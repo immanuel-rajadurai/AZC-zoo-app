@@ -42,10 +42,10 @@ const SignUp = () => {
   }
 
   return (
-    <SafeAreaView className="bg-primary h-full">
+    <SafeAreaView className="bg-white h-full">
       <ScrollView>
         <View className="w-full justify-center min-h-[83vh] px-4 my-6">
-          <Image source={images.logo} resizeMode='contain' className="w-[115px] h-[35px]"/>
+        <Image source={images.zooIcon} resizeMode='contain' className="w-[150px] h-[150px]"/>
 
           <Text className="text-2xl text-white text-semibold mt-10 font-psemibold">
             Sign up to Aora
@@ -93,7 +93,7 @@ const SignUp = () => {
               Have an account already?
             </Text>
             
-            <Link href="/sign-in" className="text-lg font-psemibold text-secondary">Sign in</Link>
+            <Link href="/sign-in" className="text-lg font-psemibold text-green-600">Sign in</Link>
           </View>
 
         </View>

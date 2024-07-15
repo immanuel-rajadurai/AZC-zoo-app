@@ -57,15 +57,16 @@ const TrendingItem = ({ activeItem, item }) => {
           onPress={() => setPlay(true)}
         >
           <ImageBackground
-            source={{
-              uri: item.thumbnail,
-            }}
+            // source={{
+            //   uri: item.thumbnail,
+            // }}
+            source = {icons.bookmark}
             className="w-52 h-72 rounded-[33px] my-5 overflow-hidden shadow-lg shadow-black/40"
             resizeMode="cover"
           />
 
           <Image
-            source={icons.play}
+            source={icons.bookmark}
             className="w-12 h-12 absolute"
             resizeMode="contain"
           />

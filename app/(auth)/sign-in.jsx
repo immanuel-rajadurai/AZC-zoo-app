@@ -41,13 +41,13 @@ const SignIn = () => {
   }
 
   return (
-    <SafeAreaView className="bg-primary h-full">
+    <SafeAreaView className="bg-white h-full">
       <ScrollView>
         <View className="w-full justify-center min-h-[83vh] px-4 my-6">
-          <Image source={images.logo} resizeMode='contain' className="w-[115px] h-[35px]"/>
+          <Image source={images.zooIcon} resizeMode='contain' className="w-[150px] h-[150px]"/>
 
-          <Text className="text-2xl text-white text-semibold mt-10 font-psemibold">
-            Log in to Aora
+          <Text className="text-2xl text-green-600 text-semibold mt-10 font-psemibold">
+            Log in to the Zoo App
           </Text>
 
           <FormField 
@@ -79,11 +79,11 @@ const SignIn = () => {
           />
           
           <View className="justify-center pt-5 flex-row gap-2">
-            <Text className="text-lg text-gray-100 font-pregular">
+            <Text className="text-lg text-gray-500 font-pregular">
               Done have an account?
             </Text>
             
-            <Link href="/sign-up" className="text-lg font-psemibold text-secondary">Sign up</Link>
+            <Link href="/sign-up" className="text-lg font-psemibold text-green-600">Sign up</Link>
           </View>
 
         </View>
