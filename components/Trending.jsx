@@ -57,16 +57,15 @@ const TrendingItem = ({ activeItem, item }) => {
           onPress={() => setPlay(true)}
         >
           <ImageBackground
-            // source={{
-            //   uri: item.thumbnail,
-            // }}
-            source = {icons.bookmark}
+            source={{
+              uri: item.thumbnail,
+            }}
             className="w-52 h-72 rounded-[33px] my-5 overflow-hidden shadow-lg shadow-black/40"
             resizeMode="cover"
           />
 
           <Image
-            source={icons.bookmark}
+            source={icons.play}
             className="w-12 h-12 absolute"
             resizeMode="contain"
           />
@@ -77,7 +76,7 @@ const TrendingItem = ({ activeItem, item }) => {
 };
 
 const Trending = ({ posts }) => {
-  const [activeItem, setActiveItem] = useState(posts[0]);
+  const [activeItem, setActiveItem] = useState(posts[1]);
 
   const viewableItemsChanged = ({ viewableItems }) => {
     if (viewableItems.length > 0) {
@@ -93,7 +92,7 @@ const Trending = ({ posts }) => {
       renderItem={({ item }) => (
         <TrendingItem activeItem={activeItem} item={item} />
       )}
-      // onViewableItemsChanged={viewableItemsChanged}
+      onViewableItemsChanged={viewableItemsChanged}
       viewabilityConfig={{
         itemVisiblePercentThreshold: 70,
       }}
