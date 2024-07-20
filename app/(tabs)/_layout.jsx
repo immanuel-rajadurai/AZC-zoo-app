@@ -1,7 +1,8 @@
 import { View, Text, Image } from 'react-native';
-import { Tabs, Redirect } from 'expo-router';
+import { Tabs, Redirect, Stack } from 'expo-router';
 
-import { icons } from '../../constants';
+import { icons, images } from '../../constants';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const TabIcon = ({ icon, color, name, focused }) => {
   return (

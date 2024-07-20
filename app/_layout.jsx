@@ -1,11 +1,31 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Image, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect } from 'react'
 import { SplashScreen, Stack } from 'expo-router';
 import { useFonts } from 'expo-font'
 import GlobalProvider from '../context/GlobalProvider'
-
+import { images } from '../constants'
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 SplashScreen.preventAutoHideAsync();
+
+const CustomHeader = ({ navigation, route }) => {
+  // Customize the header content here (e.g., add logo, buttons, etc.)
+  return (
+    <SafeAreaView className="items-center bg-green-700">
+        <View>
+            <Text className="text-2xl font-psemibold text-white mb-3 mt-3">
+              Zoo  App
+            </Text>
+            {/* <Image
+                className = "mb-1 mt-1"
+                source={images.zooIcon}
+                style={{ width: 70, height: 65, marginRight: 0 }}
+                // resizeMode='contain'
+            /> */}
+        </View>
+    </SafeAreaView>
+  );
+};
 
 const RootLayout = () => {
   const [fontsLoaded, error] = useFonts({
@@ -27,18 +47,18 @@ const RootLayout = () => {
 
   if (!fontsLoaded && !error) return null;
 
-
   return (
     <GlobalProvider>
-      <Stack>
+      <Stack >
         <Stack.Screen name="index" options={{
             headerShown:false
         }} />
         <Stack.Screen name="(auth)" options={{
-            headerShown:false
+            headerShown:true
         }} />
         <Stack.Screen name="(tabs)" options={{
-            headerShown:false
+            // headerShown:true
+            header: CustomHeader
         }} />
         {/* <Stack.Screen name="/search/[query]" options={{
             headerShown:false
