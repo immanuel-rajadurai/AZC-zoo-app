@@ -28,7 +28,7 @@ const zoomOut = {
   },
 };
 
-const TrendingItem = ({ activeItem, item }) => {
+const EventItem = ({ activeItem, item }) => {
   const [play, setPlay] = useState(false);
 
   return (
@@ -37,20 +37,6 @@ const TrendingItem = ({ activeItem, item }) => {
       animation={activeItem === item.$id ? zoomIn : zoomOut}
       duration={500}
     >
-      {play ? (
-        <Video
-          source={{ uri: item.video }}
-          className="w-52 h-72 rounded-[33px] mt-3 bg-white/10"
-          resizeMode={ResizeMode.CONTAIN}
-          useNativeControls
-          shouldPlay
-          onPlaybackStatusUpdate={(status) => {
-            if (status.didJustFinish) {
-              setPlay(false);
-            }
-          }}
-        />
-      ) : (
         <TouchableOpacity
           className="relative flex justify-center items-center"
           activeOpacity={0.7}
@@ -64,18 +50,12 @@ const TrendingItem = ({ activeItem, item }) => {
             resizeMode="cover"
           />
 
-          <Image
-            source={icons.play}
-            className="w-12 h-12 absolute"
-            resizeMode="contain"
-          />
         </TouchableOpacity>
-      )}
     </Animatable.View>
   );
 };
 
-const Trending = ({ posts }) => {
+const Events = ({ posts }) => {
   const [activeItem, setActiveItem] = useState(posts[1]);
 
   const viewableItemsChanged = ({ viewableItems }) => {
@@ -86,11 +66,12 @@ const Trending = ({ posts }) => {
 
   return (
     <FlatList
+      overScrollMode="never"
       data={posts}
       horizontal
       keyExtractor={(item) => item.$id}
       renderItem={({ item }) => (
-        <TrendingItem activeItem={activeItem} item={item} />
+        <EventItem activeItem={activeItem} item={item} />
       )}
       onViewableItemsChanged={viewableItemsChanged}
       viewabilityConfig={{
@@ -101,4 +82,4 @@ const Trending = ({ posts }) => {
   );
 };
 
-export default Trending;
+export default Events;

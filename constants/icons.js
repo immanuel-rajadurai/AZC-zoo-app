@@ -11,6 +11,12 @@ import logout from "../assets/icons/logout.png";
 import eyeHide from "../assets/icons/eye-hide.png";
 import eye from "../assets/icons/eye.png";
 import play from "../assets/icons/play.png";
+import binoculars from "../assets/icons/binoculars.png";
+import profile1 from "../assets/icons/profile1.png";
+import home1 from "../assets/icons/home1.png";
+import notification from "../assets/icons/notification.png";
+
+
 
 
 export default {
@@ -27,4 +33,8 @@ export default {
   logout,
   eyeHide,
   eye,
+  binoculars,
+  notification, 
+  profile1,
+  home1
 };

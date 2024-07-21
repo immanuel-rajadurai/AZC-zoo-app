@@ -4,6 +4,8 @@ import { Tabs, Redirect, Stack } from 'expo-router';
 import { icons, images } from '../../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+//green CSS colour #187c3c
+
 const TabIcon = ({ icon, color, name, focused }) => {
   return (
     <View className="items-center justify-center gap-2">
@@ -11,7 +13,7 @@ const TabIcon = ({ icon, color, name, focused }) => {
         source={icon}
         resizeMethod='contain'
         tintColor={color}
-        className="w-6 h-6"
+        className="w-15 h-15"
       />
       <Text className={`${focused ? 'font-psemibold' : 'font-pregular'} text-xs`} style={{ color: color }}>
         {name}
@@ -29,7 +31,7 @@ const TabsLayout = () => {
           tabBarActiveTintColor: '#2d4a29',
           tabBarInactiveTintColor: '#CDCDE0',
           tabBarStyle: {
-            backgroundColor: '#10a300',
+            backgroundColor: '#187c3c',
             borderTopWidth: 1,
             borderTopColor: '#232533',
             height:84,
@@ -43,7 +45,7 @@ const TabsLayout = () => {
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.home}
+                icon={icons.home1}
                 color={color}
                 name="Home"
                 focused={focused}
@@ -52,31 +54,32 @@ const TabsLayout = () => {
           }}
         />
         <Tabs.Screen
-          name="bookmark"
+          name="notifications"
           options={{
-            title:'Bookmark',
+            title:'Notifications',
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.bookmark}
+                icon={icons.notification}
                 color={color}
-                name="Bookmark"
+                name="Notifications"
                 focused={focused}
               />
             )
           }}
         />
         <Tabs.Screen
-          name="create"
+          name="challenge"
           options={{
-            title:'Create',
+            title:'Challenge',
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.plus}
+                icon={icons.binoculars}
                 color={color}
-                name="Create"
+                name="Challenge"
                 focused={focused}
+                className="w-52 h-72"
               />
             )
           }}
@@ -88,7 +91,7 @@ const TabsLayout = () => {
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.profile}
+                icon={icons.profile1}
                 color={color}
                 name="Profile"
                 focused={focused}
