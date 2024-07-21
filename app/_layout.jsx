@@ -48,7 +48,7 @@ const RootLayout = () => {
   if (!fontsLoaded && !error) return null;
 
   return (
-    <GlobalProvider>
+    // <GlobalProvider>
       <Stack >
         <Stack.Screen name="index" options={{
             headerShown:false
@@ -64,7 +64,7 @@ const RootLayout = () => {
             headerShown:false
         }} /> */}
       </Stack>
-    </GlobalProvider>
+    // </GlobalProvider>
     )
 }
 

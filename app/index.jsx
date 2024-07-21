@@ -12,9 +12,9 @@ import { useGlobalContext } from '../context/GlobalProvider';
 //com.jsm.app_v1
 export default function App() {
 
-   const { isLoading, isLoggedIn } = useGlobalContext();
+  //  const { isLoading, isLoggedIn } = useGlobalContext();
 
-   if (!isLoading && isLoggedIn) return <Redirect href="/home"/>
+  //  if (!isLoading && isLoggedIn) return <Redirect href="/home"/>
 
     return (
         <SafeAreaView className="bg-white h-full">
