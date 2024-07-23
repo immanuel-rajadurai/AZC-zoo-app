@@ -9,6 +9,8 @@ import EmptyState from '../../components/EmptyState'
 import { getAllPosts, getLatestPosts } from '../../lib/appwrite'
 import useAppwrite from '../../lib/useAppwrite'
 import MapView from 'react-native-maps';
+import { Marker } from "react-native-maps";
+
 
 const Home = () => {
 
@@ -31,21 +33,33 @@ const Home = () => {
     longitudeDelta: 0.01,
   });
 
+  const zooRegion = {
+    latitude: 48.7460,
+    longitude: 2.66315,
+    latitudeDelta: 0.01,
+    longitudeDelta: 0.01,
+  };
+
   return (
     <View style={styles.container}>
-      <MapView 
-        style={styles.map} 
-          initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-        onRegionChangeComplete={(region) => setRegion(region)}
+    <MapView
+      style={styles.map}
+      initialRegion={zooRegion} //your region data goes here.
+    >
+      {/*Make sure the Marker component is a child of MapView. Otherwise it won't render*/}
+      <Marker
+        coordinate={zooRegion}
+        pinColor="green"
       />
-      <Text style={styles.text}>Current latitude: {region.latitude}</Text>
-      <Text style={styles.text}>Current longitude: {region.longitude}</Text>
-    </View>
+      <Marker
+        coordinate={{
+          latitude: 48.7465,
+          longitude: 2.66317,
+        }}
+        image={require("../../assets/images/logo-small.png")}
+      />
+    </MapView>
+  </View>
   )
 }
 
