@@ -1,16 +1,17 @@
-import { View, Text, FlatList, Image, RefreshControl, Alert, StyleSheet  } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { View, Text, FlatList, Image, RefreshControl, Alert, StyleSheet, Button, TouchableOpacity  } from 'react-native'
+import React, { useEffect, useState, useRef  } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { images } from '../../constants'
 import SearchInput from '../../components/searchInput'
 import Events from '../../components/Events'
-import VideoCard from '../../components/VideoCard'
 import EmptyState from '../../components/EmptyState'
 import { getAllPosts, getLatestPosts } from '../../lib/appwrite'
 import useAppwrite from '../../lib/useAppwrite'
 import MapView from 'react-native-maps';
 import { Marker } from "react-native-maps";
-
+import { mapstyle1 } from "../../styling/mapstyles";
+import CustomButton from '../../components/CustomButton'
+import * as Location from "expo-location";
 
 const Home = () => {
 
@@ -19,6 +20,9 @@ const Home = () => {
   var posts = [{"$collectionId": "668e5083002b3f534cf3", "$createdAt": "2024-07-12T10:17:03.558+00:00", "$databaseId": "668e503d0036733ee658", "$id": "669102a0003c95af39aa", "$permissions": [], "$tenant": "165998", "$updatedAt": "2024-07-12T10:17:03.558+00:00", "prompt": "Picture the future of coding with AI. Show AR VR", "thumbnail": "https://wildlife.foothillsclusters.com/wp-content/uploads/2023/05/230518-03.jpg", "title": "How AI Shapes Coding Future", "users": {"$collectionId": "668e5057003aed7c3b16", "$createdAt": "2024-07-10T14:46:56.037+00:00", "$databaseId": "668e503d0036733ee658", "$id": "668e9ee100305aae9daf", "$permissions": [Array], "$tenant": "165998", "$updatedAt": "2024-07-10T14:46:56.037+00:00", "accountId": "668e9edf001c2f7b6117", "avatar": "https://cloud.appwrite.io/v1/avatars/initials?name=immraj&project=668e4f04003bfae2a718", "email": "immanuelraj154@gmail.com", "username": "immraj"}, "video": "https://player.vimeo.com/video/949581999?h=4672125b31"}, {"$collectionId": "668e5083002b3f534cf3", "$createdAt": "2024-07-12T10:17:47.089+00:00", "$databaseId": "668e503d0036733ee658", "$id": "669102cc0021f55940c3", "$permissions": [], "$tenant": "165998", "$updatedAt": "2024-07-12T10:17:47.089+00:00", "prompt": "Create a motivating AI driven video aimed at inspiring coding enthusiasts with simple language", "thumbnail": "https://cms.whipsnadezoo.org/sites/default/files/styles/responsive/public/1024/1024/0/2022-12/Meet-the-Animals-24-Photo-by-Justin-Doherty.jpg.webp", "title": "Get inspired to code", "users": {"$collectionId": "668e5057003aed7c3b16", "$createdAt": "2024-07-10T14:46:56.037+00:00", "$databaseId": "668e503d0036733ee658", "$id": "668e9ee100305aae9daf", "$permissions": [Array], "$tenant": "165998", "$updatedAt": "2024-07-10T14:46:56.037+00:00", "accountId": "668e9edf001c2f7b6117", "avatar": "https://cloud.appwrite.io/v1/avatars/initials?name=immraj&project=668e4f04003bfae2a718", "email": "immanuelraj154@gmail.com", "username": "immraj"}, "video": "https://player.vimeo.com/video/949579770?h=897cd5e781"}, {"$collectionId": "668e5083002b3f534cf3", "$createdAt": "2024-07-12T10:18:22.338+00:00", "$databaseId": "668e503d0036733ee658", "$id": "669102ef003c49d4c7bd", "$permissions": [], "$tenant": "165998", "$updatedAt": "2024-07-12T10:18:22.338+00:00", "prompt": "Create a heartwarming video following the travels of dalmatian dog exploring beautiful Italy", "thumbnail": "https://cdn.britannica.com/83/195983-138-66807699/numbers-tiger-populations.jpg?w=800&h=450&c=crop", "title": "Dalmatian's journey through Italy", "users": {"$collectionId": "668e5057003aed7c3b16", "$createdAt": "2024-07-10T14:46:56.037+00:00", "$databaseId": "668e503d0036733ee658", "$id": "668e9ee100305aae9daf", "$permissions": [Array], "$tenant": "165998", "$updatedAt": "2024-07-10T14:46:56.037+00:00", "accountId": "668e9edf001c2f7b6117", "avatar": "https://cloud.appwrite.io/v1/avatars/initials?name=immraj&project=668e4f04003bfae2a718", "email": "immanuelraj154@gmail.com", "username": "immraj"}, "video": "https://player.vimeo.com/video/949582778?h=d60220d68d"}]
 
   const [refreshing, setRefreshing] = useState(false)
+  const mapRef = useRef(null); 
+  const [currentLocation, setCurrentLocation] = useState(null);
+
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -27,8 +31,8 @@ const Home = () => {
   }
 
   const [region, setRegion] = useState({
-    latitude: 51.5079145,
-    longitude: -0.0899163,
+    latitude: 48.7460,
+    longitude: 2.66315,
     latitudeDelta: 0.01,
     longitudeDelta: 0.01,
   });
@@ -40,25 +44,68 @@ const Home = () => {
     longitudeDelta: 0.01,
   };
 
+  useEffect(() => {
+    const getLocation = async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setCurrentLocation(location.coords);
+
+      setInitialRegion({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.005,
+        longitudeDelta: 0.005,
+      });
+    };
+
+    getLocation();
+  }, []);
+
+  const goToZoo = () => {
+    //Animate the user to new region. Complete this animation in 3 seconds
+    mapRef.current.animateToRegion(zooRegion, 500);
+  };
+
+  const mapView = React.createRef();
+
+  const animateMap = () => {
+    mapView.current.animateToRegion(zooRegion, 1000);
+  }
+
   return (
     <View style={styles.container}>
     <MapView
       style={styles.map}
-      initialRegion={zooRegion} //your region data goes here.
+      ref={mapRef}
+      initialRegion={zooRegion}
+      showsUserLocation={true}
+      customMapStyle={mapstyle1}
+      //onRegionChangeComplete runs when the user stops dragging MapView
+      onRegionChangeComplete={(region) => setRegion(region)}
     >
-      {/*Make sure the Marker component is a child of MapView. Otherwise it won't render*/}
-      <Marker
-        coordinate={zooRegion}
-        pinColor="green"
-      />
-      <Marker
-        coordinate={{
-          latitude: 48.7465,
-          longitude: 2.66317,
-        }}
-        image={require("../../assets/images/logo-small.png")}
-      />
+
+        <Marker
+          coordinate={zooRegion}
+          pinColor="green"
+        />
+        <Marker
+          coordinate={{
+            latitude: 48.7465,
+            longitude: 2.66317,
+          }}
+          image={require("../../assets/images/logo-small.png")}
+        />
     </MapView>
+    <CustomButton handlePress={() => goToZoo()} title="Go to Zoo" />
+    {/* <TouchableOpacity onPress={animateMap}><Text>Start</Text></TouchableOpacity> */}
+    {/*Display user's current region:*/}
+    <Text style={styles.text}>Current latitude : {region.latitude}</Text>
+    <Text style={styles.text}>Current longitude: {region.longitude}</Text>
   </View>
   )
 }
