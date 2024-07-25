@@ -88,18 +88,79 @@ const Home = () => {
       //onRegionChangeComplete runs when the user stops dragging MapView
       onRegionChangeComplete={(region) => setRegion(region)}
     >
-
-        <Marker
+        {/* <Marker
           coordinate={zooRegion}
           pinColor="green"
-        />
+        /> */}
         <Marker
           coordinate={{
-            latitude: 48.7465,
+            latitude: 48.7466652,
+            longitude: 2.662887,
+          }}
+        > 
+           <View>
+            <Image
+              source={require("../../assets/amimalicons/tiger.png")}
+              style={{width: 60, height: 60}}
+              resizeMode="contain"
+            />
+          </View>
+        </Marker>
+
+        <Marker
+          coordinate={{
+            latitude: 48.746337, 
+            longitude: 2.663211,
+          }}
+        > 
+           <View>
+            <Image
+              source={require("../../assets/amimalicons/giraffe.png")}
+              style={{width: 60, height: 60}}
+              resizeMode="contain"
+            />
+          </View>
+        </Marker>
+
+        <Marker
+          coordinate={{
+            latitude: 48.746457, 
+            longitude: 2.661987,
+          }}
+        > 
+           <View>
+            <Image
+              source={require("../../assets/amimalicons/camel.png")}
+              style={{width: 70, height: 70}}
+              resizeMode="contain"
+            />
+          </View>
+        </Marker>
+
+        <Marker
+          coordinate={{
+            latitude: 48.746117, 
+            longitude: 2.662850,
+          }}
+        > 
+           <View>
+            <Image
+              source={require("../../assets/amimalicons/hippo.png")}
+              style={{width: 60, height: 60}}
+              resizeMode="contain"
+            />
+          </View>
+        </Marker>
+
+
+        {/* <Marker
+          coordinate={{
+            latitude: 48.7462,
             longitude: 2.66317,
           }}
-          image={require("../../assets/images/logo-small.png")}
-        />
+          image={require("../../assets/amimalicons/tiger.png")}
+        /> */}
+
     </MapView>
     <CustomButton handlePress={() => goToZoo()} title="Go to Zoo" />
     {/* <TouchableOpacity onPress={animateMap}><Text>Start</Text></TouchableOpacity> */}
@@ -133,3 +194,28 @@ const styles = StyleSheet.create({
 // });
 
 export default Home
+
+// <View>
+//       <FlatList
+//         ListHeaderComponent={() => (
+//           <View className="my-6 px-4 space-y-6">
+//             <View className="justify-between items-start flex-row mb-6 border w-full flex-1 pt=5 pb-8">
+//              <Text>Map goes here</Text>
+//             </View>
+            
+//             {/* <View className="w-full flex-1 pt=5 pb-8">
+              
+//               <Text className="text-black-500 text-2xl font-psemibold">
+//                 Events
+//               </Text>
+
+//               <Events
+//                 posts={posts ?? []}
+//               />
+//             </View> */}
+//           </View>
+//         )}
+   
+   
+//       />
+//       </View>
