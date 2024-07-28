@@ -17,8 +17,6 @@ import home1 from "../assets/icons/home1.png";
 import notification from "../assets/icons/notification.png";
 
 
-
-
 export default {
   play,
   bookmark,
@@ -36,5 +34,5 @@ export default {
   binoculars,
   notification, 
   profile1,
-  home1
+  home1,
 };
