@@ -1,5 +1,5 @@
 import { default as React, useState } from 'react'
-import { Button, FlatList, Text, View } from 'react-native'
+import { Button, FlatList, ImageBackground, SafeAreaView, Text, View } from 'react-native'
 import Events from '../../components/Events'
 import { getLatestPosts } from '../../lib/appwrite'
 import useAppwrite from '../../lib/useAppwrite'
@@ -27,14 +27,14 @@ const Home = () => {
   };
 
   return (
+    <SafeAreaView>
     <View>
+    <ImageBackground source = "./FillerBlueBackground">
       <FlatList
         ListHeaderComponent={() => (
           <View style={{ padding: 16 }}>
             <View style={{ marginBottom: 16 }}>
-              <Text>Map goes here</Text>
             </View>
-            <Button title="Toggle Events" onPress={toggleEvents} />
             {showEvents && (
               <View>
                 <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Events</Text>
@@ -55,7 +55,12 @@ const Home = () => {
         )}
         keyExtractor={item => item.$id}
       />
+      <View style={{ color: "black", position: "absolute", bottom: 0 }}> 
+              <Button title="Toggle Events" onPress={toggleEvents} />
+        </View>
+        </ImageBackground>
     </View>
+    </SafeAreaView>
   );
 };
 
