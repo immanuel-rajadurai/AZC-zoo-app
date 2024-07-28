@@ -1,6 +1,5 @@
-import { default as React, default as React, useState } from 'react'
-import { FlatList, Text, View } from 'react-native'
-import SlidingUpPanel from 'rn-sliding-up-panel'
+import { default as React, useState } from 'react'
+import { Button, FlatList, Text, View } from 'react-native'
 import Events from '../../components/Events'
 import { getLatestPosts } from '../../lib/appwrite'
 import useAppwrite from '../../lib/useAppwrite'
@@ -16,12 +15,17 @@ const Home = () => {
   const { data: latestPosts } = useAppwrite(getLatestPosts);
 
   const [refreshing, setRefreshing] = useState(false)
+  const [showEvents, setShowEvents] = useState(false);
 
   const onRefresh = async () => {
     setRefreshing(true);
     // await refetch();
     setRefreshing(false);
   }
+  const toggleEvents = () => {
+    setShowEvents(!showEvents);
+  };
+
   return (
     <View>
       <FlatList
@@ -30,19 +34,20 @@ const Home = () => {
             <View style={{ marginBottom: 16 }}>
               <Text>Map goes here</Text>
             </View>
-            <View>
-              <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Events</Text>
-              <SlidingUpPanel>
+            <Button title="Toggle Events" onPress={toggleEvents} />
+            {showEvents && (
+              <View>
+                <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Events</Text>
                 <View style={{ padding: 16 }}>
                   <Events posts={posts ?? []} />
                 </View>
-              </SlidingUpPanel>
-            </View>
+              </View>
+            )}
           </View>
         )}
         refreshing={refreshing}
         onRefresh={onRefresh}
-        data={posts}
+        data={latestPosts}
         renderItem={({ item }) => (
           <View>
             <Text>{item.title}</Text>
@@ -54,5 +59,4 @@ const Home = () => {
   );
 };
 
-export default Home
-
+export default Home;
