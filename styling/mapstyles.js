@@ -55,7 +55,7 @@ const mapstyle1 = [
       "elementType": "geometry",
       "stylers": [
         {
-          "color": "#c3f5bf"
+          "color": "# "
         }
       ]
     },

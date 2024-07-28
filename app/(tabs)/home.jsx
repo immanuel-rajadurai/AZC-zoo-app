@@ -7,7 +7,7 @@ import Events from '../../components/Events'
 import EmptyState from '../../components/EmptyState'
 import { getAllPosts, getLatestPosts } from '../../lib/appwrite'
 import useAppwrite from '../../lib/useAppwrite'
-import MapView from 'react-native-maps';
+import MapView, { Overlay } from 'react-native-maps';
 import { Marker } from "react-native-maps";
 import { mapstyle1 } from "../../styling/mapstyles";
 import CustomButton from '../../components/CustomButton'
@@ -37,18 +37,25 @@ const Home = () => {
     longitudeDelta: 0.01,
   });
 
+  // const zooRegion = {
+  //   latitude: 48.7460,
+  //   longitude: 2.66315,
+  //   latitudeDelta: 0.003,
+  //   longitudeDelta: 0.003,
+  // };
+
   const zooRegion = {
-    latitude: 48.7460,
-    longitude: 2.66315,
-    latitudeDelta: 0.01,
-    longitudeDelta: 0.01,
+    latitude: 51.535121,
+    longitude: -0.154131,
+    latitudeDelta: 0.003,
+    longitudeDelta: 0.003,
   };
 
   useEffect(() => {
     const getLocation = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        console.log("Permission to access location was denied");
+        console.log("Permission to  access location was denied");
         return;
       }
 
@@ -74,8 +81,13 @@ const Home = () => {
   const mapView = React.createRef();
 
   const animateMap = () => {
-    mapView.current.animateToRegion(zooRegion, 1000);
+    mapView.current.animateToRegion(zooRegion, 1000); 
   }
+
+  const imageBounds = [
+    [51.533119, -0.159473], // Southwest coordinates
+    [51.536625, -0.151500], // Northeast coordinates
+  ];
 
   return (
     <View style={styles.container}>
@@ -85,83 +97,20 @@ const Home = () => {
       initialRegion={zooRegion}
       showsUserLocation={true}
       customMapStyle={mapstyle1}
-      //onRegionChangeComplete runs when the user stops dragging MapView
       onRegionChangeComplete={(region) => setRegion(region)}
+      provider={MapView.PROVIDER_GOOGLE}
     >
-        {/* <Marker
-          coordinate={zooRegion}
-          pinColor="green"
-        /> */}
-        <Marker
-          coordinate={{
-            latitude: 48.7466652,
-            longitude: 2.662887,
-          }}
-        > 
-           <View>
-            <Image
-              source={require("../../assets/amimalicons/tiger.png")}
-              style={{width: 60, height: 60}}
-              resizeMode="contain"
-            />
-          </View>
-        </Marker>
 
-        <Marker
-          coordinate={{
-            latitude: 48.746337, 
-            longitude: 2.663211,
-          }}
-        > 
-           <View>
-            <Image
-              source={require("../../assets/amimalicons/giraffe.png")}
-              style={{width: 60, height: 60}}
-              resizeMode="contain"
-            />
-          </View>
-        </Marker>
-
-        <Marker
-          coordinate={{
-            latitude: 48.746457, 
-            longitude: 2.661987,
-          }}
-        > 
-           <View>
-            <Image
-              source={require("../../assets/amimalicons/camel.png")}
-              style={{width: 70, height: 70}}
-              resizeMode="contain"
-            />
-          </View>
-        </Marker>
-
-        <Marker
-          coordinate={{
-            latitude: 48.746117, 
-            longitude: 2.662850,
-          }}
-        > 
-           <View>
-            <Image
-              source={require("../../assets/amimalicons/hippo.png")}
-              style={{width: 60, height: 60}}
-              resizeMode="contain"
-            />
-          </View>
-        </Marker>
-
-
-        {/* <Marker
-          coordinate={{
-            latitude: 48.7462,
-            longitude: 2.66317,
-          }}
-          image={require("../../assets/amimalicons/tiger.png")}
-        /> */}
+      <Overlay  
+        image={require("../../assets/mapoverlays/londonzoo.png")}
+        bounds = {imageBounds}
+        bearing = {0.6}
+        style = {styles.overlay}
+        opacity = {0.8}
+      />
 
     </MapView>
+
     <CustomButton handlePress={() => goToZoo()} title="Go to Zoo" />
     {/* <TouchableOpacity onPress={animateMap}><Text>Start</Text></TouchableOpacity> */}
     {/*Display user's current region:*/}
@@ -181,6 +130,23 @@ const styles = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject,
   },
+  overlay: {
+    transform: [{ rotate: '90deg' }],
+  },
+});
+ 
+const overlayStyles = StyleSheet.create({
+  container: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  overlay: {
+    transform: [{ rotate: '90deg' }],
+  },
 });
 
 // const styles = StyleSheet.create({
@@ -194,28 +160,3 @@ const styles = StyleSheet.create({
 // });
 
 export default Home
-
-// <View>
-//       <FlatList
-//         ListHeaderComponent={() => (
-//           <View className="my-6 px-4 space-y-6">
-//             <View className="justify-between items-start flex-row mb-6 border w-full flex-1 pt=5 pb-8">
-//              <Text>Map goes here</Text>
-//             </View>
-            
-//             {/* <View className="w-full flex-1 pt=5 pb-8">
-              
-//               <Text className="text-black-500 text-2xl font-psemibold">
-//                 Events
-//               </Text>
-
-//               <Events
-//                 posts={posts ?? []}
-//               />
-//             </View> */}
-//           </View>
-//         )}
-   
-   
-//       />
-//       </View>
