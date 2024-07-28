@@ -106,8 +106,54 @@ const Home = () => {
         bounds = {imageBounds}
         bearing = {0.6}
         style = {styles.overlay}
-        opacity = {0.8}
+        opacity = {0.0}
       />
+
+        <Marker
+          coordinate={{
+            latitude: 51.535121,
+            longitude: -0.154131,
+          }}
+        > 
+           <View>
+            <Image
+              source={require("../../assets/amimalicons/hippo.png")}
+              style={{width: 60, height: 60}}
+              resizeMode="contain"
+            />
+          </View>
+        </Marker>
+
+        <Marker
+          coordinate={{
+            latitude: 51.535121,
+            longitude: -0.1547,
+          }}
+        > 
+           <View>
+            <Image
+              source={require("../../assets/amimalicons/tiger.png")}
+              style={{width: 60, height: 60}}
+              resizeMode="contain"
+            />
+          </View>
+        </Marker>
+
+
+        <Marker
+          coordinate={{
+            latitude: 51.5355,
+            longitude: -0.155,
+          }}
+        > 
+           <View>
+            <Image
+              source={require("../../assets/amimalicons/giraffe.png")}
+              style={{width: 60, height: 60}}
+              resizeMode="contain"
+            />
+          </View>
+        </Marker>
 
     </MapView>
 
