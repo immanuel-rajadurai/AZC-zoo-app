@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import MapView, { Marker, Overlay } from 'react-native-maps'
 import CustomButton from '../../components/CustomButton'
+import Events from "../../components/Events"
 import { mapstyle1 } from "../../styling/mapstyles"
 
 const Home = () => {
@@ -153,6 +154,7 @@ const Home = () => {
     {/*Display user's current region:*/}
     <Text style={styles.text}>Current latitude : {region.latitude}</Text>
     <Text style={styles.text}>Current longitude: {region.longitude}</Text>
+    <Events posts={posts} />
   </View>
   )
 }
