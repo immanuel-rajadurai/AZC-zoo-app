@@ -1,6 +1,6 @@
 import * as Location from "expo-location"
 import React, { useEffect, useRef, useState } from 'react'
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Animated, Button, Dimensions, Image, StyleSheet, Text, View } from 'react-native'
 import MapView, { Marker, Overlay } from 'react-native-maps'
 import CustomButton from '../../components/CustomButton'
 import Events from "../../components/Events"
@@ -14,6 +14,9 @@ const Home = () => {
   const [refreshing, setRefreshing] = useState(false)
   const mapRef = useRef(null); 
   const [currentLocation, setCurrentLocation] = useState(null);
+  const [eventsVisible, setEventsVisible] = useState(false);
+  const translateY = useRef(new Animated.Value(200)).current;
+  const { height: screenHeight } = Dimensions.get('window');
 
 
   const onRefresh = async () => {
@@ -28,6 +31,15 @@ const Home = () => {
     latitudeDelta: 0.01,
     longitudeDelta: 0.01,
   });
+
+  const showEvents = () => {
+    setEventsVisible(true);
+    Animated.timing(translateY, {
+      toValue: "30%",
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
 
   // const zooRegion = {
   //   latitude: 48.7460,
@@ -154,7 +166,14 @@ const Home = () => {
     {/*Display user's current region:*/}
     <Text style={styles.text}>Current latitude : {region.latitude}</Text>
     <Text style={styles.text}>Current longitude: {region.longitude}</Text>
-    <Events posts={posts} />
+    <Button title="Show Events" onPress={showEvents} />
+
+    {eventsVisible && (
+      <Animated.View style={{ ...styles.animatedContainer, transform: [{ translateY }] }}>
+        <Events posts={posts} />
+      </Animated.View>
+)}
+
   </View>
   )
 }

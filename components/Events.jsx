@@ -28,7 +28,7 @@ const Events = ({ posts }) => {
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
           <View style={styles.itemContainer}>
-            <Image source={{ uri: item.thumbnail }} style={styles.thumbnail} />
+            <Image source={{ uri: item.thumbnail }} style={styles.thumbnail}  />
             <Text style={styles.title}>{item.title}</Text>
             <Text style={styles.prompt}>{item.prompt}</Text>
           </View>
@@ -37,7 +37,7 @@ const Events = ({ posts }) => {
         viewabilityConfig={{
           itemVisiblePercentThreshold: 70,
         }}
-        contentOffset={{ x: 170 }}
+        contentOffset={{ x:170 }}
       />
     </Animated.View>
   );
@@ -46,15 +46,17 @@ const Events = ({ posts }) => {
 const styles = StyleSheet.create({
   animatedContainer: {
     flex: 1,
+    paddingTop: '50%',
     justifyContent: 'center',
     alignItems: 'center',
   },
+  
   itemContainer: {
     padding: 10,
     backgroundColor: '#fff',
-    borderRadius: 5,
-    margin: 5,
-    shadowColor: '#000',
+    //borderRadius: 5,
+    //margin: 5,
+   shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 0 },
@@ -63,7 +65,7 @@ const styles = StyleSheet.create({
   },
   thumbnail: {
     width: '100%',
-    height: 150,
+    height: '50%',
     borderRadius: 5,
   },
   title: {
