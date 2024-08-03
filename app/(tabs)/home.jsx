@@ -41,6 +41,14 @@ const Home = () => {
     }).start();
   };
 
+  const hideEvents = () => {
+    Animated.timing(translateY, {
+      toValue: "0%", 
+      duration: 500,
+      useNativeDriver: true,
+    }).start(() => setEventsVisible(false));
+  };
+
   // const zooRegion = {
   //   latitude: 48.7460,
   //   longitude: 2.66315,
@@ -169,11 +177,13 @@ const Home = () => {
     <Button title="Show Events" onPress={showEvents} />
 
     {eventsVisible && (
-      <Animated.View style={{ ...styles.animatedContainer, transform: [{ translateY }] }}>
-        <Events posts={posts} />
-      </Animated.View>
-)}
-
+        <Animated.View style={[styles.animatedContainer, { transform: [{ translateY }] }]}>
+          <View style={styles.closeButtonContainer}>
+            <Button title="←" onPress={hideEvents}/>
+          </View>
+          <Events posts={posts} />
+        </Animated.View>
+      )}
   </View>
   )
 }
@@ -181,7 +191,7 @@ const Home = () => {
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    flex: 1, //the container will fill the whole screen.
+    flex: 1,
     justifyContent: "flex-end",
     alignItems: "center",
   },
