@@ -1,20 +1,12 @@
-import { View, Text, FlatList, Image, RefreshControl, Alert, StyleSheet, Button, TouchableOpacity  } from 'react-native'
-import React, { useEffect, useState, useRef  } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { images } from '../../constants'
-import SearchInput from '../../components/searchInput'
-import Events from '../../components/Events'
-import EmptyState from '../../components/EmptyState'
-import { getAllPosts, getLatestPosts } from '../../lib/appwrite'
-import useAppwrite from '../../lib/useAppwrite'
-import MapView, { Overlay } from 'react-native-maps';
-import { Marker } from "react-native-maps";
-import { mapstyle1 } from "../../styling/mapstyles";
+import * as Location from "expo-location"
+import React, { useEffect, useRef, useState } from 'react'
+import { Animated, Button, Dimensions, Image, StyleSheet, Text, View } from 'react-native'
+import MapView, { Marker, Overlay } from 'react-native-maps'
 import CustomButton from '../../components/CustomButton'
-import * as Location from "expo-location";
+import Events from "../../components/Events"
+import { mapstyle1 } from "../../styling/mapstyles"
 
 const Home = () => {
-
   // const { data: posts, refetch } = useAppwrite(getAllPosts);
 
   var posts = [{"$collectionId": "668e5083002b3f534cf3", "$createdAt": "2024-07-12T10:17:03.558+00:00", "$databaseId": "668e503d0036733ee658", "$id": "669102a0003c95af39aa", "$permissions": [], "$tenant": "165998", "$updatedAt": "2024-07-12T10:17:03.558+00:00", "prompt": "Picture the future of coding with AI. Show AR VR", "thumbnail": "https://wildlife.foothillsclusters.com/wp-content/uploads/2023/05/230518-03.jpg", "title": "How AI Shapes Coding Future", "users": {"$collectionId": "668e5057003aed7c3b16", "$createdAt": "2024-07-10T14:46:56.037+00:00", "$databaseId": "668e503d0036733ee658", "$id": "668e9ee100305aae9daf", "$permissions": [Array], "$tenant": "165998", "$updatedAt": "2024-07-10T14:46:56.037+00:00", "accountId": "668e9edf001c2f7b6117", "avatar": "https://cloud.appwrite.io/v1/avatars/initials?name=immraj&project=668e4f04003bfae2a718", "email": "immanuelraj154@gmail.com", "username": "immraj"}, "video": "https://player.vimeo.com/video/949581999?h=4672125b31"}, {"$collectionId": "668e5083002b3f534cf3", "$createdAt": "2024-07-12T10:17:47.089+00:00", "$databaseId": "668e503d0036733ee658", "$id": "669102cc0021f55940c3", "$permissions": [], "$tenant": "165998", "$updatedAt": "2024-07-12T10:17:47.089+00:00", "prompt": "Create a motivating AI driven video aimed at inspiring coding enthusiasts with simple language", "thumbnail": "https://cms.whipsnadezoo.org/sites/default/files/styles/responsive/public/1024/1024/0/2022-12/Meet-the-Animals-24-Photo-by-Justin-Doherty.jpg.webp", "title": "Get inspired to code", "users": {"$collectionId": "668e5057003aed7c3b16", "$createdAt": "2024-07-10T14:46:56.037+00:00", "$databaseId": "668e503d0036733ee658", "$id": "668e9ee100305aae9daf", "$permissions": [Array], "$tenant": "165998", "$updatedAt": "2024-07-10T14:46:56.037+00:00", "accountId": "668e9edf001c2f7b6117", "avatar": "https://cloud.appwrite.io/v1/avatars/initials?name=immraj&project=668e4f04003bfae2a718", "email": "immanuelraj154@gmail.com", "username": "immraj"}, "video": "https://player.vimeo.com/video/949579770?h=897cd5e781"}, {"$collectionId": "668e5083002b3f534cf3", "$createdAt": "2024-07-12T10:18:22.338+00:00", "$databaseId": "668e503d0036733ee658", "$id": "669102ef003c49d4c7bd", "$permissions": [], "$tenant": "165998", "$updatedAt": "2024-07-12T10:18:22.338+00:00", "prompt": "Create a heartwarming video following the travels of dalmatian dog exploring beautiful Italy", "thumbnail": "https://cdn.britannica.com/83/195983-138-66807699/numbers-tiger-populations.jpg?w=800&h=450&c=crop", "title": "Dalmatian's journey through Italy", "users": {"$collectionId": "668e5057003aed7c3b16", "$createdAt": "2024-07-10T14:46:56.037+00:00", "$databaseId": "668e503d0036733ee658", "$id": "668e9ee100305aae9daf", "$permissions": [Array], "$tenant": "165998", "$updatedAt": "2024-07-10T14:46:56.037+00:00", "accountId": "668e9edf001c2f7b6117", "avatar": "https://cloud.appwrite.io/v1/avatars/initials?name=immraj&project=668e4f04003bfae2a718", "email": "immanuelraj154@gmail.com", "username": "immraj"}, "video": "https://player.vimeo.com/video/949582778?h=d60220d68d"}]
@@ -22,6 +14,9 @@ const Home = () => {
   const [refreshing, setRefreshing] = useState(false)
   const mapRef = useRef(null); 
   const [currentLocation, setCurrentLocation] = useState(null);
+  const [eventsVisible, setEventsVisible] = useState(false);
+  const translateY = useRef(new Animated.Value(200)).current;
+  const { height: screenHeight } = Dimensions.get('window');
 
 
   const onRefresh = async () => {
@@ -36,6 +31,23 @@ const Home = () => {
     latitudeDelta: 0.01,
     longitudeDelta: 0.01,
   });
+
+  const showEvents = () => {
+    setEventsVisible(true);
+    Animated.timing(translateY, {
+      toValue: "30%",
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const hideEvents = () => {
+    Animated.timing(translateY, {
+      toValue: "0%", 
+      duration: 500,
+      useNativeDriver: true,
+    }).start(() => setEventsVisible(false));
+  };
 
   // const zooRegion = {
   //   latitude: 48.7460,
@@ -162,6 +174,16 @@ const Home = () => {
     {/*Display user's current region:*/}
     <Text style={styles.text}>Current latitude : {region.latitude}</Text>
     <Text style={styles.text}>Current longitude: {region.longitude}</Text>
+    <Button title="Show Events" onPress={showEvents} />
+
+    {eventsVisible && (
+        <Animated.View style={[styles.animatedContainer, { transform: [{ translateY }] }]}>
+          <View style={styles.closeButtonContainer}>
+            <Button title="←" onPress={hideEvents}/>
+          </View>
+          <Events posts={posts} />
+        </Animated.View>
+      )}
   </View>
   )
 }
@@ -169,7 +191,7 @@ const Home = () => {
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    flex: 1, //the container will fill the whole screen.
+    flex: 1,
     justifyContent: "flex-end",
     alignItems: "center",
   },

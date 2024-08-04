@@ -1,62 +1,17 @@
-import { useState } from "react";
-import { ResizeMode, Video } from "expo-av";
-import * as Animatable from "react-native-animatable";
-import {
-  FlatList,
-  Image,
-  ImageBackground,
-  TouchableOpacity,
-} from "react-native";
-
-import { icons } from "../constants";
-
-const zoomIn = {
-  0: {
-    scale: 0.9,
-  },
-  1: {
-    scale: 1,
-  },
-};
-
-const zoomOut = {
-  0: {
-    scale: 1,
-  },
-  1: {
-    scale: 0.9,
-  },
-};
-
-const EventItem = ({ activeItem, item }) => {
-  const [play, setPlay] = useState(false);
-
-  return (
-    <Animatable.View
-      className="mr-5"
-      animation={activeItem === item.$id ? zoomIn : zoomOut}
-      duration={500}
-    >
-        <TouchableOpacity
-          className="relative flex justify-center items-center"
-          activeOpacity={0.7}
-          onPress={() => setPlay(true)}
-        >
-          <ImageBackground
-            source={{
-              uri: item.thumbnail,
-            }}
-            className="w-52 h-72 rounded-[33px] my-5 overflow-hidden shadow-lg shadow-black/40"
-            resizeMode="cover"
-          />
-
-        </TouchableOpacity>
-    </Animatable.View>
-  );
-};
+import React, { useEffect, useRef, useState } from 'react';
+import { Animated, FlatList, Image, StyleSheet, Text, View } from 'react-native';
 
 const Events = ({ posts }) => {
-  const [activeItem, setActiveItem] = useState(posts[1]);
+  const [activeItem, setActiveItem] = useState(posts[0]);
+  const translateY = useRef(new Animated.Value(200)).current; // Start position
+
+  useEffect(() => {
+    Animated.timing(translateY, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  }, []);
 
   const viewableItemsChanged = ({ viewableItems }) => {
     if (viewableItems.length > 0) {
@@ -65,21 +20,62 @@ const Events = ({ posts }) => {
   };
 
   return (
-    <FlatList
-      overScrollMode="never"
-      data={posts}
-      horizontal
-      keyExtractor={(item) => item.$id}
-      renderItem={({ item }) => (
-        <EventItem activeItem={activeItem} item={item} />
-      )}
-      onViewableItemsChanged={viewableItemsChanged}
-      viewabilityConfig={{
-        itemVisiblePercentThreshold: 70,
-      }}
-      contentOffset={{ x: 170 }}
-    />
+    <Animated.View style={{ ...styles.animatedContainer, transform: [{ translateY }] }}>
+      <FlatList
+        overScrollMode="never"
+        data={posts}
+        horizontal
+        keyExtractor={(item) => item.$id}
+        renderItem={({ item }) => (
+          <View style={styles.itemContainer}>
+            <Image source={{ uri: item.thumbnail }} style={styles.thumbnail}  />
+            <Text style={styles.title}>{item.title}</Text>
+            <Text style={styles.prompt}>{item.prompt}</Text>
+          </View>
+        )}
+        onViewableItemsChanged={viewableItemsChanged}
+        viewabilityConfig={{
+          itemVisiblePercentThreshold: 70,
+        }}
+        contentOffset={{ x:170 }}
+      />
+    </Animated.View>
   );
 };
+
+const styles = StyleSheet.create({
+  animatedContainer: {
+    flex: 1,
+    paddingTop: '50%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  
+  itemContainer: {
+    padding: 10,
+    backgroundColor: '#fff',
+   shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 0 },
+    elevation: 3,
+    width: 250,
+  },
+  thumbnail: {
+    width: '100%',
+    height: '50%',
+    borderRadius: 5,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginTop: 10,
+  },
+  prompt: {
+    fontSize: 14,
+    color: '#555',
+    marginTop: 5,
+  },
+});
 
 export default Events;
