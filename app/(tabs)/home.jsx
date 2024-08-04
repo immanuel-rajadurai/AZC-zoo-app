@@ -17,6 +17,7 @@ const Home = () => {
   const [eventsVisible, setEventsVisible] = useState(false);
   const translateY = useRef(new Animated.Value(200)).current;
   const { height: screenHeight } = Dimensions.get('window');
+  const [eventButtonTitle, setButtonTitle] = useState("Show Events");
 
 
   const onRefresh = async () => {
@@ -32,22 +33,27 @@ const Home = () => {
     longitudeDelta: 0.01,
   });
 
-  const showEvents = () => {
-    setEventsVisible(true);
-    Animated.timing(translateY, {
-      toValue: "30%",
-      duration: 500,
-      useNativeDriver: true,
-    }).start();
+  const toggleEvents = () => {
+    if (eventsVisible) {
+      Animated.timing(translateY, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }).start(() => {
+        setEventsVisible(false);
+        setButtonTitle("Show Events");
+      });
+    } else {
+      setEventsVisible(true);
+      setButtonTitle("Hide Events");
+      Animated.timing(translateY, {
+        toValue: -10,
+        duration: 5,
+        useNativeDriver: true,
+      }).start();
+    }
   };
 
-  const hideEvents = () => {
-    Animated.timing(translateY, {
-      toValue: "0%", 
-      duration: 500,
-      useNativeDriver: true,
-    }).start(() => setEventsVisible(false));
-  };
 
   // const zooRegion = {
   //   latitude: 48.7460,
@@ -174,13 +180,12 @@ const Home = () => {
     {/*Display user's current region:*/}
     <Text style={styles.text}>Current latitude : {region.latitude}</Text>
     <Text style={styles.text}>Current longitude: {region.longitude}</Text>
-    <Button title="Show Events" onPress={showEvents} />
+    <View style={styles.eventButton}>
+      <Button title={eventButtonTitle} onPress={toggleEvents} />
+    </View>
 
     {eventsVisible && (
         <Animated.View style={[styles.animatedContainer, { transform: [{ translateY }] }]}>
-          <View style={styles.closeButtonContainer}>
-            <Button title="←" onPress={hideEvents}/>
-          </View>
           <Events posts={posts} />
         </Animated.View>
       )}
@@ -201,6 +206,14 @@ const styles = StyleSheet.create({
   overlay: {
     transform: [{ rotate: '90deg' }],
   },
+  eventButton: {
+    width: "100%",
+    backgroundColor: "white",
+    padding: 10,
+    position: "absolute",
+    bottom: 0,
+    zIndex: 1,
+  }
 });
  
 const overlayStyles = StyleSheet.create({
