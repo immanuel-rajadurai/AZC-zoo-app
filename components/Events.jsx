@@ -54,12 +54,13 @@ const styles = StyleSheet.create({
   itemContainer: {
     padding: 10,
     backgroundColor: '#fff',
-   shadowColor: '#000',
+    shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 0 },
     elevation: 3,
     width: 250,
+    marginBottom: 30,
   },
   thumbnail: {
     width: '100%',
