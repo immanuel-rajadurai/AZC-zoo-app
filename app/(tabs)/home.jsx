@@ -19,7 +19,6 @@ const Home = () => {
   const { height: screenHeight } = Dimensions.get('window');
   const [eventButtonTitle, setButtonTitle] = useState("Show Events");
 
-
   const onRefresh = async () => {
     setRefreshing(true);
     // await refetch();
@@ -53,7 +52,6 @@ const Home = () => {
       }).start();
     }
   };
-
 
   // const zooRegion = {
   //   latitude: 48.7460,
@@ -156,7 +154,6 @@ const Home = () => {
             />
           </View>
         </Marker>
-
 
         <Marker
           coordinate={{

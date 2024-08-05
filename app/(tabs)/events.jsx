@@ -1,12 +1,12 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const Challenge = () => {
+const Events = () => {
   return (
     <View>
-      <Text>Challenge page</Text>
+      <Text>Events page</Text>
     </View>
   )
 }
 
-export default Challenge
+export default Events
