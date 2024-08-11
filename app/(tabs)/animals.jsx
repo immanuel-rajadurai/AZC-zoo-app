@@ -1,6 +1,45 @@
 import { View, Text,FlatList, Image, StyleSheet } from 'react-native'
 import React from 'react'
-import animalData from '../../data/animals.json';
+
+
+const animalData = [
+  {
+    "name": "Lion",
+    "image": "lion"
+  },
+  {
+    "name": "Giraffe",
+    "image": "giraffe"
+  },
+  {
+    "name": "Tiger",
+    "image": "tiger"
+  },
+  {
+    "name": "Monkey",
+    "image": "monkey"
+  },
+  {
+    "name": "Panda",
+    "image": "panda"
+  },
+  {
+    "name": "Camel",
+    "image": "camel"
+  },
+  {
+    "name": "Hawk",
+    "image": "hawk"
+  },
+  {
+    "name": "Hippo",
+    "image": "hippo"
+  },
+  {
+    "name": "Llama",
+    "image": "llama"
+  }
+];
 
 const images = {
   lion: require('../../assets/amimalicons/lion.png'),
@@ -26,6 +65,7 @@ const AnimalItem = ({ animal }) => {
     </View>
   );
 };
+
 const Animals = () => {
   return (
     <View style={styles.container}>
