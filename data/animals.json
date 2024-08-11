@@ -1,0 +1,39 @@
+[
+    {
+      "name": "Lion",
+      "image": "lion"
+    },
+    {
+      "name": "Giraffe",
+      "image": "giraffe"
+    },
+    {
+      "name": "Tiger",
+      "image": "tiger"
+    },
+    {
+      "name": "Monkey",
+      "image": "monkey"
+    },
+    {
+      "name": "Panda",
+      "image": "panda"
+    },
+    {
+      "name": "Camel",
+      "image": "camel"
+    },
+    {
+      "name": "Hawk",
+      "image": "hawk"
+    },
+    {
+      "name": "Hippo",
+      "image": "hippo"
+    },
+    {
+      "name": "Llama",
+      "image": "llama"
+    }
+  ]
+  
