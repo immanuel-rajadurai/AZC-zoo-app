@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity, Modal, ScrollView } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Modal, ScrollView, Animated, Dimensions, Button } from 'react-native';
 import React, { useState, useRef, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MapView, { Marker, Overlay } from 'react-native-maps';
@@ -6,6 +6,7 @@ import * as Location from 'expo-location';
 import { useRouter } from 'expo-router'; // Import useRouter
 import CustomButton from '../../components/CustomButton';
 import { mapstyle1 } from "../../styling/mapstyles";
+import Events from "../../components/Events"
 
 const Home = () => {
   const mapRef = useRef(null);
@@ -13,6 +14,17 @@ const Home = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const router = useRouter(); // Initialize useRouter
+  const [refreshing, setRefreshing] = useState(false)
+  const [eventsVisible, setEventsVisible] = useState(false);
+  const translateY = useRef(new Animated.Value(200)).current;
+  const { height: screenHeight } = Dimensions.get('window');
+  const [eventButtonTitle, setButtonTitle] = useState("Show Events");
+  
+  const onRefresh = async () => {
+    setRefreshing(true);
+    // await refetch();
+    setRefreshing(false);
+  }
 
   const animals = [
     {
@@ -38,12 +50,36 @@ const Home = () => {
     },
   ];
 
+
   const [region, setRegion] = useState({
     latitude: 48.7460,
     longitude: 2.66315,
     latitudeDelta: 0.01,
     longitudeDelta: 0.01,
   });
+
+
+  const toggleEvents = () => {
+    if (eventsVisible) {
+      Animated.timing(translateY, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }).start(() => {
+        setEventsVisible(false);
+        setButtonTitle("Show Events");
+      });
+    } else {
+      setEventsVisible(true);
+      setButtonTitle("Hide Events");
+      Animated.timing(translateY, {
+        toValue: -10,
+        duration: 5,
+        useNativeDriver: true,
+      }).start();
+    }
+  };
+
 
   const zooRegion = {
     latitude: 51.535121,
@@ -175,6 +211,22 @@ const Home = () => {
       </Modal>
     </View>
   );
+    <CustomButton handlePress={() => goToZoo()} title="Go to Zoo" />
+    {/* <TouchableOpacity onPress={animateMap}><Text>Start</Text></TouchableOpacity> */}
+    {/*Display user's current region:*/}
+    <Text style={styles.text}>Current latitude : {region.latitude}</Text>
+    <Text style={styles.text}>Current longitude: {region.longitude}</Text>
+    <View style={styles.eventButton}>
+      <Button title={eventButtonTitle} onPress={toggleEvents} />
+    </View>
+
+    {eventsVisible && (
+        <Animated.View style={[styles.animatedContainer, { transform: [{ translateY }] }]}>
+          <Events posts={posts} />
+        </Animated.View>
+      )}
+  </View>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -194,6 +246,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     margin: 10,
   },
+  eventButton: {
+    width: "100%",
+    backgroundColor: "white",
+    padding: 10,
+    position: "absolute",
+    bottom: 0,
+    zIndex: 1,
+  }
 });
 
 const modalStyles = StyleSheet.create({

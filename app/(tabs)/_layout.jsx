@@ -1,6 +1,5 @@
 import { View, Text, Image } from 'react-native';
 import { Tabs, Redirect, Stack } from 'expo-router';
-
 import { icons, images } from '../../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -54,30 +53,30 @@ const TabsLayout = () => {
           }}
         />
         <Tabs.Screen
-          name="notifications"
+          name="events"
           options={{
-            title:'Notifications',
+            title:'Events',
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.notification}
+                icon={icons.eye}
                 color={color}
-                name="Notifications"
+                name="Events"
                 focused={focused}
               />
             )
           }}
         />
         <Tabs.Screen
-          name="challenge"
+          name="animals"
           options={{
-            title:'Challenge',
+            title:'Animals',
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
                 icon={icons.binoculars}
                 color={color}
-                name="Challenge"
+                name="Animals"
                 focused={focused}
                 className="w-52 h-72"
               />
