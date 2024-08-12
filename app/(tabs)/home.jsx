@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MapView, { Marker, Overlay } from 'react-native-maps';
 import * as Location from 'expo-location';
+import { useRouter } from 'expo-router'; // Import useRouter
 import CustomButton from '../../components/CustomButton';
 import { mapstyle1 } from "../../styling/mapstyles";
 
@@ -11,6 +12,7 @@ const Home = () => {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
+  const router = useRouter(); // Initialize useRouter
 
   const animals = [
     {
@@ -35,7 +37,6 @@ const Home = () => {
       facts: 'Giraffes are the tallest mammals on Earth.\n\nGiraffes are herbivores!\n\nOther facts'
     },
   ];
-  
 
   const [region, setRegion] = useState({
     latitude: 48.7460,
@@ -50,7 +51,6 @@ const Home = () => {
     latitudeDelta: 0.003,
     longitudeDelta: 0.003,
   };
-
 
   useEffect(() => {
     const getLocation = async () => {
@@ -88,6 +88,15 @@ const Home = () => {
     setModalVisible(true);
   };
 
+  const handleShowMore = () => {
+    setModalVisible(false);
+    router.push({
+        pathname: '/ExhibitDetails',
+        params: { animalName: selectedAnimal.name }
+    });
+};
+  
+
   return (
     <View style={styles.container}>
       <MapView
@@ -109,10 +118,10 @@ const Home = () => {
 
         {animals.map((animal, index) => (
           <Marker
-          key={index}
-          coordinate={animal.coordinates}
-          onPress={() => handleAnimalPress(animal)}
-        >
+            key={index}
+            coordinate={animal.coordinates}
+            onPress={() => handleAnimalPress(animal)}
+          >
             <Image
               source={animal.image}
               style={{ width: 60, height: 60 }}
@@ -153,6 +162,12 @@ const Home = () => {
                 >
                   <Text style={modalStyles.textStyle}>Close</Text>
                 </TouchableOpacity>
+                <TouchableOpacity
+    style={[modalStyles.button, modalStyles.buttonMore]}
+    onPress={handleShowMore}
+>
+    <Text style={modalStyles.textStyle}>Show More</Text>
+</TouchableOpacity>
               </>
             )}
           </View>
@@ -242,6 +257,16 @@ const modalStyles = StyleSheet.create({
   },
   scrollContainer: {
     maxHeight: 100, // Set a max height for the scrollable area
+  },
+  buttonContainer: {
+    paddingTop: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  buttonMore: {
+    
+    backgroundColor: "green",
   },
 });
 
