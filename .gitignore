@@ -225,6 +225,8 @@ sketch
 .expo
 __generated__
 
+.Identifier
+
 ### ReactNative.Android Stack ###
 # Gradle files
 
