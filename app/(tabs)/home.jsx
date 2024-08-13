@@ -151,7 +151,7 @@ const Home = () => {
           bounds={imageBounds}
           bearing={160}
           style={styles.overlay}
-          opacity={0.8}
+          opacity={1}
         />
 
         {animals.map((animal, index) => (
