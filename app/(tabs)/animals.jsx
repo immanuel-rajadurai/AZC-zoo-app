@@ -32,7 +32,7 @@ const animalData = [
     "image": "hawk"
   },
   {
-    "name": "Hippo",
+    "name": "Hippopotamus",
     "image": "hippo"
   },
   {

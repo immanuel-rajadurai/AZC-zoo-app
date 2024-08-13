@@ -116,23 +116,23 @@ const Home = () => {
     mapRef.current.animateToRegion(zooRegion, 500);
   };
 
-  const imageBounds = [
-    [51.533119, -0.159473], // Southwest coordinates
-    [51.536625, -0.151500], // Northeast coordinates
-  ];
-
   const handleAnimalPress = (animal) => {
     setSelectedAnimal(animal);
     setModalVisible(true);
   };
 
   const handleShowMore = () => {
-    setModalVisible(false);
-    router.push({
-        pathname: '/ExhibitDetails',
-        params: { animalName: selectedAnimal.name }
-    });
-};
+      setModalVisible(false);
+      router.push({
+          pathname: '/ExhibitDetails',
+          params: { animalName: selectedAnimal.name }
+      });
+  };
+
+  const imageBounds = [
+    [51.53099938615087, -0.16020707102841678], //soutwest
+    [51.53763097724814, -0.1493777865209378], //northeast
+  ];
   
   return (
     <View style={styles.container}>
@@ -145,12 +145,13 @@ const Home = () => {
         onRegionChangeComplete={(region) => setRegion(region)}
         provider={MapView.PROVIDER_GOOGLE}
       >
+
         <Overlay  
-          image={require("../../assets/mapoverlays/londonzoo.png")}
+          image={require("../../assets/mapoverlays/londonzoo2.png")}
           bounds={imageBounds}
-          bearing={0.6}
+          bearing={160}
           style={styles.overlay}
-          opacity={0.0}
+          opacity={0.8}
         />
 
         {animals.map((animal, index) => (
