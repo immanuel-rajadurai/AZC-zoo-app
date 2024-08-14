@@ -7,9 +7,9 @@ import { images } from '../constants/';
 import CustomButton from '../components/CustomButton';
 import { useGlobalContext } from '../context/GlobalProvider';
 
-import Amplify from 'aws-amplify';
-import awsconfig from './aws-exports'; // Adjust the path as necessary
-Amplify.configure(awsconfig);
+import { Amplify } from 'aws-amplify';
+import amplifyconfig from '../src/amplifyconfiguration.json';
+Amplify.configure(amplifyconfig);
 
 //command to start up the app
 // npx expo start --tunnel
@@ -35,8 +35,6 @@ export default function App() {
                  <Text className="text-3xl text-green-500 font-bold text-center">
                    Welcome to the zoo
                  </Text>
-
-              
                </View>
 
                <Text className="text-sm font-pregular text-green-600 mt-7 text-center">

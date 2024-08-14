@@ -8,8 +8,11 @@ import CustomButton from '../../components/CustomButton';
 import { mapstyle1 } from "../../styling/mapstyles";
 import Events from "../../components/Events"
 
-import { API, graphqlOperation } from 'aws-amplify';
+// import { API, graphqlOperation } from 'aws-amplify';
+import { generateClient } from 'aws-amplify/api';
 import { listEvents } from '../../src/graphql/queries';
+
+const client = generateClient();
 
 const Home = () => {
   const mapRef = useRef(null);
@@ -96,30 +99,36 @@ const Home = () => {
   };
 
   useEffect(() => {
-    const getLocation = async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        console.log("Permission to access location was denied");
-        return;
-      }
+    // const getLocation = async () => {
+    //   let { status } = await Location.requestForegroundPermissionsAsync();
+    //   if (status !== "granted") {
+    //     console.log("Permission to access location was denied");
+    //     return;
+    //   }
 
-      let location = await Location.getCurrentPositionAsync({});
-      setCurrentLocation(location.coords);
+    //   let location = await Location.getCurrentPositionAsync({});
+    //   setCurrentLocation(location.coords);
 
-      setRegion({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-        latitudeDelta: 0.005,
-        longitudeDelta: 0.005,
-      });
-    };
+    //   setRegion({
+    //     latitude: location.coords.latitude,
+    //     longitude: location.coords.longitude,
+    //     latitudeDelta: 0.005,
+    //     longitudeDelta: 0.005,
+    //   });
+    // };
 
     const fetchEvents = async () => { 
 
       try {
-        const eventsResult = await API.graphql(
-          graphqlOperation(listEvents)
-        )
+        // const eventsResult = await API.graphql(
+        //   graphqlOperation(listEvents)
+        // )
+
+        const eventsResult = await client.graphql(
+          {query: listEvents}
+        );
+
+        console.log(eventsResult);
 
         setEvents(eventsResult.data.listEvents.items)
       } catch (error) {
@@ -127,7 +136,7 @@ const Home = () => {
       }
     }
 
-    getLocation();
+    // getLocation();
     fetchEvents();
   }, []);
 
