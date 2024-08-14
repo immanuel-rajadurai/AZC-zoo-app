@@ -7,6 +7,10 @@ import { images } from '../constants/';
 import CustomButton from '../components/CustomButton';
 import { useGlobalContext } from '../context/GlobalProvider';
 
+import Amplify from 'aws-amplify';
+import awsconfig from './aws-exports'; // Adjust the path as necessary
+Amplify.configure(awsconfig);
+
 //command to start up the app
 // npx expo start --tunnel
 //com.jsm.app_v1

@@ -8,6 +8,9 @@ import CustomButton from '../../components/CustomButton';
 import { mapstyle1 } from "../../styling/mapstyles";
 import Events from "../../components/Events"
 
+import { API, graphqlOperation } from 'aws-amplify';
+import { listEvents } from '../../src/graphql/queries';
+
 const Home = () => {
   const mapRef = useRef(null);
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -60,6 +63,8 @@ const Home = () => {
     longitudeDelta: 0.01,
   });
 
+  const [events, setEvents] = useState([]);
+
 
   const toggleEvents = () => {
     if (eventsVisible) {
@@ -109,11 +114,27 @@ const Home = () => {
       });
     };
 
+    const fetchEvents = async () => { 
+
+      try {
+        const eventsResult = await API.graphql(
+          graphqlOperation(listEvents)
+        )
+
+        setEvents(eventsResult.data.listEvents.items)
+      } catch (error) {
+        console.log('error on fetching events', error)
+      }
+    }
+
     getLocation();
+    fetchEvents();
   }, []);
 
   const goToZoo = () => {
     mapRef.current.animateToRegion(zooRegion, 500);
+
+    console.log(events);
   };
 
   const handleAnimalPress = (animal) => {
