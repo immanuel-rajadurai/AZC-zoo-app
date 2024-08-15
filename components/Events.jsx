@@ -28,9 +28,9 @@ const Events = ({ posts }) => {
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
           <View style={styles.itemContainer}>
-            <Image source={{ uri: item.thumbnail }} style={styles.thumbnail}  />
-            <Text style={styles.title}>{item.title}</Text>
-            <Text style={styles.prompt}>{item.prompt}</Text>
+            <Image source={{ uri: item.image }} style={styles.thumbnail}  />
+            <Text style={styles.title}>{item.name}</Text>
+            <Text style={styles.prompt}>{item.description}</Text>
           </View>
         )}
         onViewableItemsChanged={viewableItemsChanged}

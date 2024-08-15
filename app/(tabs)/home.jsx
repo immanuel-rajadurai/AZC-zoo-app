@@ -7,12 +7,41 @@ import { useRouter } from 'expo-router'; // Import useRouter
 import CustomButton from '../../components/CustomButton';
 import { mapstyle1 } from "../../styling/mapstyles";
 import Events from "../../components/Events"
+import animals from "../../data/animals";
 
 // import { API, graphqlOperation } from 'aws-amplify';
 import { generateClient } from 'aws-amplify/api';
 import { listEvents } from '../../src/graphql/queries';
 
 const client = generateClient();
+
+
+// const animals = [
+//   {
+//     key: "1",
+//     name: 'Hippopotamus',
+//     species: 'Hippopotamus amphibius',
+//     coordinates: { latitude: 51.535121, longitude: -0.154131 },
+//     image: require("../../assets/amimalicons/hippo.png"),
+//     facts: 'Hippos are the third largest  land mammal after elephants and rhinos.\n\nHippos are found in Savannahs!\n\nOther Facts'
+//   },
+//   {
+//     key: "2",
+//     name: 'Tiger',
+//     species: 'Panthera tigris',
+//     coordinates: { latitude: 51.535121, longitude: -0.1547 },
+//     image: require("../../assets/amimalicons/tiger.png"),
+//     facts: 'Tigers are the largest wild cats in the world.\n\nTigers are apex predators!\n\nOther facts\n\nOther facts\n\nOther facts\n\nOther facts\n\nOther facts\n\nOther facts\n\nOther facts'
+//   },
+//   {
+//     key:"3",
+//     name: 'Giraffe',
+//     species: 'Giraffa camelopardalis',
+//     coordinates: { latitude: 51.5355, longitude: -0.155 },
+//     image: require("../../assets/amimalicons/giraffe.png"),
+//     facts: 'Giraffes are the tallest mammals on Earth.\n\nGiraffes are herbivores!\n\nOther facts'
+//   },
+// ];
 
 const Home = () => {
   const mapRef = useRef(null);
@@ -32,33 +61,7 @@ const Home = () => {
     setRefreshing(false);
   }
 
-  var posts = [{"$collectionId": "668e5083002b3f534cf3", "$createdAt": "2024-07-12T10:17:03.558+00:00", "$databaseId": "668e503d0036733ee658", "$id": "669102a0003c95af39aa", "$permissions": [], "$tenant": "165998", "$updatedAt": "2024-07-12T10:17:03.558+00:00", "prompt": "Come and see our eagles as they fly in the sky", "thumbnail": "https://wildlife.foothillsclusters.com/wp-content/uploads/2023/05/230518-03.jpg", "title": "Eagle Show", "users": {"$collectionId": "668e5057003aed7c3b16", "$createdAt": "2024-07-10T14:46:56.037+00:00", "$databaseId": "668e503d0036733ee658", "$id": "668e9ee100305aae9daf", "$permissions": [Array], "$tenant": "165998", "$updatedAt": "2024-07-10T14:46:56.037+00:00", "accountId": "668e9edf001c2f7b6117", "avatar": "https://cloud.appwrite.io/v1/avatars/initials?name=immraj&project=668e4f04003bfae2a718", "email": "immanuelraj154@gmail.com", "username": "immraj"}, "video": "https://player.vimeo.com/video/949581999?h=4672125b31"}, {"$collectionId": "668e5083002b3f534cf3", "$createdAt": "2024-07-12T10:17:47.089+00:00", "$databaseId": "668e503d0036733ee658", "$id": "669102cc0021f55940c3", "$permissions": [], "$tenant": "165998", "$updatedAt": "2024-07-12T10:17:47.089+00:00", "prompt": "Help us feed our lovable animals", "thumbnail": "https://cms.whipsnadezoo.org/sites/default/files/styles/responsive/public/1024/1024/0/2022-12/Meet-the-Animals-24-Photo-by-Justin-Doherty.jpg.webp", "title": "Animal feeding", "users": {"$collectionId": "668e5057003aed7c3b16", "$createdAt": "2024-07-10T14:46:56.037+00:00", "$databaseId": "668e503d0036733ee658", "$id": "668e9ee100305aae9daf", "$permissions": [Array], "$tenant": "165998", "$updatedAt": "2024-07-10T14:46:56.037+00:00", "accountId": "668e9edf001c2f7b6117", "avatar": "https://cloud.appwrite.io/v1/avatars/initials?name=immraj&project=668e4f04003bfae2a718", "email": "immanuelraj154@gmail.com", "username": "immraj"}, "video": "https://player.vimeo.com/video/949579770?h=897cd5e781"}, {"$collectionId": "668e5083002b3f534cf3", "$createdAt": "2024-07-12T10:18:22.338+00:00", "$databaseId": "668e503d0036733ee658", "$id": "669102ef003c49d4c7bd", "$permissions": [], "$tenant": "165998", "$updatedAt": "2024-07-12T10:18:22.338+00:00", "prompt": "Come and learn about the fascinating world of Tigers, enjoy a free Tiger snack the TigerTaste Cafe", "thumbnail": "https://cdn.britannica.com/83/195983-138-66807699/numbers-tiger-populations.jpg?w=800&h=450&c=crop", "title": "Tiger festival", "users": {"$collectionId": "668e5057003aed7c3b16", "$createdAt": "2024-07-10T14:46:56.037+00:00", "$databaseId": "668e503d0036733ee658", "$id": "668e9ee100305aae9daf", "$permissions": [Array], "$tenant": "165998", "$updatedAt": "2024-07-10T14:46:56.037+00:00", "accountId": "668e9edf001c2f7b6117", "avatar": "https://cloud.appwrite.io/v1/avatars/initials?name=immraj&project=668e4f04003bfae2a718", "email": "immanuelraj154@gmail.com", "username": "immraj"}, "video": "https://player.vimeo.com/video/949582778?h=d60220d68d"}]
-
-  const animals = [
-    {
-      name: 'Hippopotamus',
-      species: 'Hippopotamus amphibius',
-      coordinates: { latitude: 51.535121, longitude: -0.154131 },
-      image: require("../../assets/amimalicons/hippo.png"),
-      facts: 'Hippos are the third largest land mammal after elephants and rhinos.\n\nHippos are found in Savannahs!\n\nOther Facts'
-    },
-    {
-      name: 'Tiger',
-      species: 'Panthera tigris',
-      coordinates: { latitude: 51.535121, longitude: -0.1547 },
-      image: require("../../assets/amimalicons/tiger.png"),
-      facts: 'Tigers are the largest wild cats in the world.\n\nTigers are apex predators!\n\nOther facts\n\nOther facts\n\nOther facts\n\nOther facts\n\nOther facts\n\nOther facts\n\nOther facts'
-    },
-    {
-      name: 'Giraffe',
-      species: 'Giraffa camelopardalis',
-      coordinates: { latitude: 51.5355, longitude: -0.155 },
-      image: require("../../assets/amimalicons/giraffe.png"),
-      facts: 'Giraffes are the tallest mammals on Earth.\n\nGiraffes are herbivores!\n\nOther facts'
-    },
-  ];
-
-
+ 
   const [region, setRegion] = useState({
     latitude: 48.7460,
     longitude: 2.66315,
@@ -99,31 +102,28 @@ const Home = () => {
   };
 
   useEffect(() => {
-    // const getLocation = async () => {
-    //   let { status } = await Location.requestForegroundPermissionsAsync();
-    //   if (status !== "granted") {
-    //     console.log("Permission to access location was denied");
-    //     return;
-    //   }
 
-    //   let location = await Location.getCurrentPositionAsync({});
-    //   setCurrentLocation(location.coords);
+    const getLocation = async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+        return;
+      }
 
-    //   setRegion({
-    //     latitude: location.coords.latitude,
-    //     longitude: location.coords.longitude,
-    //     latitudeDelta: 0.005,
-    //     longitudeDelta: 0.005,
-    //   });
-    // };
+      let location = await Location.getCurrentPositionAsync({});
+      setCurrentLocation(location.coords);
+
+      setRegion({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.005,
+        longitudeDelta: 0.005,
+      });
+    };
 
     const fetchEvents = async () => { 
 
       try {
-        // const eventsResult = await API.graphql(
-        //   graphqlOperation(listEvents)
-        // )
-
         const eventsResult = await client.graphql(
           {query: listEvents}
         );
@@ -136,7 +136,7 @@ const Home = () => {
       }
     }
 
-    // getLocation();
+    getLocation();
     fetchEvents();
   }, []);
 
@@ -251,7 +251,7 @@ const Home = () => {
 
       {eventsVisible && (
         <Animated.View style={[styles.animatedContainer, { transform: [{ translateY }] }]}>
-          <Events posts={posts} />
+          <Events posts={events} />
         </Animated.View>
       )}
 
