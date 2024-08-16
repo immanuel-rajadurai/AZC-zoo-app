@@ -70,7 +70,7 @@ const TabsLayout = () => (
         headerShown: false,
         tabBarIcon: ({ color, focused }) => (
           <TabIcon
-            icon={icons.eye} // Ensure the path is correct
+            icon={icons.eye}  // change this to a camera icon
             color={color}
             name="Camera"
             focused = {focused}
