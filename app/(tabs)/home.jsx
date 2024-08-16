@@ -15,8 +15,6 @@ import { listEvents } from '../../src/graphql/queries';
 
 const client = generateClient();
 
-
-
 const Home = () => {
   const mapRef = useRef(null);
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -34,7 +32,6 @@ const Home = () => {
     // await refetch();
     setRefreshing(false);
   }
-
  
   const [region, setRegion] = useState({
     latitude: 48.7460,
@@ -66,7 +63,6 @@ const Home = () => {
       }).start();
     }
   };
-
 
   const zooRegion = {
     latitude: 51.535121,
