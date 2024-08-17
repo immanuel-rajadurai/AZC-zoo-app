@@ -1,25 +1,7 @@
-import { View, Text,FlatList, Image, StyleSheet } from 'react-native'
-import React from 'react'
+import { View, Text, FlatList, Image, StyleSheet } from 'react-native';
+import React from 'react';
+import {placesData, images} from '../../data/places';
 
-
-const placesData = [
-  {
-    "name": "Eagle Restaurant",
-    "image": "place"
-  },
-  {
-    "name": "Animal Exhibit Name",
-    "image": "place"
-  },
-  {
-    "name": "TigerTaste Café",
-    "image": "place"
-  },
-];
-
-const images = {
-  place: require('../../assets/icons/eye.png'),
-};
 
 const PlaceItem = ({ place }) => {
   const placeImage = images[place.image]; 
