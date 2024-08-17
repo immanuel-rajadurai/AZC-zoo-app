@@ -41,8 +41,7 @@ const Home = () => {
   });
 
   const [events, setEvents] = useState([]);
-
-
+  
   const toggleEvents = () => {
     if (eventsVisible) {
       Animated.timing(translateY, {
