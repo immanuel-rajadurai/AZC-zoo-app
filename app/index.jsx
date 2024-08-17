@@ -7,9 +7,9 @@ import { images } from '../constants/';
 import CustomButton from '../components/CustomButton';
 import { useGlobalContext } from '../context/GlobalProvider';
 
-import { Amplify } from 'aws-amplify';
-import amplifyconfig from '../src/amplifyconfiguration.json';
-Amplify.configure(amplifyconfig);
+// import { Amplify } from 'aws-amplify';
+// import amplifyconfig from '../src/amplifyconfiguration.json';
+// Amplify.configure(amplifyconfig);
 
 //command to start up the app
 // npx expo start --tunnel

@@ -8,12 +8,12 @@ import CustomButton from '../../components/CustomButton';
 import { mapstyle1 } from "../../styling/mapstyles";
 import Events from "../../components/Events"
 import animals from "../../data/animals";
+import eventsDummy from "../../data/events";
 
-// import { API, graphqlOperation } from 'aws-amplify';
-import { generateClient } from 'aws-amplify/api';
-import { listEvents } from '../../src/graphql/queries';
+// import { generateClient } from 'aws-amplify/api';
+// import { listEvents } from '../../src/graphql/queries';
 
-const client = generateClient();
+// const client = generateClient();
 
 const Home = () => {
   const mapRef = useRef(null);
@@ -90,23 +90,25 @@ const Home = () => {
       });
     };
 
-    const fetchEvents = async () => { 
+    // const fetchEvents = async () => { 
 
-      try {
-        const eventsResult = await client.graphql(
-          {query: listEvents}
-        );
+    //   try {
+    //     const eventsResult = await client.graphql(
+    //       {query: listEvents}
+    //     );
 
-        console.log(eventsResult);
+    //     console.log(eventsResult);
 
-        setEvents(eventsResult.data.listEvents.items)
-      } catch (error) {
-        console.log('error on fetching events', error)
-      }
-    }
+    //     setEvents(eventsResult.data.listEvents.items)
+    //   } catch (error) {
+    //     console.log('error on fetching events', error)
+    //   }
+    // }
+
+    setEvents(eventsDummy)
 
     getLocation();
-    fetchEvents();
+    // fetchEvents();
   }, []);
 
   const goToZoo = () => {

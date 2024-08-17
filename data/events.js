@@ -1,4 +1,4 @@
-var events1 = [{
+var eventsDummy = [{
     "id":"1",
     "name": "Eagle Show",
     "description": "Come and see our eagles as they fly in the sky",
@@ -19,3 +19,5 @@ var events1 = [{
     "description": "Come and learn about the fascinating world of Tigers, enjoy a free Tiger snack the TigerTaste Cafe",
     "image": "https://cdn.britannica.com/83/195983-138-66807699/numbers-tiger-populations.jpg?w=800&h=450&c=crop", 
   }]
+
+export default eventsDummy;
