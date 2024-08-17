@@ -1,4 +1,3 @@
-
 const placesData = [
     {
       "name": "Eagle Restaurant",
@@ -18,5 +17,5 @@ const images = {
     place: require('../assets/icons/eye.png'),
 };
 
-export default placesData;
-export {images};
+// export default placesData;
+export {placesData, images};

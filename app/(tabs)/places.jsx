@@ -1,10 +1,7 @@
-import { View, Text,FlatList, Image, StyleSheet } from 'react-native';
+import { View, Text, FlatList, Image, StyleSheet } from 'react-native';
 import React from 'react';
-import {placesData} from '../../data/places';
+import {placesData, images} from '../../data/places';
 
-const images = {
-  place: require('../../assets/icons/eye.png'),
-};
 
 const PlaceItem = ({ place }) => {
   const placeImage = images[place.image]; 
