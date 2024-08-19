@@ -19,4 +19,4 @@ var eventsDummy = [{
     "description": "Come and learn about the fascinating world of Tigers, enjoy a free Tiger snack the TigerTaste Cafe",
     "image": "https://cdn.britannica.com/83/195983-138-66807699/numbers-tiger-populations.jpg?w=800&h=450&c=crop", 
   }];
-export d;efault eventsDummy;
+export default eventsDummy;
