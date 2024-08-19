@@ -1,60 +1,9 @@
 import { View, Text,FlatList, Image, StyleSheet } from 'react-native'
 import React from 'react'
-
-
-const animalData = [
-  {
-    "name": "Lion",
-    "image": "lion"
-  },
-  {
-    "name": "Giraffe",
-    "image": "giraffe"
-  },
-  {
-    "name": "Tiger",
-    "image": "tiger"
-  },
-  {
-    "name": "Monkey",
-    "image": "monkey"
-  },
-  {
-    "name": "Panda",
-    "image": "panda"
-  },
-  {
-    "name": "Camel",
-    "image": "camel"
-  },
-  {
-    "name": "Hawk",
-    "image": "hawk"
-  },
-  {
-    "name": "Hippopotamus",
-    "image": "hippo"
-  },
-  {
-    "name": "Llama",
-    "image": "llama"
-  }
-];
-
-const images = {
-  lion: require('../../assets/amimalicons/lion.png'),
-  giraffe: require('../../assets/amimalicons/giraffe.png'),
-  tiger: require('../../assets/amimalicons/tiger.png'),
-  monkey: require('../../assets/amimalicons/monkey.png'),
-  panda: require('../../assets/amimalicons/panda.png'),
-  camel: require('../../assets/amimalicons/camel.png'),
-  hawk: require('../../assets/amimalicons/hawk.png'),
-  hippo: require('../../assets/amimalicons/hippo.png'),
-  llama: require('../../assets/amimalicons/llama.png'),
-};
+import {animalImages, animalData} from '../../data/animals';
 
 const AnimalItem = ({ animal }) => {
-  const animalImage = images[animal.image]; 
+  const animalImage = animalImages[animal.image]; 
 
   return (
     <View style={styles.animal}>
