@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { Animated, FlatList, Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import eventsDummy from '../data/events';
+import { FlatList, Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import eventsData from '../data/events';
 
 const Events = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const translateY = new Animated.Value(200);
 
   const openEventModal = (event) => {
     setSelectedEvent(event);
@@ -17,17 +16,10 @@ const Events = () => {
     setSelectedEvent(null);
   };
 
-  const viewableItemsChanged = ({ viewableItems }) => {
-    if (viewableItems.length > 0) {
-      setActiveItem(viewableItems[0].key);
-    }
-  };
-
   return (
     <View>
       <FlatList
-        overScrollMode="never"
-        data={eventsDummy} // Use passed posts or dummy data
+        data={eventsData}
         horizontal
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
@@ -39,11 +31,6 @@ const Events = () => {
             </View>
           </TouchableOpacity>
         )}
-        onViewableItemsChanged={viewableItemsChanged}
-        viewabilityConfig={{
-          itemVisiblePercentThreshold: 70,
-        }}
-        contentOffset={{ x: 170 }}
       />
 
       {selectedEvent && (
@@ -85,11 +72,10 @@ const styles = StyleSheet.create({
     elevation: 3,
     width: 250,
     marginBottom: 30,
-    zIndex: 1,
   },
   thumbnail: {
     width: '100%',
-    height: '50%',
+    height: 120,
     borderRadius: 5,
   },
   title: {
@@ -109,7 +95,6 @@ const modalStyles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22,
   },
   modalView: {
     margin: 20,
