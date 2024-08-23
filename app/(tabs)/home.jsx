@@ -1,14 +1,13 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity, Modal, ScrollView, Animated, Dimensions, Button } from 'react-native';
-import React, { useState, useRef, useEffect } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import MapView, { Marker, Overlay } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { useRouter } from 'expo-router'; // Import useRouter
+import React, { useEffect, useRef, useState } from 'react';
+import { Animated, Button, Dimensions, Image, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import MapView, { Marker, Overlay } from 'react-native-maps';
 import CustomButton from '../../components/CustomButton';
-import { mapstyle1 } from "../../styling/mapstyles";
-import Events from "../../components/Events"
+import Events from "../../components/Events";
 import animals from "../../data/animals";
 import eventsDummy from "../../data/events";
+import { mapstyle1 } from "../../styling/mapstyles";
 
 // import { generateClient } from 'aws-amplify/api';
 // import { listEvents } from '../../src/graphql/queries';
@@ -26,6 +25,7 @@ const Home = () => {
   const translateY = useRef(new Animated.Value(200)).current;
   const { height: screenHeight } = Dimensions.get('window');
   const [eventButtonTitle, setButtonTitle] = useState("Show Events");
+  const [currentTime, setCurrentTime] = useState('');
   
   const onRefresh = async () => {
     setRefreshing(true);
@@ -71,7 +71,6 @@ const Home = () => {
   };
 
   useEffect(() => {
-
     const getLocation = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
@@ -90,25 +89,18 @@ const Home = () => {
       });
     };
 
-    // const fetchEvents = async () => { 
-
-    //   try {
-    //     const eventsResult = await client.graphql(
-    //       {query: listEvents}
-    //     );
-
-    //     console.log(eventsResult);
-
-    //     setEvents(eventsResult.data.listEvents.items)
-    //   } catch (error) {
-    //     console.log('error on fetching events', error)
-    //   }
-    // }
-
-    setEvents(eventsDummy)
+    const getCurrentTime = () => {
+      const currentTime = new Date();
+      const formattedTime = currentTime.toLocaleTimeString(); 
+      setCurrentTime(formattedTime);
+      console.log("Current Time:", formattedTime);
+    };
 
     getLocation();
-    // fetchEvents();
+    getCurrentTime();
+
+    setEvents(eventsDummy);
+
   }, []);
 
   const goToZoo = () => {
