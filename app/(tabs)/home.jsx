@@ -20,12 +20,14 @@ const Home = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const router = useRouter(); // Initialize useRouter
-  const [refreshing, setRefreshing] = useState(false)
+  const [refreshing, setRefreshing] = useState(false);
   const [eventsVisible, setEventsVisible] = useState(false);
   const translateY = useRef(new Animated.Value(200)).current;
   const { height: screenHeight } = Dimensions.get('window');
   const [eventButtonTitle, setButtonTitle] = useState("Show Events");
   const [currentTime, setCurrentTime] = useState('');
+  const intervalRef = useRef(null); 
+  const [isTimeLogged, setIsTimeLogged] = useState(false);
   
   const onRefresh = async () => {
     setRefreshing(true);
@@ -90,14 +92,30 @@ const Home = () => {
     };
 
     const getCurrentTime = () => {
-      const currentTime = new Date();
-      const formattedTime = currentTime.toLocaleTimeString(); 
+      const now = new Date();
+      const formattedTime = now.toLocaleTimeString(); 
       setCurrentTime(formattedTime);
       console.log("Current Time:", formattedTime);
     };
 
+    const startTimer = () => {
+      intervalRef.current = setInterval(() => {
+        setIsTimeLogged(false); // Allow time logging after 2 minutes
+        clearInterval(intervalRef.current); 
+      }, 2 * 60 * 1000); // 2 minutes interval
+    };
+
+    const handleVisit = () => {
+      if (!isTimeLogged) {
+        getCurrentTime();
+        setIsTimeLogged(true)
+        startTimer(); 
+      }
+    };
+
     getLocation();
     getCurrentTime();
+    handleVisit();
 
     setEvents(eventsDummy);
 
