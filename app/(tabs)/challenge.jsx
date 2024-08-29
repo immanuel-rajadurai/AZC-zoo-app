@@ -4,50 +4,85 @@ import { StyleSheet, View, ScrollView, Text, Image } from 'react-native';
 const snappedAnimals = [
     {
       "name": "llama",
-      "path": "../../assets/amimalicons/llama.png"
+      "path": require('../../assets/amimalicons/llama.png')
     },
     {
       "name": "monkey",
-      "path": "../../assets/amimalicons/monkey.png"
+      "path": require('../../assets/amimalicons/monkey.png')
     },
     {
       "name": "panda",
-      "path": "../../assets/amimalicons/panda.png"
+      "path": require('../../assets/amimalicons/panda.png')
     },
     {
       "name": "tiger",
-      "path": "../../assets/amimalicons/tiger.png"
+      "path": require('../../assets/amimalicons/tiger.png')
     }
 ];
+
+const unsnappedAnimals = [
+  {
+    "name": "Camel",
+    "path": require('../../assets/amimalicons/camel.png')
+  },
+  {
+    "name": "Giraffe",
+    "path": require('../../assets/amimalicons/giraffe.png')
+  },
+  {
+    "name": "Hawk",
+    "path": require('../../assets/amimalicons/hawk.png')
+  },
+  {
+    "name": "Hippo",
+    "path": require('../../assets/amimalicons/hippo.png')
+  },
+  {
+    "name": "Lion",
+    "path": require('../../assets/amimalicons/lion.png')
+  }
+];
+
 const ImageDisplay = ({ imagePath, imageName }) => {
     return (
-      <View style={styles.container}>
-        <Text>{imageName}</Text>
+      <View style={styles.imageContainer}>
         <Image 
-          source={imagePath} // Not allowed, will cause an error
-          style={{ width: 200, height: 200 }} 
+          source={imagePath}
+          style={styles.image} 
         />
+        <Text style={styles.text}>{imageName}</Text>
       </View>
     );
 };
 
 const challengeScreen = () => {
-  const localImagePath = '../../assets/amimalicons/lion.png'; // Example path stored as a string
-  const localImage = require('../../assets/amimalicons/lion.png'); // Static require
   return (
     <View style={styles.container}>
       <View style={styles.section}>
         <Text style={styles.title}>Animals To Snap</Text>
         <ScrollView style={styles.scrollView}>
-        <ImageDisplay imagePath={localImage}/>
-        </ScrollView>
+          {unsnappedAnimals.map((animal, index) => (
+            <ImageDisplay 
+              key={index} 
+              imagePath={animal.path} 
+              imageName={animal.name} 
+            />
+          ))}
+        </ScrollView> 
       </View>
-
- 
-      <View style={styles.section2}>
+      
+      <View style={styles.divider}></View>
+      
+      <View style={styles.section}>
         <Text style={styles.title}>Snapped Animals</Text>
-        <ScrollView style={styles.scrollView2}>
-
+        <ScrollView style={styles.scrollView}>
+          {snappedAnimals.map((animal, index) => (
+            <ImageDisplay 
+              key={index} 
+              imagePath={animal.path}
+              imageName={animal.name} 
+            />
+          ))}
         </ScrollView>
       </View>
     </View>
@@ -62,23 +97,13 @@ const styles = StyleSheet.create({
   },
   section: {
     flex: 1,
-    padding: 10,
-  },
-  section2: {
-    flex: 1,
-    padding: 10,
-    backgroundColor: "#fafafa",
   },
   scrollView: {
     backgroundColor: 'white',
     marginTop: 10,
   },
-  scrollView2: {
-    backgroundColor: '#fafafa',
-    marginTop: 10,
-  },
   title: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
     padding: 10,
@@ -87,12 +112,22 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 18,
     marginBottom: 10,
+    textAlign: 'center',
+  },
+  imageContainer: {
+    alignItems: 'center',
+    marginBottom: 10,
   },
   image: {
-    width: 200,
-    height: 200,
-    marginVertical: 20,
-    alignSelf: 'center',
+    width: 140,
+    height: 140,
+    borderRadius: 10,
+    resizeMode: 'contain',
+  },
+  divider: {
+    width: 3,
+    backgroundColor: '#000000',
+    marginVertical: 10,
   },
 });
 
