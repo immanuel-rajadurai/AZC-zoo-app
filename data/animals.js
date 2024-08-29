@@ -29,39 +29,120 @@ const animals = [
   const animalData = [
     {
       "name": "Lion",
-      "image": "lion"
+      "image": "lion",
+      "species": "Panthera leo",
+      "diet": "Carnivorous (Buffaloes, leopards, baby elephants)",
+      "length": "0.00m",
+      "height": "0.00m",
+      "weightM": "0Kg",
+      "weightF": "0Kg",
+      "habitat": "Earth",
+      "conservationStatus": "Endangered",
+      "funFacts": ["Its an animal", "Its alive", "Its in this zoo", "", "", ""]
     },
     {
       "name": "Giraffe",
-      "image": "giraffe"
+      "image": "giraffe",
+      "species": "Giraffa camelopardalis",
+      "diet": "Herbivorous (Leaves, herbs, flowers)",
+      "length": "0.00m",
+      "height": "0.00m",
+      "weightM": "0Kg",
+      "weightF": "0Kg",
+      "habitat": "Earth",
+      "conservationStatus": "Endangered",
+      "funFacts": ["Its an animal", "Its alive", "Its in this zoo", "", "", ""]
     },
     {
       "name": "Tiger",
-      "image": "tiger"
+      "image": "tiger",
+      "species": "Panthera tigris",
+      "diet": "Carnivorous (Monkeys, wild boar, deer)",
+      "length": "0.00m",
+      "height": "0.00m",
+      "weightM": "0Kg",
+      "weightF": "0Kg",
+      "habitat": "Earth",
+      "conservationStatus": "Endangered",
+      "funFacts": ["Its an animal", "Its alive", "Its in this zoo", "", "", ""]
     },
     {
       "name": "Monkey",
-      "image": "monkey"
+      "image": "monkey",
+      "species": "Cercopithecidae",
+      "diet": "Omnivorous (Fruit, insects, lizards)",
+      "length": "0.00m",
+      "height": "0.00m",
+      "weightM": "0Kg",
+      "weightF": "0Kg",
+      "habitat": "Earth",
+      "conservationStatus": "Endangered",
+      "funFacts": ["Its an animal", "Its alive", "Its in this zoo", "", "", ""]
     },
     {
       "name": "Panda",
-      "image": "panda"
+      "image": "panda",
+      "species": "Ailuropoda melanoleuca",
+      "diet": "Omnivorous (Bamboo, eggs, carrion)",
+      "length": "0.00m",
+      "height": "0.00m",
+      "weightM": "0Kg",
+      "weightF": "0Kg",
+      "habitat": "Earth",
+      "conservationStatus": "Endangered",
+      "funFacts": ["Its an animal", "Its alive", "Its in this zoo", "", "", ""]
     },
     {
       "name": "Camel",
-      "image": "camel"
+      "image": "camel",
+      "species": "Camelus",
+      "diet": "Herbivorous (Grass, grains, wheat)",
+      "length": "0.00m",
+      "height": "0.00m",
+      "weightM": "0Kg",
+      "weightF": "0Kg",
+      "habitat": "Earth",
+      "conservationStatus": "Endangered",
+      "funFacts": ["Its an animal", "Its alive", "Its in this zoo", "", "", ""]
     },
     {
       "name": "Hawk",
-      "image": "hawk"
+      "image": "hawk",
+      "species": "Accipitrinae urotriorchis",
+      "diet": "Carnivorous (Snakes, fish, smaller birds)",
+      "length": "0.00m",
+      "height": "0.00m",
+      "weightM": "0Kg",
+      "weightF": "0Kg",
+      "habitat": "Earth",
+      "conservationStatus": "Endangered",
+      "funFacts": ["Its an animal", "Its alive", "Its in this zoo", "", "", ""]
     },
     {
       "name": "Hippopotamus",
-      "image": "hippo"
+      "image": "hippo",
+      "species": "Hippopotamus amphibius",
+      "diet": "Herbivorous (Grass, flowers, fruit)",
+      "length": "0.00m",
+      "height": "0.00m",
+      "weightM": "0Kg",
+      "weightF": "0Kg",
+      "habitat": "Earth",
+      "conservationStatus": "Endangered",
+      "funFacts": ["Its an animal", "Its alive", "Its in this zoo", "", "", ""]
     },
     {
       "name": "Llama",
-      "image": "llama"
+      "image": "llama",
+      "species": "Lama glama",
+      "diet": "Herbivorous (Grass, shrubs, trees)",
+      "length": "0.00m",
+      "height": "0.00m",
+      "weightM": "0Kg",
+      "weightF": "0Kg",
+      "habitat": "Earth",
+      "conservationStatus": "Endangered",
+      "funFacts": ["Its an animal", "Its alive", "Its in this zoo", "", "", ""]
     }
   ];
   
