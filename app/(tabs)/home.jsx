@@ -131,8 +131,8 @@ const Home = () => {
   };
 
   const imageBounds = [
-    [51.53099938615087, -0.16020707102841678], //soutwest
-    [51.53763097724814, -0.1493777865209378], //northeast
+    [51.53089938615087, -0.16028707102841678], //southwest
+    [51.53682606533663, -0.15118165430416303], //northeast
   ];
   
   return (
@@ -148,9 +148,9 @@ const Home = () => {
       >
 
         <Overlay  
-          image={require("../../assets/mapoverlays/londonzoo2.png")}
+          image={require("../../assets/mapoverlays/zoomap3.png")}
           bounds={imageBounds}
-          bearing={160}
+          bearing={5}
           style={styles.overlay}
           opacity={1}
         />
