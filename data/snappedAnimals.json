@@ -1,0 +1,20 @@
+{
+    "animals": [
+      {
+        "name": "llama",
+        "path": "assets/amimalicons/llama.png"
+      },
+      {
+        "name": "monkey",
+        "path": "assets/amimalicons/monkey.png"
+      },
+      {
+        "name": "panda",
+        "path": "assets/amimalicons/panda.png"
+      },
+      {
+        "name": "tiger",
+        "path": "assets/amimalicons/tiger.png"
+      }
+    ]
+  }

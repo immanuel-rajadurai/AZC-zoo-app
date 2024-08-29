@@ -68,6 +68,22 @@ const TabsLayout = () => {
           }}
         />
         <Tabs.Screen
+          name="challenge"
+          options={{
+            title:'Challenge',
+            headerShown: false,
+            tabBarIcon: ({ color, focused }) => (
+              <TabIcon
+                icon={icons.binoculars}
+                color={color}
+                name="Challenge"
+                focused={focused}
+                className="w-52 h-72"
+              />
+            )
+          }}
+        />
+        <Tabs.Screen
           name="animals"
           options={{
             title:'Animals',

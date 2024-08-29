@@ -1,0 +1,24 @@
+{
+    "animals": [
+      {
+        "name": "camel",
+        "path": "assets/amimalicons/camel.png"
+      },
+      {
+        "name": "giraffe",
+        "path": "assets/amimalicons/giraffe.png"
+      },
+      {
+        "name": "hawk",
+        "path": "assets/amimalicons/hawk.png"
+      },
+      {
+        "name": "hippo",
+        "path": "assets/amimalicons/hippo.png"
+      },
+      {
+        "name": "lion",
+        "path": "assets/amimalicons/lion.png"
+      }
+    ]
+  }
