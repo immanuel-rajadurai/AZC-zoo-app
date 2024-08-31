@@ -5,6 +5,24 @@ input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONL
 type Event @model {
   id: ID!
   name: String!
-  description: String
+  description: String!
+  place: Place  @hasOne
   image: String
 }
+
+type Place @model {
+  id: ID!
+  name: String!
+  description: String!
+  isOpen: Boolean!
+  animal: Animal @hasOne
+  image: String
+}
+
+type Animal @model {
+  id: ID!
+  name: String!
+  image: String
+}
+
+
