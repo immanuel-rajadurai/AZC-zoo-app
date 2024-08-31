@@ -3,7 +3,7 @@ import { Button, StyleSheet, View } from 'react-native';
 import SlidingUpPanel from 'rn-sliding-up-panel';
 import Events from './Events'; // Ensure Events is correctly imported
 
-const SwipeUp = ({ posts , title, value, placeholder, handleChangeText, otherStyles, ...props }) => {
+const SwipeUp = ({ events , title, value, placeholder, handleChangeText, otherStyles, ...props }) => {
   const panelRef = useRef(null);
 
   return (
@@ -11,7 +11,7 @@ const SwipeUp = ({ posts , title, value, placeholder, handleChangeText, otherSty
       <Button title='Show panel' onPress={() => panelRef.current.show()} />
       <SlidingUpPanel ref={panelRef} {...props}>
         <View>
-            <Events posts={posts} />
+            <Events posts={events} />
         </View>
       </SlidingUpPanel>
     </View>

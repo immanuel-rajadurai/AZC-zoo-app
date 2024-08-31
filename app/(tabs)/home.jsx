@@ -131,8 +131,8 @@ const Home = () => {
   };
 
   const imageBounds = [
-    [51.53089938615087, -0.16028707102841678], //southwest
-    [51.53682606533663, -0.15118165430416303], //northeast
+    [51.532581594564654, -0.15931530103070354], //southwest
+    [51.536631441307364, -0.15031572508956532], //northeast
   ];
   
   return (
@@ -150,7 +150,7 @@ const Home = () => {
         <Overlay  
           image={require("../../assets/mapoverlays/zoomap3.png")}
           bounds={imageBounds}
-          bearing={5}
+          bearing={0}
           style={styles.overlay}
           opacity={1}
         />
@@ -208,7 +208,7 @@ const Home = () => {
                     style={[modalStyles.button, modalStyles.buttonMore]}
                     onPress={handleShowMore}
                 >
-                    <Text style={modalStyles.textStyle}>Show More </Text>
+                    <Text style={modalStyles.textStyle}>Show More</Text>
                 </TouchableOpacity>
               </>
             )}
@@ -222,7 +222,7 @@ const Home = () => {
 
       {eventsVisible && (
         <Animated.View style={[styles.animatedContainer, { transform: [{ translateY }] }]}>
-          <Events posts={events} />
+          <Events events={events} />
         </Animated.View>
       )}
 
