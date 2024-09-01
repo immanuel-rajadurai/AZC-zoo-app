@@ -10,21 +10,9 @@ export const createEvent = /* GraphQL */ `
       id
       name
       description
-      place {
-        id
-        name
-        description
-        isOpen
-        image
-        createdAt
-        updatedAt
-        placeAnimalId
-        __typename
-      }
       image
       createdAt
       updatedAt
-      eventPlaceId
       __typename
     }
   }
@@ -38,21 +26,9 @@ export const updateEvent = /* GraphQL */ `
       id
       name
       description
-      place {
-        id
-        name
-        description
-        isOpen
-        image
-        createdAt
-        updatedAt
-        placeAnimalId
-        __typename
-      }
       image
       createdAt
       updatedAt
-      eventPlaceId
       __typename
     }
   }
@@ -66,21 +42,9 @@ export const deleteEvent = /* GraphQL */ `
       id
       name
       description
-      place {
-        id
-        name
-        description
-        isOpen
-        image
-        createdAt
-        updatedAt
-        placeAnimalId
-        __typename
-      }
       image
       createdAt
       updatedAt
-      eventPlaceId
       __typename
     }
   }
@@ -95,18 +59,9 @@ export const createPlace = /* GraphQL */ `
       name
       description
       isOpen
-      animal {
-        id
-        name
-        image
-        createdAt
-        updatedAt
-        __typename
-      }
       image
       createdAt
       updatedAt
-      placeAnimalId
       __typename
     }
   }
@@ -121,18 +76,9 @@ export const updatePlace = /* GraphQL */ `
       name
       description
       isOpen
-      animal {
-        id
-        name
-        image
-        createdAt
-        updatedAt
-        __typename
-      }
       image
       createdAt
       updatedAt
-      placeAnimalId
       __typename
     }
   }
@@ -147,18 +93,9 @@ export const deletePlace = /* GraphQL */ `
       name
       description
       isOpen
-      animal {
-        id
-        name
-        image
-        createdAt
-        updatedAt
-        __typename
-      }
       image
       createdAt
       updatedAt
-      placeAnimalId
       __typename
     }
   }
@@ -202,6 +139,96 @@ export const deleteAnimal = /* GraphQL */ `
       id
       name
       image
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createPlaceAnimal = /* GraphQL */ `
+  mutation CreatePlaceAnimal(
+    $input: CreatePlaceAnimalInput!
+    $condition: ModelPlaceAnimalConditionInput
+  ) {
+    createPlaceAnimal(input: $input, condition: $condition) {
+      id
+      placeID
+      animalID
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updatePlaceAnimal = /* GraphQL */ `
+  mutation UpdatePlaceAnimal(
+    $input: UpdatePlaceAnimalInput!
+    $condition: ModelPlaceAnimalConditionInput
+  ) {
+    updatePlaceAnimal(input: $input, condition: $condition) {
+      id
+      placeID
+      animalID
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deletePlaceAnimal = /* GraphQL */ `
+  mutation DeletePlaceAnimal(
+    $input: DeletePlaceAnimalInput!
+    $condition: ModelPlaceAnimalConditionInput
+  ) {
+    deletePlaceAnimal(input: $input, condition: $condition) {
+      id
+      placeID
+      animalID
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createEventPlace = /* GraphQL */ `
+  mutation CreateEventPlace(
+    $input: CreateEventPlaceInput!
+    $condition: ModelEventPlaceConditionInput
+  ) {
+    createEventPlace(input: $input, condition: $condition) {
+      id
+      placeID
+      eventID
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateEventPlace = /* GraphQL */ `
+  mutation UpdateEventPlace(
+    $input: UpdateEventPlaceInput!
+    $condition: ModelEventPlaceConditionInput
+  ) {
+    updateEventPlace(input: $input, condition: $condition) {
+      id
+      placeID
+      eventID
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteEventPlace = /* GraphQL */ `
+  mutation DeleteEventPlace(
+    $input: DeleteEventPlaceInput!
+    $condition: ModelEventPlaceConditionInput
+  ) {
+    deleteEventPlace(input: $input, condition: $condition) {
+      id
+      placeID
+      eventID
       createdAt
       updatedAt
       __typename

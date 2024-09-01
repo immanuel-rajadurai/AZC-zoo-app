@@ -7,21 +7,9 @@ export const onCreateEvent = /* GraphQL */ `
       id
       name
       description
-      place {
-        id
-        name
-        description
-        isOpen
-        image
-        createdAt
-        updatedAt
-        placeAnimalId
-        __typename
-      }
       image
       createdAt
       updatedAt
-      eventPlaceId
       __typename
     }
   }
@@ -32,21 +20,9 @@ export const onUpdateEvent = /* GraphQL */ `
       id
       name
       description
-      place {
-        id
-        name
-        description
-        isOpen
-        image
-        createdAt
-        updatedAt
-        placeAnimalId
-        __typename
-      }
       image
       createdAt
       updatedAt
-      eventPlaceId
       __typename
     }
   }
@@ -57,21 +33,9 @@ export const onDeleteEvent = /* GraphQL */ `
       id
       name
       description
-      place {
-        id
-        name
-        description
-        isOpen
-        image
-        createdAt
-        updatedAt
-        placeAnimalId
-        __typename
-      }
       image
       createdAt
       updatedAt
-      eventPlaceId
       __typename
     }
   }
@@ -83,18 +47,9 @@ export const onCreatePlace = /* GraphQL */ `
       name
       description
       isOpen
-      animal {
-        id
-        name
-        image
-        createdAt
-        updatedAt
-        __typename
-      }
       image
       createdAt
       updatedAt
-      placeAnimalId
       __typename
     }
   }
@@ -106,18 +61,9 @@ export const onUpdatePlace = /* GraphQL */ `
       name
       description
       isOpen
-      animal {
-        id
-        name
-        image
-        createdAt
-        updatedAt
-        __typename
-      }
       image
       createdAt
       updatedAt
-      placeAnimalId
       __typename
     }
   }
@@ -129,18 +75,9 @@ export const onDeletePlace = /* GraphQL */ `
       name
       description
       isOpen
-      animal {
-        id
-        name
-        image
-        createdAt
-        updatedAt
-        __typename
-      }
       image
       createdAt
       updatedAt
-      placeAnimalId
       __typename
     }
   }
@@ -175,6 +112,90 @@ export const onDeleteAnimal = /* GraphQL */ `
       id
       name
       image
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreatePlaceAnimal = /* GraphQL */ `
+  subscription OnCreatePlaceAnimal(
+    $filter: ModelSubscriptionPlaceAnimalFilterInput
+  ) {
+    onCreatePlaceAnimal(filter: $filter) {
+      id
+      placeID
+      animalID
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdatePlaceAnimal = /* GraphQL */ `
+  subscription OnUpdatePlaceAnimal(
+    $filter: ModelSubscriptionPlaceAnimalFilterInput
+  ) {
+    onUpdatePlaceAnimal(filter: $filter) {
+      id
+      placeID
+      animalID
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeletePlaceAnimal = /* GraphQL */ `
+  subscription OnDeletePlaceAnimal(
+    $filter: ModelSubscriptionPlaceAnimalFilterInput
+  ) {
+    onDeletePlaceAnimal(filter: $filter) {
+      id
+      placeID
+      animalID
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateEventPlace = /* GraphQL */ `
+  subscription OnCreateEventPlace(
+    $filter: ModelSubscriptionEventPlaceFilterInput
+  ) {
+    onCreateEventPlace(filter: $filter) {
+      id
+      placeID
+      eventID
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateEventPlace = /* GraphQL */ `
+  subscription OnUpdateEventPlace(
+    $filter: ModelSubscriptionEventPlaceFilterInput
+  ) {
+    onUpdateEventPlace(filter: $filter) {
+      id
+      placeID
+      eventID
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteEventPlace = /* GraphQL */ `
+  subscription OnDeleteEventPlace(
+    $filter: ModelSubscriptionEventPlaceFilterInput
+  ) {
+    onDeleteEventPlace(filter: $filter) {
+      id
+      placeID
+      eventID
       createdAt
       updatedAt
       __typename

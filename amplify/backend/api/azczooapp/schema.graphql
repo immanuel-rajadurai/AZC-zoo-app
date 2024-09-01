@@ -6,7 +6,6 @@ type Event @model {
   id: ID!
   name: String!
   description: String!
-  place: Place  @hasOne
   image: String
 }
 
@@ -15,7 +14,6 @@ type Place @model {
   name: String!
   description: String!
   isOpen: Boolean!
-  animal: Animal @hasOne
   image: String
 }
 
@@ -25,4 +23,16 @@ type Animal @model {
   image: String
 }
 
+# Connection table for Place and Animal
+type PlaceAnimal @model {
+  id: ID!
+  placeID: ID!
+  animalID: ID!
+}
 
+# Connection table for Event and Place
+type EventPlace @model {
+  id: ID!
+  placeID: ID!
+  eventID: ID!
+}

@@ -2,7 +2,8 @@ export type AmplifyDependentResourcesAttributes = {
   "api": {
     "azczooapp": {
       "GraphQLAPIEndpointOutput": "string",
-      "GraphQLAPIIdOutput": "string"
+      "GraphQLAPIIdOutput": "string",
+      "GraphQLAPIKeyOutput": "string"
     }
   }
 }
