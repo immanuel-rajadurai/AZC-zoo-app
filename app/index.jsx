@@ -1,11 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
-import { Text, View, Image, ScrollView } from 'react-native';
+import { Text, View, Image, ScrollView, Alert } from 'react-native';
 import { Redirect, router, Router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { images } from '../constants/';
 import CustomButton from '../components/CustomButton';
 import { useGlobalContext } from '../context/GlobalProvider';
+import messaging from '@react-native-firebase/messaging';
+import React, { useEffect } from 'react';
 
 // import { Amplify } from 'aws-amplify';
 // import amplifyconfig from '../src/amplifyconfiguration.json';
@@ -16,9 +18,59 @@ import { useGlobalContext } from '../context/GlobalProvider';
 //com.jsm.app_v1
 export default function App() {
 
-  //  const { isLoading, isLoggedIn } = useGlobalContext();
+    const requestUserPermission = async () => {
+      const authStatus = await messaging().requestPermission();
+      const enabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
-  //  if (!isLoading && isLoggedIn) return <Redirect href="/home"/>
+      if (enabled) {
+        console.log('Authorization status:', authStatus);
+      }
+    }
+
+    useEffect(() => {
+      if (requestUserPermission()) {
+        //return the token of the device
+
+        messaging().getToken().then(token => {
+          console.log(token);
+        });
+      } else {
+        console.log("Failed token status", authStatus);
+      }
+
+      messaging()
+        .getInitialNotification()
+        .then( async (remoteMessage) => {
+          if (remoteMessage) {
+            console.log(
+              'Notification caused app to open from quit state:',
+              remoteMessage.notification,
+            );
+          }
+      });
+
+      messaging().onNotificationOpenedApp(async (remoteMessage) => {
+        console.log(
+          'Notification caused app to open from background state:',
+          remoteMessage.notification,
+        );
+      });
+
+      //Register background handler
+      messaging().setBackgroundMessageHandler(async remoteMessage => {
+        console.log('Message handled in the background!', remoteMessage);
+      });
+
+      //Listen to messages in the foreground
+
+      const unsubscribe = messaging().onMessage(async remoteMessage => {
+        Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+      });
+
+
+    }, [])
 
     return (
         <SafeAreaView className="bg-white h-full">
