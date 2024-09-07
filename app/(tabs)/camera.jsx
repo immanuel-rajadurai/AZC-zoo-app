@@ -1,57 +1,104 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Button, Image, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { decodeJpeg } from '@tensorflow/tfjs-react-native';
 import * as tf from '@tensorflow/tfjs';
-import * as tflite from 'tflite-react-native';
+import * as FileSystem from 'expo-file-system';
+import * as cocoSsd from '@tensorflow-models/coco-ssd';
+
 
 
 export default function CameraPage() {
   const [image, setImage] = useState(null);
   const [model, setModel] = useState(null);
+  const [isModelLoading, setIsModelLoading] = useState(true);
 
   useEffect(() => {
-    async function loadModel() {
+    const loadModel = async () => {
+      setIsModelLoading(true);
       try {
-        await tf.ready();
-        // Load your .tflite model
-        const model = await tflite.loadModel({
-          model: '../../assets/ResNet50.tflite', 
-        });
-        setTfliteModel(model);
-        console.log('TFLite model loaded successfully');
+        await tf.ready();  // makes sure tensorFlow is ready
+        console.log('TensorFlow is ready');
+
+        // loads coco ssd model
+        const cocoModel = await cocoSsd.load();
+        console.log('Coco SSD model loaded successfully');
+        setModel(cocoModel);
+        setIsModelLoading(false);
       } catch (error) {
-        console.error('Failed to load TFLite model:', error);
+        console.error('Failed to load the model:', error);
+        Alert.alert('Error', `Failed to load the model: ${error.message}`);
+        setIsModelLoading(false);
       }
-    }
+    };
+
     loadModel();
   }, []);
 
+
+
+  
+   
   const classifyImage = async (uri) => {
-    if (!tfliteModel) {
-      console.log('Model not loaded yet');
+    if (isModelLoading) {
+      Alert.alert('Please wait', 'Model is still loading...');
       return;
     }
-
+  
+    if (!model) {
+      Alert.alert('Error', 'Model failed to load. Please restart the app.');
+      return;
+    }
+  
     try {
-      // Run inference on the image
-      const results = await tfliteModel.runModelOnImage({
-        path: uri,
-        imageMean: 128,           // These values might need adjustment
-        imageStd: 128,            // based on your model's requirements
-        numResults: 3,
-        threshold: 0.05,
+      // reads image file
+      const imgB64 = await FileSystem.readAsStringAsync(uri, {
+        encoding: FileSystem.EncodingType.Base64,
       });
-
-      // Get the top prediction
-      const topPrediction = results[0];
+      const imgBuffer = tf.util.encodeString(imgB64, 'base64').buffer;
+      const raw = new Uint8Array(imgBuffer);
+  
+      // decodes and preprocesses the image
+      let imageTensor = decodeJpeg(raw);
+      imageTensor = tf.image.resizeBilinear(imageTensor, [224, 224]);
+      imageTensor = imageTensor.reshape([224, 224, 3]);
+      imageTensor = tf.cast(imageTensor, 'int32');
+  
+      // runs inference 
+      const predictions = await model.detect(imageTensor);
+  
       
-      // If no labels, we just display the raw output
-      Alert.alert('Classification Result', `Top prediction has ${topPrediction.confidence * 100}% confidence. Raw result: ${JSON.stringify(topPrediction)}`);
+      const boxes = predictions.map(p => p.bbox);
+      const scores = predictions.map(p => p.score);
+  
+      const selectedIndices = await tf.image.nonMaxSuppressionAsync(
+        tf.tensor2d(boxes, [boxes.length, 4]),
+        tf.tensor1d(scores),
+        10, // max number of boxes to keep
+        0.5, // IoU threshold
+        0.5  // score threshold
+      );
+  
+      
+      const filteredPredictions = selectedIndices.arraySync().map(i => predictions[i]);
+  
+      // showthe results
+      if (filteredPredictions.length === 0) {
+        Alert.alert('No objects detected');
+      } else {
+        const topPrediction = filteredPredictions[0];
+        Alert.alert('Classification Result', `Detected: ${topPrediction.class} with score: ${topPrediction.score}`);
+      }
+  
+      // clean up tensors to free memory
+      tf.dispose([imageTensor, selectedIndices]);
     } catch (error) {
       console.error('Classification error:', error);
-      Alert.alert('Error', 'Failed to classify the image. Please try again.');
+      Alert.alert('Error', `Failed to classify the image: ${error.message}`);
     }
   };
+  
+  
   
   const handleTakePhoto = async () => {
     // Request permission to access the camera
@@ -67,16 +114,15 @@ export default function CameraPage() {
       aspect: [4, 3],
     });
 
-    if (!result.cancelled) {
+    if (!result.canceled) {
       setImage(result.assets[0].uri);
       await classifyImage(result.assets[0].uri);
-      
     }
   };
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Camera Page</Text>
-      <Button title="Take a Photo" onPress={handleTakePhoto} />
+       <Button title={isModelLoading ? "Loading Model..." : "Take a Photo"} onPress={handleTakePhoto} disabled={isModelLoading} />
       {image && <Image source={{ uri: image }} style={styles.image} />}
     </View>
   );
