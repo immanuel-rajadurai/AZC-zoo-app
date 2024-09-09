@@ -9,10 +9,13 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@aws-amplify/react-native": "^1.1.4",
     "@react-native-async-storage/async-storage": "^1.24.0",
     "@react-native-community/netinfo": "^11.3.2",
+    "@tensorflow/tfjs": "^4.21.0",
+    "@tensorflow/tfjs-backend-webgl": "^4.21.0",
+    "@tensorflow/tfjs-react-native": "^1.0.0",
     "expo": "~51.0.28",
-    "@aws-amplify/react-native": "^1.1.4",
     "expo-av": "^14.0.6",
     "expo-cli": "^6.3.10",
     "expo-constants": "~16.0.2",
@@ -21,6 +24,7 @@
     "expo-router": "~3.5.23",
     "expo-status-bar": "~1.12.1",
     "glob": "^11.0.0",
+    "install": "^0.13.0",
     "nativewind": "^2.0.11",
     "react": "18.2.0",
     "react-dom": "^18.2.0",
@@ -33,9 +37,11 @@
     "react-native-screens": "3.31.1",
     "react-native-url-polyfill": "^2.0.0",
     "react-native-web": "^0.19.12",
+    "resnet_imagenet": "^1.0.4",
     "rimraf": "^6.0.1",
     "rn-sliding-up-panel": "^2.4.6",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "@tensorflow-models/mobilenet": "2.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
