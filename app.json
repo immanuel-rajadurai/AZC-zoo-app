@@ -14,12 +14,19 @@
     },
     "ios": {
       "supportsTablet": true,
-      "package": "com.jsm.app_v1"
+      "package": "com.jsm.app_v1",
+      "bundleIdentifier": "app.aquazoo.zooapp"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "package": "com.immraj.app_v1",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyCM0TGLhNYQLJeNAEbwz238BgNsGZK9QOA"
+        }
       }
     },
     "web": {
@@ -27,6 +34,14 @@
     },
     "plugins": [
       "expo-router"
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "1e2466c8-01fd-4bcd-a066-354d6d9a99ab"
+      }
+    }
   }
 }
