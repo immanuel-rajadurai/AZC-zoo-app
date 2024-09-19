@@ -11,7 +11,7 @@ import { animalImages, animalData } from '../../data/animals';
 import { ModelContext } from '../modelContext';
 import { fetch } from '@tensorflow/tfjs-react-native';
 import { Asset } from 'expo-asset';
-import peacock from '../../assets/animalImages/ostrich.jpg';
+import peacock from '../../assets/animalImages/tiger.jpg';
 
 
 const Challenge = () => {
@@ -76,7 +76,7 @@ const Challenge = () => {
 
         setModelLoaded(false);
 
-        console.log("waiting for tf to be ready")
+        console.log("waiting for  resnet tf to be ready")
         await tf.ready();
 
         console.log("TF is successfully ready")
