@@ -11,7 +11,7 @@ import { animalImages, animalData } from '../../data/animals';
 import { ModelContext } from '../modelContext';
 import { fetch } from '@tensorflow/tfjs-react-native';
 import { Asset } from 'expo-asset';
-import peacock from '../../assets/animalImages/ostrich.jpg';
+import animalPhoto from '../../assets/animalImages/leopard.jpg';
 
 
 const Challenge = () => {
@@ -25,6 +25,8 @@ const Challenge = () => {
   const [scannedAnimals, setScannedAnimals] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
+  const [predictedAnimal, setPredictedAnimal] = useState(null);
+
 
   // const loadedModel = useContext(ModelContext);
 
@@ -37,7 +39,7 @@ const Challenge = () => {
         if (storedAnimals) {
           setZooAnimals(JSON.parse(storedAnimals));
         } else {
-          const initialAnimals = ['Lion', 'Elephant', 'Giraffe', 'Zebra', 'Monkey'];
+          const initialAnimals = ['Lion', 'Leopard', 'Giraffe', 'Zebra', 'Monkey'];
           setZooAnimals(initialAnimals);
           await AsyncStorage.setItem('zooAnimals', JSON.stringify(initialAnimals));
         }
@@ -124,7 +126,7 @@ const Challenge = () => {
         console.log("Model files loaded. Creating model" )
 
         const loadedModel = await tf.loadGraphModel(bundleResourceIO(modelJson, combinedWeights));
-
+      
         setModelLoaded(true);
         console.log("successfully created graph model");
         setModel(loadedModel);
@@ -142,7 +144,7 @@ const Challenge = () => {
     if (model) {
 
       console.log("loading image")
-      const asset = Asset.fromModule(peacock);
+      const asset = Asset.fromModule(animalPhoto);
       await asset.downloadAsync();
       const imageUri = asset.localUri || asset.uri;
 
@@ -163,10 +165,22 @@ const Challenge = () => {
       const prediction = await model.predict(imageTensor).data();
       const highestPredictionIndex = prediction.indexOf(Math.max(...prediction));
       const predictedClassEntry = labels[highestPredictionIndex];
-      const predictedClass = predictedClassEntry ? predictedClassEntry[1] : 'Unknown'; // class name
+      const predictedAnimal = predictedClassEntry ? predictedClassEntry[1] : 'Unknown'; // class name
 
-      console.log("prediction: " + predictedClass)
-      setPredictions(prediction);
+      console.log("prediction: " + predictedAnimal)
+
+      //feature
+
+      //add scanned animal to scanned animals list
+      scannedAnimals = await AsyncStorage.getItem('scannedAnimals');
+
+      scannedAnimals.push(predictedAnimal);
+
+      await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
+
+      setPredictedAnimal(prediction);
+
+      showModal(); 
     }
   }
 
@@ -214,6 +228,16 @@ const Challenge = () => {
     }
   }
 
+  const getAnimalInfo = (animal) => {
+    // Replace this with actual logic to fetch animal information
+    const animalData = {
+      leopard: "Cats are small, carnivorous mammals that are often kept as pets.",
+      tiger: "Dogs are domesticated mammals, not natural wild animals.",
+      // Add more animals as needed
+    };
+    return animalData[animal] || "Information not available.";
+  };
+
   const takePicture = async () => {
     // Request camera permissions
     // const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
@@ -243,8 +267,8 @@ const Challenge = () => {
 
   const showModal = () => {
     setSelectedAnimal({
-      name: 'Lion',
-      species: 'Panthera leo',
+      name: predictedAnimal,
+      species: 'Panthera leopardis',
       diet: 'Carnivore',
       length: '1.8-2.1m',
       height: '1.2m',
@@ -252,7 +276,7 @@ const Challenge = () => {
       weightF: '130kg',
       habitat: 'Savannah',
       conservationStatus: 'Vulnerable',
-      funFacts: ['Lions are the only cats that live in groups.', 'A group, or pride, can be up to 30 lions, depending on how much food and water is available.'],
+      funFacts: ['Leopards are the only cats that live in groups.', 'A group, or pride, can be up to 30 lions, depending on how much food and water is available.'],
       image: 'lionImage'
     });
     setModalVisible(true);
