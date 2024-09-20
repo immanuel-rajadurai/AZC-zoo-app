@@ -11,7 +11,8 @@ import { animalImages, animalData } from '../../data/animals';
 import { ModelContext } from '../modelContext';
 import { fetch } from '@tensorflow/tfjs-react-native';
 import { Asset } from 'expo-asset';
-import animalPhoto from '../../assets/animalImages/leopard.jpg';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import animalPhoto from '../../assets/animalImages/lion.jpg';
 
 
 const Challenge = () => {
@@ -26,6 +27,84 @@ const Challenge = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [predictedAnimal, setPredictedAnimal] = useState(null);
+
+  const animalInfo = {
+    leopard: {
+      name: "Leopard",
+      species: "Panthera Leo",
+      diet: "Carnivore",
+      length: "1.6 - 2.6 meters",
+      height: "60 - 70 cm",
+      weightM: "31 - 65 kg",
+      weightF: "17 - 58 kg",
+      conservationStatus: "Vulnerable",
+      funFacts: [
+        "Leopards are the only cats that live in groups.",
+        "A group, or pride, can be up to 30 lions, depending on how much food and water is available."
+      ],
+      image: "https://cdn.britannica.com/30/136130-050-3370E37A/Leopard.jpg"
+    },
+    tiger: {
+      name: "Tiger",
+      species: "Panthera Tigris",
+      diet: "Carnivore",
+      length: "2.5 - 3.9 meters",
+      height: "70 - 120 cm",
+      weightM: "90 - 310 kg",
+      weightF: "65 - 170 kg",
+      conservationStatus: "Endangered",
+      funFacts: [
+        "Tigers are the largest cat species in the world.",
+        "A tiger's roar can be heard as far as 3 kilometers away."
+      ],
+      image: "https://upload.wikimedia.org/wikipedia/commons/5/56/Tiger.50.jpg"
+    },
+    ostrich: {
+      name: "Ostrich",
+      species: "Struthio",
+      diet: "Omnivore",
+      length: "2.1 - 2.8 meters",
+      height: "2.1 - 2.8 meters",
+      weightM: "100 - 156 kg",
+      weightF: "90 - 130 kg",
+      conservationStatus: "Least Concern",
+      funFacts: [
+        "Ostriches are the largest flightless birds in the world.",
+        "An ostrich's eye is bigger than its brain."
+      ],
+      image: "https://upload.wikimedia.org/wikipedia/commons/9/9d/Struthio_camelus_-_Etosha_2014_%283%29.jpg"
+    },
+    African_elephant: {
+      name: "African Elephant",
+      species: "Loxodonta",
+      diet: "Herbivore",
+      length: "5.5 - 6.5 meters",
+      height: "2.7 - 3.3 meters",
+      weightM: "4000 - 7000 kg",
+      weightF: "2000 - 3500 kg",
+      conservationStatus: "Vulnerable",
+      funFacts: [
+        "Elephants are the largest land animals on Earth.",
+        "An elephant's trunk has over 40,000 muscles."
+      ],
+      image: "https://upload.wikimedia.org/wikipedia/commons/3/37/African_Bush_Elephant.jpg"
+    },
+    lion: {
+      name: "Lion",
+      species: "Panthera leo",
+      diet: "Carnivore",
+      length: "1.4 - 2.5 meters",
+      height: "1.2 meters",
+      weightM: "150 - 250 kg",
+      weightF: "120 - 182 kg",
+      conservationStatus: "Vulnerable",
+      funFacts: [
+        "Lions are the only cats that live in groups.",
+        "A group, or pride, can be up to 30 lions, depending on how much food and water is available."
+      ],
+      image: "https://upload.wikimedia.org/wikipedia/commons/7/73/Lion_waiting_in_Namibia.jpg"
+    }
+  };
 
 
   // const loadedModel = useContext(ModelContext);
@@ -49,12 +128,12 @@ const Challenge = () => {
       }
 
       try {
-        const scannedAnimals = await AsyncStorage.getItem('scannedAnimals');
+        let scannedAnimals = await AsyncStorage.getItem('scannedAnimals');
   
         if (scannedAnimals) {
           setScannedAnimals(JSON.parse(scannedAnimals));
         } else {
-          const emptyScannedAnimals = [];
+          let emptyScannedAnimals = [];
           setScannedAnimals(emptyScannedAnimals);
           await AsyncStorage.setItem('scannedAnimals', JSON.stringify(emptyScannedAnimals));
         }
@@ -152,7 +231,6 @@ const Challenge = () => {
         encoding: FileSystem.EncodingType.Base64,
       });
 
-
       const imageBuffer = Uint8Array.from(atob(base64String), c => c.charCodeAt(0));
 
       const imageTensor = tf.tidy(() => {
@@ -169,18 +247,23 @@ const Challenge = () => {
 
       console.log("prediction: " + predictedAnimal)
 
-      //feature
-
       //add scanned animal to scanned animals list
-      scannedAnimals = await AsyncStorage.getItem('scannedAnimals');
 
-      scannedAnimals.push(predictedAnimal);
+      try {
+        let storedScannedAnimals = await AsyncStorage.getItem('scannedAnimals');
+        storedScannedAnimals = storedScannedAnimals ? JSON.parse(storedScannedAnimals) : [];
+        storedScannedAnimals.push(predictedAnimal);
+        await AsyncStorage.setItem('scannedAnimals', JSON.stringify(storedScannedAnimals));
+      
+      } catch (error) {
+        console.error("failed to save scanned animals", error);
+      }
 
-      await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
+      setPredictedAnimal(predictedAnimal);
 
-      setPredictedAnimal(prediction);
+      console.log("showing popup")
 
-      showModal(); 
+      showModal(predictedAnimal); 
     }
   }
 
@@ -246,8 +329,6 @@ const Challenge = () => {
     //   return;
     // }
 
-   
-
     // // Launch the camera to take a picture
     // const result = await ImagePicker.launchCameraAsync({
     //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -265,19 +346,20 @@ const Challenge = () => {
     // }
   };
 
-  const showModal = () => {
+  const showModal = (predictedAnimal) => {
+
     setSelectedAnimal({
-      name: predictedAnimal,
-      species: 'Panthera leopardis',
-      diet: 'Carnivore',
-      length: '1.8-2.1m',
-      height: '1.2m',
-      weightM: '190kg',
-      weightF: '130kg',
-      habitat: 'Savannah',
-      conservationStatus: 'Vulnerable',
-      funFacts: ['Leopards are the only cats that live in groups.', 'A group, or pride, can be up to 30 lions, depending on how much food and water is available.'],
-      image: 'lionImage'
+      name: animalInfo[predictedAnimal].name,
+      species: animalInfo[predictedAnimal].species,
+      diet: animalInfo[predictedAnimal].diet,
+      length: animalInfo[predictedAnimal].length,
+      height: animalInfo[predictedAnimal].height,
+      weightM: animalInfo[predictedAnimal].weightM,
+      weightF: animalInfo[predictedAnimal].weightF,
+      habitat: animalInfo[predictedAnimal].habitat,
+      conservationStatus: animalInfo[predictedAnimal].conservationStatus,
+      funFacts: animalInfo[predictedAnimal].funFacts,
+      image: animalInfo[predictedAnimal].image
     });
     setModalVisible(true);
   };
@@ -288,18 +370,23 @@ const Challenge = () => {
 
   return (
     <View style={styles.container}>
-    <Text>Below is experimental camera code</Text>
+    <Text>Image Classification Model MobileNet</Text>
 
     {modelLoaded ? (
       <>
         <Text>Model Loaded Successfully</Text>
-        <Button title="Take a picture" onPress={takePicture} />
+        {/* <Button title="Take a picture" onPress={takePicture} /> */}
+
+        <TouchableOpacity style={styles.cameraButton} onPress={takePicture}>
+            <Icon name="camera-alt" size={30} color="#fff" />
+        </TouchableOpacity>
+   
       </>
     ) : (
       <ActivityIndicator size="large" color="#0000ff" />
     )}
 
-    <Button title="Show popup" onPress={showModal} />
+    {/* <Button title="Show popup" onPress={showModal} /> */}
 
     {image && <Image source={{ uri: image }} style={styles.image} />}
 
@@ -314,10 +401,8 @@ const Challenge = () => {
           <ScrollView>
             {selectedAnimal && (
               <>
-                <Text style={modalStyle.modalTitle}>{selectedAnimal.name} Exhibit</Text>
-                <Image
-                  source={animalImages[selectedAnimal.image]}
-                />
+                <Text style={modalStyle.modalTitle}> Animal Unlocked! {selectedAnimal.name} </Text>
+                <Image source={{ uri: selectedAnimal.image}} style={[styles.image, { height: 100, width:100}]} />
                 <Text style={modalStyle.animalName}>{selectedAnimal.name}</Text>
                 <Text style={modalStyle.species}>{selectedAnimal.species}</Text>
                 <Text>
@@ -368,6 +453,8 @@ const Challenge = () => {
         </View>
       </SafeAreaView>
     </Modal>
+
+
   </View>
   )
 }
@@ -384,6 +471,13 @@ const styles = StyleSheet.create({
   camera: {
     flex: 1,
     width: '100%',
+  },
+  cameraButton: {
+    backgroundColor: '#068c08',
+    borderRadius: 50,
+    padding: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   image: {
     width: 300,
@@ -433,7 +527,7 @@ const modalStyle = StyleSheet.create({
   closeButton: {
     marginTop: 20,
     padding: 10,
-    backgroundColor: '#2196F3',
+    backgroundColor: '#068c08',
     borderRadius: 5,
   },
   closeButtonText: {
