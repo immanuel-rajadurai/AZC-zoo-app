@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, FlatList, Image, StyleSheet, Text, View, Modal, TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation } from 'expo-router';
+import { images } from '../constants/'
 
 // const Events = ({ events }) => {
 //   const [activeItem, setActiveItem] = useState(events[0]);
@@ -118,11 +119,11 @@ const Events = () => {
     setSelectedAnimal(event);
     setModalVisible(true);
 
-    if (event.name === 'news') {
+    if (event.name === 'News') {
       navigation.navigate('news');
-    } else if (event.name === 'information') {
+    } else if (event.name === 'Information') {
       navigation.navigate('information');
-    } else if (event.name === 'events') {
+    } else if (event.name === 'Events') {
       navigation.navigate('events');
     }
   };
@@ -134,9 +135,9 @@ const Events = () => {
   };
 
   const hardcodedEvents = [
-    { id: '1', name: 'news' },
-    { id: '2', name: 'information' },
-    { id: '3', name: 'events' }
+    { id: '1', name: 'Events', description: 'Events happening at the zoo', thumbnail: images.eventsThumbnail },
+    { id: '2', name: 'News', description: 'News about the zoo', thumbnail: images.newsThumbnail},
+    { id: '3', name: 'Information', description: 'Information about the zoo', thumbnail: images.informationThumbnail },
   ];
 
   return (
@@ -154,7 +155,13 @@ const Events = () => {
             }}
             style={styles.itemContainer}
           >
-            <Text>{item.name}</Text>
+            {/* <Text>{item.name}</Text> */}
+
+            <View >
+              <Text style={styles.title}>{item.name}</Text>
+              <Text style={styles.prompt}>{item.description}</Text>
+              <Image source={ item.thumbnail } style={styles.thumbnail} />
+            </View>
           </TouchableOpacity>
         )}
         onViewableItemsChanged={viewableItemsChanged}
@@ -166,31 +173,33 @@ const Events = () => {
 const styles = StyleSheet.create({
   animatedContainer: {
     flex: 1,
-    paddingTop: '50%',
+    paddingTop: '95%',
     justifyContent: 'center',
     alignItems: 'center',
   },
   
   itemContainer: {
     padding: 10,
+    margin: 1,
     backgroundColor: '#fff',
+    borderRadius: 20,
     shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    shadowOffset: { width: 0, height: 0 },
-    elevation: 3,
-    width: 250,
-    marginBottom: 30,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 1,
+    width: 250, // Adjust the width as needed
   },
   thumbnail: {
     width: '100%',
-    height: '50%',
+    height: '65%',
     borderRadius: 5,
   },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
     marginTop: 10,
+    color: '#107a04',
   },
   prompt: {
     fontSize: 14,
@@ -200,78 +209,5 @@ const styles = StyleSheet.create({
 });
 
 
-const modalStyles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 20,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonClose: {
-    backgroundColor: "green",
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  topicText: {
-    color: "green",
-    fontWeight: "bold",
-    fontSize: 20,
-    margin: 10,
-  },
-  subTopicText: {
-    color: "darkgreen",
-    fontSize: 16,
-    fontWeight: "bold",
-    fontStyle: "italic",
-    marginBottom: 10,
-  },
-  modalText: {
-    marginBottom: 30,
-    fontSize: 14,
-    fontWeight: "bold",
-    textAlign: "left",
-  },
-  image: {
-    width: 100,
-    height: 100,
-    marginBottom: 15,
-  },
-  scrollContainer: {
-    maxHeight: 100, // Set a max height for the scrollable area
-  },
-  buttonContainer: {
-    paddingTop: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-  },
-  buttonMore: {
-    
-    backgroundColor: "green",
-  },
-});
 
 export default Events;
