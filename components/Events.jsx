@@ -1,11 +1,109 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, FlatList, Image, StyleSheet, Text, View, Modal, TouchableOpacity, ScrollView } from 'react-native';
+import { useNavigation } from 'expo-router';
 
-const Events = ({ events }) => {
-  const [activeItem, setActiveItem] = useState(events[0]);
-  const [modalVisible, setModalVisible] = useState(false);
-  const translateY = useRef(new Animated.Value(200)).current; // Start position
+// const Events = ({ events }) => {
+//   const [activeItem, setActiveItem] = useState(events[0]);
+//   const [modalVisible, setModalVisible] = useState(false);
+//   const translateY = useRef(new Animated.Value(200)).current; // Start position
+//   const [selectedAnimal, setSelectedAnimal] = useState(null);
+
+//   useEffect(() => {
+//     Animated.timing(translateY, {
+//       toValue: 0,
+//       duration: 500,
+//       useNativeDriver: true,
+//     }).start();
+//   }, []);
+
+//   const handleAnimalPress = (event) => {
+//     console.log("event " + event + " has been pressed")
+//     setSelectedAnimal(event);
+//     setModalVisible(true);
+//   };
+
+//   const viewableItemsChanged = ({ viewableItems }) => {
+//     if (viewableItems.length > 0) {
+//       setActiveItem(viewableItems[0].key);
+//     }
+//   };
+
+//   return (
+//     <Animated.View style={{ ...styles.animatedContainer, transform: [{ translateY }] }}>
+//       <FlatList
+//       overScrollMode="never"
+//       data={events}
+//       horizontal
+//       keyExtractor={(item) => item.$id}
+//       renderItem={({ item }) => (
+//         <TouchableOpacity
+//           onPress={() => {
+//             console.log(`Item pressed: ${item.name}`);
+//             handleAnimalPress(item);
+//           }}
+//           style={styles.itemContainer}
+//         >
+//           <View >
+//             <Image source={{ uri: item.image }} style={styles.thumbnail} />
+//             <Text style={styles.title}>{item.name}</Text>
+//             <Text style={styles.prompt}>{item.description}</Text>
+//           </View>
+//         </TouchableOpacity>
+//       )}
+//       onViewableItemsChanged={viewableItemsChanged}
+//       viewabilityConfig={{
+//         itemVisiblePercentThreshold: 70,
+//       }}
+//       contentOffset={{ x: 170 }}
+//     />
+
+//       <Modal
+//         animationType="slide"
+//         transparent={true}
+//         visible={modalVisible}
+//         onRequestClose={() => {
+//           setModalVisible(!modalVisible);
+//         }}
+//       >
+//         <View style={modalStyles.centeredView}>
+//           <View style={modalStyles.modalView}>
+//             {selectedAnimal && (
+//               <>
+//                 <Text style={modalStyles.topicText}>{selectedAnimal.name}</Text>
+//                 {/* <Text style={modalStyles.subTopicText}>( {selectedAnimal.description} )</Text> */}
+//                 <Image
+//                   source={selectedAnimal.image} 
+//                   style={modalStyles.image}
+//                 />
+
+//                 <ScrollView style={modalStyles.scrollContainer}>
+//                   <Text style={modalStyles.modalText}>{selectedAnimal.description}</Text>
+//                 </ScrollView>
+
+//                 <TouchableOpacity
+//                   style={[modalStyles.button, modalStyles.buttonClose]}
+//                   onPress={() => setModalVisible(!modalVisible)}
+//                 >
+//                   <Text style={modalStyles.textStyle}>Close </Text>
+//                 </TouchableOpacity>
+
+//               </>
+//             )}
+//           </View>
+//         </View>
+//       </Modal>
+
+//     </Animated.View>
+//   );
+// };
+
+
+const Events = () => {
+  const [translateY] = useState(new Animated.Value(0));
   const [selectedAnimal, setSelectedAnimal] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [activeItem, setActiveItem] = useState(null);
+  const navigation = useNavigation();
 
   useEffect(() => {
     Animated.timing(translateY, {
@@ -16,9 +114,17 @@ const Events = ({ events }) => {
   }, []);
 
   const handleAnimalPress = (event) => {
-    console.log("event " + event + " has been pressed")
+    console.log("event " + event.name + " has been pressed");
     setSelectedAnimal(event);
     setModalVisible(true);
+
+    if (event.name === 'news') {
+      navigation.navigate('news');
+    } else if (event.name === 'information') {
+      navigation.navigate('information');
+    } else if (event.name === 'events') {
+      navigation.navigate('events');
+    }
   };
 
   const viewableItemsChanged = ({ viewableItems }) => {
@@ -27,71 +133,32 @@ const Events = ({ events }) => {
     }
   };
 
+  const hardcodedEvents = [
+    { id: '1', name: 'news' },
+    { id: '2', name: 'information' },
+    { id: '3', name: 'events' }
+  ];
+
   return (
     <Animated.View style={{ ...styles.animatedContainer, transform: [{ translateY }] }}>
       <FlatList
-      overScrollMode="never"
-      data={events}
-      horizontal
-      keyExtractor={(item) => item.$id}
-      renderItem={({ item }) => (
-        <TouchableOpacity
-          onPress={() => {
-            console.log(`Item pressed: ${item.name}`);
-            handleAnimalPress(item);
-          }}
-          style={styles.itemContainer}
-        >
-          <View >
-            <Image source={{ uri: item.image }} style={styles.thumbnail} />
-            <Text style={styles.title}>{item.name}</Text>
-            <Text style={styles.prompt}>{item.description}</Text>
-          </View>
-        </TouchableOpacity>
-      )}
-      onViewableItemsChanged={viewableItemsChanged}
-      viewabilityConfig={{
-        itemVisiblePercentThreshold: 70,
-      }}
-      contentOffset={{ x: 170 }}
-    />
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={modalStyles.centeredView}>
-          <View style={modalStyles.modalView}>
-            {selectedAnimal && (
-              <>
-                <Text style={modalStyles.topicText}>{selectedAnimal.name}</Text>
-                {/* <Text style={modalStyles.subTopicText}>( {selectedAnimal.description} )</Text> */}
-                <Image
-                  source={selectedAnimal.image} 
-                  style={modalStyles.image}
-                />
-
-                <ScrollView style={modalStyles.scrollContainer}>
-                  <Text style={modalStyles.modalText}>{selectedAnimal.description}</Text>
-                </ScrollView>
-
-                <TouchableOpacity
-                  style={[modalStyles.button, modalStyles.buttonClose]}
-                  onPress={() => setModalVisible(!modalVisible)}
-                >
-                  <Text style={modalStyles.textStyle}>Close </Text>
-                </TouchableOpacity>
-
-              </>
-            )}
-          </View>
-        </View>
-      </Modal>
-
+        overScrollMode="never"
+        data={hardcodedEvents}
+        horizontal
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            onPress={() => {
+              console.log(`Item pressed: ${item.name}`);
+              handleAnimalPress(item);
+            }}
+            style={styles.itemContainer}
+          >
+            <Text>{item.name}</Text>
+          </TouchableOpacity>
+        )}
+        onViewableItemsChanged={viewableItemsChanged}
+      />
     </Animated.View>
   );
 };
