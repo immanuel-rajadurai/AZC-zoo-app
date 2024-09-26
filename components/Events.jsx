@@ -173,7 +173,7 @@ const Events = () => {
 const styles = StyleSheet.create({
   animatedContainer: {
     flex: 1,
-    paddingTop: '95%',
+    paddingTop: '50%',
     justifyContent: 'center',
     alignItems: 'center',
   },
