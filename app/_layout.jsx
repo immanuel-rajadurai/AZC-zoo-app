@@ -42,13 +42,7 @@ const CustomHeader = ({ navigation, route }) => {
             handleChangeText={(text) => setSearchQuery(text)}
           />
         )}
-            
-            {/* <Image
-                className = "mb-1 mt-1"
-                source={images.zooIcon}
-                style={{ width: 70, height: 65, marginRight: 0 }}
-                // resizeMode='contain'
-            /> */}
+   
           <TouchableOpacity style={{
               position: 'absolute',
               right: 50, 
@@ -104,9 +98,11 @@ const RootLayout = () => {
             // headerShown:true
             header: CustomHeader
         }} />
-        {/* <Stack.Screen name="/search/[query]" options={{
-            headerShown:false
-        }} /> */}
+
+        <Stack.Screen name="news" options={{ title: 'News' }} />
+        <Stack.Screen name="information" options={{ title: 'Information' }} />
+        <Stack.Screen name="events" options={{ title: 'Events' }} />
+        
       </Stack>
     // </GlobalProvider>
     )
