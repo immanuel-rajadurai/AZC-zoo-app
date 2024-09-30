@@ -204,12 +204,12 @@ const Home = () => {
                   <Text style={modalStyles.textStyle}>Close</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity
+                {/* <TouchableOpacity
                     style={[modalStyles.button, modalStyles.buttonMore]}
                     onPress={handleShowMore}
                 >
                     <Text style={modalStyles.textStyle}>Show More</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </>
             )}
           </View>
