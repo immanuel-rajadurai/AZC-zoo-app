@@ -50,11 +50,11 @@ const Home = () => {
         useNativeDriver: true,
       }).start(() => {
         setEventsVisible(false);
-        setButtonTitle("Show Events");
+        setButtonTitle("Information");
       });
     } else {
       setEventsVisible(true);
-      setButtonTitle("Hide Events");
+      setButtonTitle("Hide Information");
       Animated.timing(translateY, {
         toValue: -10,
         duration: 5,
