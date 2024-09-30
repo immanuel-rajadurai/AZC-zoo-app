@@ -17,10 +17,13 @@ import { ModelProvider } from './modelContext';
 //com.jsm.app_v1
 export default function App() {
 
+<<<<<<< HEAD
     //  const { isLoading, isLoggedIn } = useGlobalContext();
 
     //  if (!isLoading && isLoggedIn) return <Redirect href="/home"/>
 
+=======
+>>>>>>> main
     return (
         // <ModelProvider>
           <SafeAreaView className="bg-white h-full">
