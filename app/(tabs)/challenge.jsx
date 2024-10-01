@@ -74,7 +74,7 @@ const Challenge = () => {
       ],
       image: "https://upload.wikimedia.org/wikipedia/commons/9/9d/Struthio_camelus_-_Etosha_2014_%283%29.jpg"
     },
-    African_elephant: {
+    african_elephant: {
       name: "African Elephant",
       species: "Loxodonta",
       diet: "Herbivore",
@@ -104,6 +104,33 @@ const Challenge = () => {
       ],
       image: "https://upload.wikimedia.org/wikipedia/commons/7/73/Lion_waiting_in_Namibia.jpg"
     }
+  };
+  const ScannedAnimalsList = ({ animals }) => {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Snapped Animals</Text>
+        <View style={styles.contentContainer}>
+          <ScrollView style={styles.scrollView}>
+            {animals.map((animal, index) => {
+              const info = animalInfo[animal.toLowerCase()];
+              return (
+                <View key={index} style={styles.animalCard}>
+                  <View style={styles.imageContainer}>
+                    <Image source={{ uri: info.image }} style={styles.animalImage} />
+                    <Icon name="check-circle" size={30} color="green" style={styles.tickIcon} />
+                  </View>
+                  <Text style={styles.animalName}>{info.name}</Text>
+                </View>
+              );
+            })}
+          </ScrollView>
+          <View style={styles.animalsLeftContainer}>
+            <Text style={styles.animalsLeft}>Animals left to scan: </Text>
+            <Text style={styles.animalsLeft}>2</Text>
+          </View>
+        </View>
+      </View>
+    );
   };
 
 
@@ -157,36 +184,36 @@ const Challenge = () => {
     console.log("Scanned animals: ", scannedAnimals);
   }, [scannedAnimals]);
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    async function loadModel() {
+  //   async function loadModel() {
 
-        setModelLoaded(false);
+  //       setModelLoaded(false);
 
-        console.log("waiting for  resnet tf to be ready")
-        await tf.ready();
+  //       console.log("waiting for  resnet tf to be ready")
+  //       await tf.ready();
 
-        console.log("TF is successfully ready")
+  //       console.log("TF is successfully ready")
 
-        const modelJson = require('../../assets/mobilenet_model/model.json');
-        const shard1 = require('../../assets/mobilenet_model/group1-shard1of3.bin');
-        const shard2 = require('../../assets/mobilenet_model/group1-shard2of3.bin');
-        const shard3 = require('../../assets/mobilenet_model/group1-shard3of3.bin');
+  //       const modelJson = require('../../assets/mobilenet_model/model.json');
+  //       const shard1 = require('../../assets/mobilenet_model/group1-shard1of3.bin');
+  //       const shard2 = require('../../assets/mobilenet_model/group1-shard2of3.bin');
+  //       const shard3 = require('../../assets/mobilenet_model/group1-shard3of3.bin');
 
-        const combinedWeights = [
-          shard1, shard2, shard3
-        ];
+  //       const combinedWeights = [
+  //         shard1, shard2, shard3
+  //       ];
 
-        console.log("Model files loaded. Creating model" )
+  //       console.log("Model files loaded. Creating model" )
 
-        const loadedModel = await tf.loadGraphModel(bundleResourceIO(modelJson, combinedWeights));
+  //       const loadedModel = await tf.loadGraphModel(bundleResourceIO(modelJson, combinedWeights));
       
-        setModelLoaded(true);
-        console.log("successfully created graph model");
-        setModel(loadedModel);
-    }
-    loadModel();
-  }, []);
+  //       setModelLoaded(true);
+  //       console.log("successfully created graph model");
+  //       setModel(loadedModel);
+  //   }
+  //   loadModel();
+  // }, []);
 
   function decodeImage(imageData) {
     const pixels = jpeg.decode(imageData, true); 
@@ -194,7 +221,7 @@ const Challenge = () => {
     return tensor;
   }
 
-  async function classifyImage2() {
+  async function classifyImage() {
     if (model) {
 
       console.log("loading image")
@@ -316,7 +343,7 @@ const Challenge = () => {
       // setImage(result.assets[0].uri);
       // classifyImage(result.assets[0].uri);
 
-      classifyImage2();
+      classifyImage();
       // console.log(result.assets[0].uri);
     // }
   };
@@ -345,25 +372,27 @@ const Challenge = () => {
 
   return (
     <View style={styles.container}>
-    <Text>Image Classification Model MobileNet</Text>
+    <Text style={styles.title}>Mystery Animal Scavenger Hunt</Text>
+    <ScannedAnimalsList animals={["Tiger", "Lion", "Ostrich", "African_elephant"]} />
 
     {modelLoaded ? (
       <>
-        <Text>Model Loaded Successfully</Text>
-        {/* <Button title="Take a picture" onPress={takePicture} /> */}
-
-        <TouchableOpacity style={styles.cameraButton} onPress={takePicture}>
+        <View style={styles.cameraBar}>
+          <TouchableOpacity style={styles.cameraButton} onPress={takePicture}>
             <Icon name="camera-alt" size={30} color="#fff" />
-        </TouchableOpacity>
-   
+          </TouchableOpacity>
+        </View>
       </>
     ) : (
+      <Text>Loading AI</Text>,
       <ActivityIndicator size="large" color="#0000ff" />
     )}
 
     {/* <Button title="Show popup" onPress={showModal} /> */}
 
     {image && <Image source={{ uri: image }} style={styles.image} />}
+
+    
 
     <Modal
       animationType="slide"
@@ -443,9 +472,41 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
   },
+  contentContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'darkgreen',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  animalsLeft: {
+    fontSize: 24, // Increased font size
+    fontWeight: 'bold',
+    color: 'darkgreen',
+    textAlign: 'center',
+    marginBottom: 10, // Added margin for spacing
+  },
+  animalsLeftContainer: {
+    width: '40%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   camera: {
     flex: 1,
     width: '100%',
+  },
+  cameraBar: {
+    backgroundColor: '#e8f5e9',
+    padding: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    position: 'absolute',
+    bottom: 0,
   },
   cameraButton: {
     backgroundColor: '#068c08',
@@ -463,8 +524,46 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 20,
   },
+  scrollView: {
+    width: '50%',
+    padding: 20,
+  },
+  animalCard: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 15,
+    marginVertical: 10,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  imageContainer: {
+    position: 'relative',
+  },
+  animalImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 10,
+  },
+  tickIcon: {
+    position: 'absolute',
+    top: 5,
+    right: 5,
+    transform: [{ translateX: 10 }, { translateY: -10 }],
+  },
+  animalName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+  },
 });
-
 
 const modalStyle = StyleSheet.create({
   modalContainer: {
