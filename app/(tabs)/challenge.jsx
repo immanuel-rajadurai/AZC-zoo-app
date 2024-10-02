@@ -13,6 +13,7 @@ import { fetch } from '@tensorflow/tfjs-react-native';
 import { Asset } from 'expo-asset';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import animalPhoto from '../../assets/animalImages/lion.jpg';
+import mysteryAnimalImage from '../../assets/animalImages/mystery_animal.jpg';
 
 
 const Challenge = () => {
@@ -105,28 +106,45 @@ const Challenge = () => {
       image: "https://upload.wikimedia.org/wikipedia/commons/7/73/Lion_waiting_in_Namibia.jpg"
     }
   };
+  
   const ScannedAnimalsList = ({ animals }) => {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Snapped Animals</Text>
         <View style={styles.contentContainer}>
-          <ScrollView style={styles.scrollView}>
-            {animals.map((animal, index) => {
-              const info = animalInfo[animal.toLowerCase()];
-              return (
-                <View key={index} style={styles.animalCard}>
-                  <View style={styles.imageContainer}>
-                    <Image source={{ uri: info.image }} style={styles.animalImage} />
-                    <Icon name="check-circle" size={30} color="green" style={styles.tickIcon} />
+        
+        
+          <View>
+            <Text style={styles.subtitle}>Animals to snap</Text>
+            <ScrollView style={styles.scrollView} persistentScrollbar={true}>  
+              {animals.map((animal, index) => {
+                const info = animalInfo[animal.toLowerCase()];
+                return (
+                  <View key={index} style={styles.mysteryAnimalCard}>
+                    <View style={styles.imageContainer}>
+                      <Image source={mysteryAnimalImage} style={styles.animalImage} />
+                    </View>
+                    <Text style={styles.animalName}>Mystery Animal</Text>
                   </View>
-                  <Text style={styles.animalName}>{info.name}</Text>
-                </View>
-              );
-            })}
-          </ScrollView>
-          <View style={styles.animalsLeftContainer}>
-            <Text style={styles.animalsLeft}>Animals left to scan: </Text>
-            <Text style={styles.animalsLeft}>2</Text>
+                );
+              })}
+            </ScrollView>
+          </View>
+          <View>
+          <Text style={styles.subtitle}>Snapped Animals</Text>
+          <ScrollView style={styles.scrollView} persistentScrollbar={true}>
+              {animals.map((animal, index) => {
+                const info = animalInfo[animal.toLowerCase()];
+                return (
+                  <View key={index} style={styles.animalCard}>
+                    <View style={styles.imageContainer}>
+                      <Image source={{ uri: info.image }} style={styles.animalImage} />
+                      <Icon name="check-circle" size={30} color="green" style={styles.tickIcon} />
+                    </View>
+                    <Text style={styles.animalName}>{info.name}</Text>
+                  </View>
+                );
+              })}
+            </ScrollView>
           </View>
         </View>
       </View>
@@ -372,7 +390,9 @@ const Challenge = () => {
 
   return (
     <View style={styles.container}>
-    <Text style={styles.title}>Mystery Animal Scavenger Hunt</Text>
+    <View style={styles.titleContainer}>
+        <Text style={styles.title}>Mystery Animal Scavenger Hunt</Text>
+    </View>
     <ScannedAnimalsList animals={["Tiger", "Lion", "Ostrich", "African_elephant"]} />
 
     {modelLoaded ? (
@@ -471,15 +491,34 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
+    paddingBottom: 1,
   },
   contentContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    paddingBottom: 110
+  },
+  titleContainer: {
+    backgroundColor: '#d4edda', // Light green background
+    borderRadius: 10, // Curved edges
+    padding: 16, // Padding inside the box
+    marginBottom: 20, // Space below the box
+    alignItems: 'center', // Center the text horizontally
+    marginTop:2
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     color: 'darkgreen',
+    marginBottom: 2,
+    marginTop:1,
+    textAlign: 'center',
+  },
+  subtitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'darkgreen',
+    marginTop: 10,
     marginBottom: 10,
     textAlign: 'center',
   },
@@ -525,10 +564,26 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   scrollView: {
-    width: '50%',
+    width: '100%',
     padding: 20,
+    paddingBottom: 20
   },
   animalCard: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 15,
+    marginVertical: 10,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  mysteryAnimalCard: {
     backgroundColor: '#fff',
     borderRadius: 10,
     padding: 15,
