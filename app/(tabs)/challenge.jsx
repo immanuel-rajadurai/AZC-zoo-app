@@ -107,16 +107,15 @@ const Challenge = () => {
     }
   };
   
-  const ScannedAnimalsList = ({ animals }) => {
+  const ScannedAnimalsList = ({ targetAnimals, scannedAnimals }) => {
+
     return (
       <View style={styles.container}>
         <View style={styles.contentContainer}>
-        
-        
           <View>
             <Text style={styles.subtitle}>Animals to snap</Text>
             <ScrollView style={styles.scrollView} persistentScrollbar={true}>  
-              {animals.map((animal, index) => {
+              {targetAnimals.map((animal, index) => {
                 const info = animalInfo[animal.toLowerCase()];
                 return (
                   <View key={index} style={styles.mysteryAnimalCard}>
@@ -132,8 +131,13 @@ const Challenge = () => {
           <View>
           <Text style={styles.subtitle}>Snapped Animals</Text>
           <ScrollView style={styles.scrollView} persistentScrollbar={true}>
-              {animals.map((animal, index) => {
+              {scannedAnimals.map((animal, index) => {
+                console.log("animal: " + animal);
+                
                 const info = animalInfo[animal.toLowerCase()];
+
+                console.log("animal info: " + info);
+
                 return (
                   <View key={index} style={styles.animalCard}>
                     <View style={styles.imageContainer}>
@@ -152,22 +156,20 @@ const Challenge = () => {
   };
 
 
-  // const loadedModel = useContext(ModelContext);
-
   useEffect(() => {
 
     const loadZooAnimals = async () => {
       try {
         const storedAnimals = await AsyncStorage.getItem('zooAnimals');
 
-        console.log("stored animals: " + storedAnimals);
-  
         if (storedAnimals) {
           setTargetAnimals(JSON.parse(storedAnimals));
         } else {
-          const initialAnimals = ['Lion', 'Elephant', 'Leopard', 'Ostrich', 'Tiger'];
-          setTargetAnimals(initialAnimals);
-          await AsyncStorage.setItem('zooAnimals', JSON.stringify(initialAnimals));
+          const initialTargetAnimals = ['lion', 'african_elephant', 'leopard', 'ostrich', 'tiger'];
+          setTargetAnimals(initialTargetAnimals);
+          await AsyncStorage.setItem('zooAnimals', JSON.stringify(initialTargetAnimals));
+
+          await AsyncStorage.setItem('zooAnimals', initialTargetAnimals);
         }
 
       } catch (error) {
@@ -239,52 +241,74 @@ const Challenge = () => {
     return tensor;
   }
 
-  async function classifyImage() {
-    if (model) {
+  async function classifyImageTest() {
+    
+    console.log("calling classify image on: " + Object.values(targetAnimals));
 
-      console.log("loading image")
-      const asset = Asset.fromModule(animalPhoto);
-      await asset.downloadAsync();
-      const imageUri = asset.localUri || asset.uri;
+    const predictedAnimal = "lion"
 
-      const base64String = await FileSystem.readAsStringAsync(imageUri, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
+    setPredictedAnimal(predictedAnimal);
 
-      const imageBuffer = Uint8Array.from(atob(base64String), c => c.charCodeAt(0));
+    console.log("with predicted Animals: ");
 
-      const imageTensor = tf.tidy(() => {
-        const decodedImage = decodeImage(imageBuffer);
-        return decodedImage.resizeNearestNeighbor([224, 224]).toFloat().expandDims();
-      });
-
-      console.log("image loaded. classifying image")
-
-      const prediction = await model.predict(imageTensor).data();
-      const highestPredictionIndex = prediction.indexOf(Math.max(...prediction));
-      const predictedClassEntry = labels[highestPredictionIndex];
-      const predictedAnimal = predictedClassEntry ? predictedClassEntry[1] : 'Unknown'; // class name
-
-      console.log("prediction: " + predictedAnimal)
-
-      //add scanned animal to scanned animals list
-
-      try {
-        let storedScannedAnimals = await AsyncStorage.getItem('scannedAnimals');
-        storedScannedAnimals = storedScannedAnimals ? JSON.parse(storedScannedAnimals) : [];
-        storedScannedAnimals.push(predictedAnimal);
-        await AsyncStorage.setItem('scannedAnimals', JSON.stringify(storedScannedAnimals));
-      
-      } catch (error) {
-        console.error("failed to save scanned animals", error);
-      }
-
-      setPredictedAnimal(predictedAnimal);
-
-      console.log("showing popup")
+    if (Object.values(targetAnimals).includes(predictedAnimal)) {
+      console.log("showing popup");
+      console.log("animal info for predicted animal: " + animalInfo[predictedAnimal]);
 
       showModal(predictedAnimal); 
+
+      
+    } else {
+      console.log(predictedAnimal + " is not in targetAnimals: " + targetAnimals)
     }
+    
+    // if (model) {
+
+    //   console.log("loading image")
+    //   const asset = Asset.fromModule(animalPhoto);
+    //   await asset.downloadAsync();
+    //   const imageUri = asset.localUri || asset.uri;
+
+    //   const base64String = await FileSystem.readAsStringAsync(imageUri, {
+    //     encoding: FileSystem.EncodingType.Base64,
+    //   });
+
+    //   const imageBuffer = Uint8Array.from(atob(base64String), c => c.charCodeAt(0));
+
+    //   const imageTensor = tf.tidy(() => {
+    //     const decodedImage = decodeImage(imageBuffer);
+    //     return decodedImage.resizeNearestNeighbor([224, 224]).toFloat().expandDims();
+    //   });
+
+    //   console.log("image loaded. classifying image")
+
+    //   const prediction = await model.predict(imageTensor).data();
+    //   const highestPredictionIndex = prediction.indexOf(Math.max(...prediction));
+    //   const predictedClassEntry = labels[highestPredictionIndex];
+    //   const predictedAnimal = predictedClassEntry ? predictedClassEntry[1] : 'Unknown'; // class name
+
+    //   console.log("prediction: " + predictedAnimal)
+
+    //   //add scanned animal to scanned animals list
+
+    //   try {
+    //     let storedScannedAnimals = await AsyncStorage.getItem('scannedAnimals');
+    //     storedScannedAnimals = storedScannedAnimals ? JSON.parse(storedScannedAnimals) : [];
+    //     storedScannedAnimals.push(predictedAnimal);
+    //     await AsyncStorage.setItem('scannedAnimals', JSON.stringify(storedScannedAnimals));
+      
+    //   } catch (error) {
+    //     console.error("failed to save scanned animals", error);
+    //   }
+
+    //   setPredictedAnimal(predictedAnimal);
+
+    //   console.log("showing popup")
+
+
+      
+    // }
+
   }
 
   async function classifyImage(imageUri) {
@@ -361,7 +385,7 @@ const Challenge = () => {
       // setImage(result.assets[0].uri);
       // classifyImage(result.assets[0].uri);
 
-      classifyImage();
+      classifyImageTest();
       // console.log(result.assets[0].uri);
     // }
   };
@@ -393,7 +417,7 @@ const Challenge = () => {
     <View style={styles.titleContainer}>
         <Text style={styles.title}>Mystery Animal Scavenger Hunt</Text>
     </View>
-    <ScannedAnimalsList animals={["Tiger", "Lion", "Ostrich", "African_elephant"]} />
+    <ScannedAnimalsList targetAnimals={targetAnimals} scannedAnimals={scannedAnimals} />
 
     {modelLoaded ? (
       <>
