@@ -2,10 +2,11 @@ import { View, Text, Image } from 'react-native';
 import { Tabs, Redirect, Stack } from 'expo-router';
 import { icons, images } from '../../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 //green CSS colour #187c3c
 
-const TabIcon = ({ icon, color, name, focused }) => {
+const TabIcon = ({ icon, color, name, focused, style }) => {
   return (
     <View className="items-center justify-center gap-2">
       <Image
@@ -13,6 +14,7 @@ const TabIcon = ({ icon, color, name, focused }) => {
         resizeMethod='contain'
         tintColor={color}
         className="w-15 h-15"
+        style={[{ tintColor: color }, style]}
       />
       <Text className={`${focused ? 'font-psemibold' : 'font-pregular'} text-xs`} style={{ color: color }}>
         {name}
@@ -63,6 +65,7 @@ const TabsLayout = () => {
                 color={color}
                 name="Places"
                 focused={focused}
+                style={{ width: 65, height: 40}}
               />
             )
           }}
@@ -74,11 +77,12 @@ const TabsLayout = () => {
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.binoculars}
+                icon={icons.paw}
                 color={color}
                 name="Animals"
                 focused={focused}
                 className="w-52 h-72"
+                style={{ width: 45, height: 40}}
               />
             )
           }}
@@ -90,7 +94,7 @@ const TabsLayout = () => {
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.profile1}
+                icon={icons.binoculars}
                 color={color}
                 name="Challenge"
                 focused={focused}
