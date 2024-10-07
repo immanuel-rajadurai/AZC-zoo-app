@@ -1,7 +1,19 @@
-import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity, Modal, SafeAreaView, ScrollView, router} from 'react-native';
+import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity, Modal, SafeAreaView, ScrollView, Button } from 'react-native';
 import React, { useState } from 'react';
 import { animalImages, animalData } from '../../data/animals';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
+const AnimalItem = ({ animal, onPress }) => {
+  return (
+    <TouchableOpacity onPress={() => onPress(animal)} style={styles.animalItem}>
+      <Image source={animalImages[animal.image]} style={styles.animalImage} />
+      <Text style={styles.animalName}>{animal.name}</Text>
+      <View style={styles.buttonContainer}>
+        <Button title="add to schedule" color="green" onPress={() => {}} />
+      </View>
+    </TouchableOpacity>
+  );
+};
 
 const Animals = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -41,6 +53,7 @@ const Animals = () => {
                   <Text style={modalStyle.modalTitle}>{selectedAnimal.name} Exhibit</Text>
                   <Image
                     source={animalImages[selectedAnimal.image]}
+                    style={modalStyle.image}
                   />
                   <Text style={modalStyle.animalName}>{selectedAnimal.name}</Text>
                   <Text style={modalStyle.species}>{selectedAnimal.species}</Text>
@@ -96,71 +109,58 @@ const Animals = () => {
   );
 };
 
-const AnimalItem = ({ animal, onPress }) => {
-  const animalImage = animalImages[animal.image];
-  return (
-    <TouchableOpacity style={styles.animal} onPress={() => onPress(animal)}>
-      <Image source={animalImage} style={styles.image} />
-      <View style={styles.textContainer}>
-        <Text style={styles.name}>{animal.name}</Text>
-      </View>
-    </TouchableOpacity>
-  );
-};
-
-const handleGoHome = () => {
-  router.push('/home');
-};
+export default Animals;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f4f4f4',
-    paddingTop: 50,
-    paddingHorizontal: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
   },
   title: {
-    fontSize: 32, 
+    fontSize: 24,
     fontWeight: 'bold',
-    color: 'green',
-    textAlign: 'center', 
-    marginBottom: 2,
-    marginTop: -30,
+    color: 'darkgreen',
+    marginBottom: 20,
   },
   animalList: {
-    marginTop: 20,
+    width: '100%',
   },
-  animal: {
-    flexDirection: 'row',
-    backgroundColor: '#fff',
-    marginBottom: 25,
-    padding: 10,
-    borderRadius: 8,
-    shadowColor: '#000',
-    borderColor: '#000',
-    borderWidth: 1,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3, 
-    shadowRadius: 5, 
-    elevation: 5,
-    alignItems: 'flex-start', 
+  animalItem: {
+    borderRadius: 10, // Rounded corners
+    shadowColor: '#000', // Shadow color
+    shadowOffset: { width: 0, height: 2 }, // Shadow offset
+    shadowOpacity: 0.25, // Shadow opacity
+    shadowRadius: 3.84, // Shadow radius
+    elevation: 5, // Elevation for Android shadow
+    backgroundColor: '#fff', // Background color to make the shadow visible
+    padding: 10, // Optional: Add padding to the component
+    margin: 10, // Optional: Add margin to the component
   },
-  image: {
-    width: 80,
-    height: 80,
-    borderRadius: 8,
+  animalImage: {
+    width: 100,
+    height: 100,
     marginRight: 10,
+    borderRadius: 10
   },
-  textContainer: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  name: {
-    fontSize: 18,
+  animalName: {
+    fontSize: 20,
     fontWeight: 'bold',
-    color: 'green',
-    marginBottom: 5,
+    color: 'darkgreen',
+    marginTop: 10,
+    marginBottom: 10,
+    textAlign: 'left',
+    paddingRight: 17,
+  },
+  buttonContainer: {
+    flexDirection: 'row', // Arrange children in a row
+    justifyContent: 'flex-end', // Move children to the far right
+  },
+  checkboxText: {
+    marginLeft: 8,
+    fontSize: 12,
+    color: 'gray',
   },
 });
 
@@ -188,6 +188,14 @@ const modalStyle = StyleSheet.create({
     color: 'green',
     marginBottom: 15,
     marginTop: 30,
+  },
+  animalListElement: {
+    borderRadius: 10, // Rounded corners
+    shadowColor: '#000', // Shadow color
+    shadowOffset: { width: 0, height: 2 }, // Shadow offset
+    shadowOpacity: 0.25, // Shadow opacity
+    shadowRadius: 3.84, // Shadow radius
+    elevation: 5, // For Android shadow
   },
   animalImage: {
     width: 90,
@@ -227,5 +235,3 @@ const modalStyle = StyleSheet.create({
     fontSize: 16,
   },
 });
-
-export default Animals

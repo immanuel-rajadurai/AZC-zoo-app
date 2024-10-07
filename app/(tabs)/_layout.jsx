@@ -2,7 +2,6 @@ import { View, Text, Image } from 'react-native';
 import { Tabs, Redirect, Stack } from 'expo-router';
 import { icons, images } from '../../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
 //green CSS colour #187c3c
 
