@@ -1,132 +1,114 @@
 import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity, Modal, SafeAreaView, ScrollView, Button } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import { animalImages, animalData } from '../../data/animals';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { animalImages, animalData } from '../data/animals';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
-
 
 
 const Animals = () => {
+
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
-  const [scheduledAnimals, setScheduledAnimals] = useState([]);
-  const [loading, setLoading] = useState(true);
 
-  const navigation = useNavigation();
+  const [scheduledAnimals, setScheduledAnimals] = useState(null); 
+  const [scheduledAnimalsDetails, setScheduledAnimalsDetails] = useState(null);  
+  const [loading, setLoading] = useState(true); // Add loading state
+  const [animalsRetrieved, setAnimalsRetrieved] = useState(false); // Add state to track retrieval
 
-  const closeModal = () => {
-    setModalVisible(false);
-    setSelectedAnimal(null);
+  const filterAnimalsByName = (name) => {
+    return animalData.filter(animal => animal.name === name);
   };
 
-  const NavigateToSchedule = () => {
-    navigation.navigate('schedule'); 
-  };
+  useEffect(() => {
 
+    const filterScheduledAnimals = async () => {
+
+       const retrievedScheduledAnimals = await AsyncStorage.getItem('scheduledAnimals');
+
+       setScheduledAnimals(JSON.parse(retrievedScheduledAnimals));
+       setAnimalsRetrieved(true)
+
+    //    if (retrievedScheduledAnimals) {
+    //     const filteredAnimals = retrievedScheduledAnimals.map(name => filterAnimalsByName(name)).flat();
+    //     setScheduledAnimalsDetails(filteredAnimals);
+    //    }
+
+       setLoading(false);
+    };
+    
+    filterScheduledAnimals();
+  }, []); 
+
+  useEffect(() => {
+    if (animalsRetrieved) {
+      const filteredAnimals = scheduledAnimals.map(name => filterAnimalsByName(name)).flat();
+      setScheduledAnimalsDetails(filteredAnimals);
+    }
+  }, [animalsRetrieved, scheduledAnimals]);
+
+
+  useEffect(() => {
+    console.log("scheduled animals in schedule.jsx: " + scheduledAnimals);
+  }, [scheduledAnimals]);
 
   const AnimalItem = ({ animal, onPress }) => {
+
     return (
       <TouchableOpacity onPress={() => onPress(animal)} style={styles.animalItem}>
         <Image source={animalImages[animal.image]} style={styles.animalImage} />
         <Text style={styles.animalName}>{animal.name}</Text>
-        {!scheduledAnimals.includes(animal.name) && (
-          <View style={styles.buttonContainer}>
-            <Button title="add to schedule" style={styles.text} color="green" onPress={() => addToSchedule(animal.name)} />
-          </View>
-        )}
+        <View style={styles.buttonContainer}>
+          <Button title="remove from schedule" color="green" onPress={() => removeFromSchedule(animal.name)}/>
+        </View>
       </TouchableOpacity>
     );
   };
+  
+  
 
-  const loadScheduledAnimals = async () => {
+  async function removeFromSchedule(animalName) {
+
+    console.log("calling removeFromSchedule");
+
     try {
-      const scheduledAnimals = await AsyncStorage.getItem('scheduledAnimals');
 
-      console.log("scheduled animals in animals.jsx: " + scheduledAnimals);
+      if (scheduledAnimals.includes(animalName)) {
+        let updatedScheduledAnimals = scheduledAnimals.filter(animal => animal !== animalName);
+        setScheduledAnimals(updatedScheduledAnimals);
+        await AsyncStorage.setItem('scheduledAnimals', JSON.stringify(updatedScheduledAnimals));
 
-      if (scheduledAnimals) {
-        setScheduledAnimals(JSON.parse(scheduledAnimals));
-      } else {
-        const initialScheduledAnimals = [];
-        setScheduledAnimals(initialScheduledAnimals);
-        setLoading(false);
-        await AsyncStorage.setItem('scheduledAnimals', JSON.stringify(initialScheduledAnimals));
+        const updatedScheduledAnimalsDetails = updatedScheduledAnimals.map(name => filterAnimalsByName(name)).flat();
+        setScheduledAnimalsDetails(updatedScheduledAnimalsDetails);
+
+        
       }
 
+      console.log("animal removed from schedule now: " + scheduledAnimals);
+
     } catch (error) {
-      console.error('Failed to load zoo animals', error);
-      setLoading(false);
+      console.error('Failed to load scanned animals', error);
     }
 
+   
   };
-
-  // useFocusEffect(() => {
-
-  //   const loadScheduledAnimals = async () => {
-  //     try {
-  //       const scheduledAnimals = await AsyncStorage.getItem('scheduledAnimals');
-
-  //       console.log("scheduled animals in animals.jsx: " + scheduledAnimals);
-
-  //       if (scheduledAnimals) {
-  //         setScheduledAnimals(JSON.parse(scheduledAnimals));
-  //       } else {
-  //         const initialScheduledAnimals = [];
-  //         setScheduledAnimals(initialScheduledAnimals);
-  //         await AsyncStorage.setItem('scheduledAnimals', JSON.stringify(initialScheduledAnimals));
-  //       }
-
-  //     } catch (error) {
-  //       console.error('Failed to load zoo animals', error);
-  //     }
-
-  //   };
-    
-  //   loadScheduledAnimals();
-  // }, []);  
-
-  useFocusEffect(
-    React.useCallback(() => {
-      loadScheduledAnimals();
-    }, [])
-  );
 
   const handlePress = (animal) => {
     setSelectedAnimal(animal);
     setModalVisible(true);
   };
 
-  async function addToSchedule(animalName) {
-
-    try {
-
-      if (!scheduledAnimals.includes(animalName)) {
-
-        let currentScheduledAnimals = scheduledAnimals
-
-        currentScheduledAnimals.push(animalName)
-
-        setScheduledAnimals(currentScheduledAnimals)
-
-        await AsyncStorage.setItem('scheduledAnimals', JSON.stringify(currentScheduledAnimals));
-
-      }
-
-    } catch (error) {
-      console.error('Failed to modify scheduled animals', error);
-    }
+  const closeModal = () => {
+    setModalVisible(false);
+    setSelectedAnimal(null);
   };
 
+  if (loading) {
+    return <Text>Loading...</Text>; // Show loading state
+  }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Animals</Text>
-      <View style={styles.buttonContainer}>
-          <Button title="My schedule" style={styles.text} color="green" onPress={NavigateToSchedule} />
-        </View>
       <FlatList
-        data={animalData}
+        data={scheduledAnimalsDetails}
         renderItem={({ item }) => <AnimalItem animal={item} onPress={handlePress} />}
         keyExtractor={(item) => item.name}
         style={styles.animalList}
@@ -216,9 +198,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'darkgreen',
     marginBottom: 20,
-  },
-  text: {
-    fontSize: 18,
   },
   animalList: {
     width: '100%',

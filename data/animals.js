@@ -1,4 +1,3 @@
-
 const animals = [
     {
       key: "1",
