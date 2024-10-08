@@ -28,6 +28,7 @@ const animals = [
 
   const animalData = [
     {
+      "key": "1",
       "name": "Lion",
       "image": "lion",
       "species": "Panthera leo",
@@ -41,6 +42,7 @@ const animals = [
       "funFacts": ["Its an animal", "Its alive", "Its in this zoo", "", "", ""]
     },
     {
+      "key": "2",
       "name": "Giraffe",
       "image": "giraffe",
       "species": "Giraffa camelopardalis",
@@ -54,6 +56,7 @@ const animals = [
       "funFacts": ["Its an animal", "Its alive", "Its in this zoo", "", "", ""]
     },
     {
+      "key": "3",
       "name": "Tiger",
       "image": "tiger",
       "species": "Panthera tigris",
@@ -67,6 +70,7 @@ const animals = [
       "funFacts": ["Its an animal", "Its alive", "Its in this zoo", "", "", ""]
     },
     {
+      "key": "4",
       "name": "Monkey",
       "image": "monkey",
       "species": "Cercopithecidae",
@@ -80,6 +84,7 @@ const animals = [
       "funFacts": ["Its an animal", "Its alive", "Its in this zoo", "", "", ""]
     },
     {
+      "key": "5",
       "name": "Panda",
       "image": "panda",
       "species": "Ailuropoda melanoleuca",
@@ -93,6 +98,7 @@ const animals = [
       "funFacts": ["Its an animal", "Its alive", "Its in this zoo", "", "", ""]
     },
     {
+      "key": "6",
       "name": "Camel",
       "image": "camel",
       "species": "Camelus",
@@ -106,6 +112,7 @@ const animals = [
       "funFacts": ["Its an animal", "Its alive", "Its in this zoo", "", "", ""]
     },
     {
+      "key": "7",
       "name": "Hawk",
       "image": "hawk",
       "species": "Accipitrinae urotriorchis",
@@ -119,6 +126,7 @@ const animals = [
       "funFacts": ["Its an animal", "Its alive", "Its in this zoo", "", "", ""]
     },
     {
+      "key": "8",
       "name": "Hippopotamus",
       "image": "hippo",
       "species": "Hippopotamus amphibius",
@@ -132,6 +140,7 @@ const animals = [
       "funFacts": ["Its an animal", "Its alive", "Its in this zoo", "", "", ""]
     },
     {
+      "key": "9",
       "name": "Llama",
       "image": "llama",
       "species": "Lama glama",
