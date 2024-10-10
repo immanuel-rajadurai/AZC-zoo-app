@@ -10,7 +10,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import mysteryAnimalImage from '../assets/animalImages/mystery_animal.jpg';
 import { Asset } from 'expo-asset';
 import { fetch } from '@tensorflow/tfjs-react-native';
-import animalPhoto from '../assets/animalImages/tiger.jpg';
+import animalPhoto from '../assets/animalImages/ostrich.jpg';
 import { bundleResourceIO } from '@tensorflow/tfjs-react-native';
 
 

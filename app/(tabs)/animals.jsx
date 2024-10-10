@@ -28,7 +28,7 @@ const Animals = () => {
   const AnimalItem = ({ animal, onPress }) => {
     return (
       <TouchableOpacity onPress={() => onPress(animal)} style={styles.animalItem}>
-        <Image source={animalImages[animal.image]} style={styles.animalImage} />
+        <Image source={{ uri: animal.image }} style={styles.animalImage} />
         <Text style={styles.animalName}>{animal.name}</Text>
         {!scheduledAnimals.includes(animal.name) && (
           <View style={styles.buttonContainer}>
