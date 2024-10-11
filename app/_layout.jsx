@@ -134,6 +134,8 @@ const RootLayout = () => {
         options={{header: CustomHeader }}
       />
 
+      <Stack.Screen name="wallet2" options={{ title: 'Wallet2' }} />
+
       <Stack.Screen name="news" options={{ title: 'News' }} />
       <Stack.Screen name="information" options={{ title: 'Information' }} />
       <Stack.Screen name="events" options={{ title: 'Events' }} />

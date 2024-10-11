@@ -11,18 +11,24 @@ import Home from '../(drawer)/(tabs)/home'
 import Animals from './(tabs)/animals';
 import Challenge from './(tabs)/challenge';
 import Places from './(tabs)/places';
+import { useNavigation } from 'expo-router';
 
 
 //const Drawer = createDrawerNavigator();
 
 
 const CustomDrawerContent = (props) => {
+
+    const navigation = useNavigation();
+
+
     return(
     <DrawerContentScrollView {...props} screenOptions={{headerShown: false}} >
         <DrawerItem
         label={"Wallet"}
         onPress={() => {
-            router.push('wallet');
+            // router.push('wallet');
+            navigation.navigate('wallet2');
         }}
         options={{ headerShown: false }}
       />
