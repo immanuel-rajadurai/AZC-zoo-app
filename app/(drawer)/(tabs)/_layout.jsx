@@ -1,7 +1,8 @@
 import { View, Text, Image } from 'react-native';
 import { Tabs, Redirect, Stack } from 'expo-router';
-import { icons, images } from '../../constants';
+import { icons, images } from '../../../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { CustomHeader } from '../_layout';
 
 //green CSS colour #187c3c
 
@@ -42,6 +43,7 @@ const TabsLayout = () => {
           options={{
             title:'Home',
             headerShown: false,
+            //header: CustomHeader,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
                 icon={icons.home1}
@@ -57,6 +59,7 @@ const TabsLayout = () => {
           options={{
             title:'Places',
             headerShown: false,
+            //header: CustomHeader,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
                 icon={icons.eye}
@@ -72,6 +75,7 @@ const TabsLayout = () => {
           options={{
             title:'Animals',
             headerShown: false,
+            //header: CustomHeader,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
                 icon={icons.binoculars}
@@ -88,6 +92,7 @@ const TabsLayout = () => {
           options={{
             title:'Challenge',
             headerShown: false,
+            //header: CustomHeader,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
                 icon={icons.profile1}
@@ -103,4 +108,4 @@ const TabsLayout = () => {
   )
 }
 
-export default TabsLayout
+export default TabsLayout;
