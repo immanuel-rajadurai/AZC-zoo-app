@@ -1,16 +1,8 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 import { Drawer } from 'expo-router/drawer';
-import Wallet from './wallet';
 import { DrawerContentScrollView, DrawerItem  } from '@react-navigation/drawer';
 import { router } from 'expo-router';
-import { NavigationContainer, DrawerActions } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { CustomHeader } from '../_layout'
-import Home from '../(drawer)/(tabs)/home'
-import Animals from './(tabs)/animals';
-import Challenge from './(tabs)/challenge';
-import Places from './(tabs)/places';
 import { useNavigation } from 'expo-router';
 
 
@@ -28,7 +20,7 @@ const CustomDrawerContent = (props) => {
         label={"Wallet"}
         onPress={() => {
             // router.push('wallet');
-            navigation.navigate('wallet2');
+            navigation.navigate('wallet');
         }}
         options={{ headerShown: false }}
       />
