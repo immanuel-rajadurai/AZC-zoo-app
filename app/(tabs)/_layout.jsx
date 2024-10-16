@@ -32,9 +32,9 @@ const TabsLayout = () => {
           tabBarInactiveTintColor: '#CDCDE0',
           tabBarStyle: {
             backgroundColor: '#187c3c',
-            borderTopWidth: 1,
+            borderTopWidth: 0,
             borderTopColor: '#232533',
-            height:84,
+            height:80,
           }
         }}
       >
@@ -60,11 +60,11 @@ const TabsLayout = () => {
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.eye}
+                icon={icons.showsgreen}
                 color={color}
                 name="Places"
                 focused={focused}
-                style={{ width: 65, height: 40}}
+                style={{ width: 35, height: 35}}
               />
             )
           }}

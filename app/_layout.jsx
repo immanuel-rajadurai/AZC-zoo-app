@@ -30,7 +30,7 @@ const CustomHeader = ({ navigation, route }) => {
   }, [isSearchVisible]);
   return (
     <SafeAreaView className="bg-green-700">
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 10, paddingHorizontal: 15, position: 'relative'}}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 1, paddingHorizontal: 15, position: 'relative'}}>
         {!isSearchVisible ? (
           <Text className="text-2xl font-psemibold text-white mb-3 mt-3 f">
           Zoo  App
@@ -50,7 +50,7 @@ const CustomHeader = ({ navigation, route }) => {
             onPress={handleSearchToggle} 
           >
           <Image
-            source={isSearchVisible ? icons.close : icons.search} 
+            source={isSearchVisible ? icons.close : icons.searchgreen} 
             className="w-5 h-5"
             style={{
               width: 20,
