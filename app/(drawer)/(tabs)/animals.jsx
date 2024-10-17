@@ -1,6 +1,6 @@
 import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity, Modal, SafeAreaView, ScrollView, router} from 'react-native';
 import React, { useState } from 'react';
-import { animalImages, animalData } from '../../data/animals';
+import { animalImages, animalData } from '../../../data/animals';
 
 
 const Animals = () => {

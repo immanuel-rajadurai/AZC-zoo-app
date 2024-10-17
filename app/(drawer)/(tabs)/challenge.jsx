@@ -4,15 +4,17 @@ import * as tf from '@tensorflow/tfjs';
 import { bundleResourceIO } from '@tensorflow/tfjs-react-native';
 import * as jpeg from 'jpeg-js';
 import * as FileSystem from 'expo-file-system';
-import labels from '../../assets/labels.json'; 
+import labels from '../../../assets/labels.json'; 
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { animalImages, animalData } from '../../data/animals';
-import { ModelContext } from '../modelContext';
+import { animalImages, animalData } from '../../../data/animals';
+import { ModelContext } from '../../modelContext';
 import { fetch } from '@tensorflow/tfjs-react-native';
 import { Asset } from 'expo-asset';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import animalPhoto from '../../assets/animalImages/lion.jpg';
+import animalPhoto from '../../../assets/animalImages/lion.jpg';
+
+
 
 
 const Challenge = () => {
@@ -168,10 +170,10 @@ const Challenge = () => {
 
         console.log("TF is successfully ready")
 
-        const modelJson = require('../../assets/mobilenet_model/model.json');
-        const shard1 = require('../../assets/mobilenet_model/group1-shard1of3.bin');
-        const shard2 = require('../../assets/mobilenet_model/group1-shard2of3.bin');
-        const shard3 = require('../../assets/mobilenet_model/group1-shard3of3.bin');
+        const modelJson = require('../../../assets/mobilenet_model/model.json');
+        const shard1 = require('../../../assets/mobilenet_model/group1-shard1of3.bin');
+        const shard2 = require('../../../assets/mobilenet_model/group1-shard2of3.bin');
+        const shard3 = require('../../../assets/mobilenet_model/group1-shard3of3.bin');
 
         const combinedWeights = [
           shard1, shard2, shard3

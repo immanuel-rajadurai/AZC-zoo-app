@@ -1,21 +1,31 @@
-import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
-import React, { useState, useEffect, useRef} from 'react'
+import { Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
 import { SplashScreen, Stack } from 'expo-router';
-import { useFonts } from 'expo-font'
-import GlobalProvider from '../context/GlobalProvider'
-import { images } from '../constants'
+import { useFonts } from 'expo-font';
+import GlobalProvider from '../context/GlobalProvider';
+import { images } from '../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { icons } from '../constants'
-import SearchInput from "../components/searchInput";
+import { icons } from '../constants';
+import SearchInput from '../components/searchInput';
+import 'react-native-gesture-handler';
+import { NavigationContainer, DrawerActions } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+//import Wallet from './wallet';
+import { useNavigation } from '@react-navigation/native';
+import { customGrad } from '@tensorflow/tfjs';
+import DrawerNavigator from './(drawer)/_layout';
+
+
 
 SplashScreen.preventAutoHideAsync();
 
-const CustomHeader = ({ navigation, route }) => {
+
+const CustomHeader = ({ route }) => {
   // Customize the header content here (e.g., add logo, buttons, etc.)
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const searchInputRef = useRef(null); 
-  
+  const searchInputRef = useRef(null);
+
   const handleSearchToggle = () => {
     if (isSearchVisible) {
       setSearchQuery('');
@@ -25,25 +35,42 @@ const CustomHeader = ({ navigation, route }) => {
 
   useEffect(() => {
     if (isSearchVisible && searchInputRef.current) {
-      searchInputRef.current.focus(); 
+      searchInputRef.current.focus();
     }
   }, [isSearchVisible]);
+
+  const navigation = useNavigation();
+
+  const toggleDrawer = () => {
+    navigation.dispatch(DrawerActions.toggleDrawer());
+  };
+
   return (
     <SafeAreaView className="bg-green-700">
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 10, paddingHorizontal: 15, position: 'relative'}}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 10, paddingHorizontal: 15, position: 'relative' }}>
         {!isSearchVisible ? (
-          <Text className="text-2xl font-psemibold text-white mb-3 mt-3 f">
-          Zoo  App
-        </Text>
+          <>
+            <TouchableOpacity
+              style={{ position: 'absolute', left: 50 }}
+              onPress={toggleDrawer}
+            >
+              <Image
+                source={icons.burgerMenu}
+                style={{ width: 40, height: 35, tintColor: "white" }}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+            <Text className="text-2xl font-psemibold text-white mb-3 mt-3">Zoo App</Text>
+          </>
         ) : (
           <SearchInput
-            ref={searchInputRef} 
+            ref={searchInputRef}
             value={searchQuery}
             handleChangeText={(text) => setSearchQuery(text)}
           />
         )}
-   
-          <TouchableOpacity style={{
+
+        <TouchableOpacity style={{
               position: 'absolute',
               right: 50, 
             }} 
@@ -59,53 +86,62 @@ const CustomHeader = ({ navigation, route }) => {
             }}
             resizeMode="contain"
           />
-            </TouchableOpacity>
-        </View>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
 
 const RootLayout = () => {
   const [fontsLoaded, error] = useFonts({
-    "Poppins-Black": require("../assets/fonts/Poppins-Black.ttf"),
-    "Poppins-Bold": require("../assets/fonts/Poppins-Bold.ttf"),
-    "Poppins-ExtraBold": require("../assets/fonts/Poppins-ExtraBold.ttf"),
-    "Poppins-ExtraLight": require("../assets/fonts/Poppins-ExtraLight.ttf"),
-    "Poppins-Light": require("../assets/fonts/Poppins-Light.ttf"),
-    "Poppins-Medium": require("../assets/fonts/Poppins-Medium.ttf"),
-    "Poppins-Regular": require("../assets/fonts/Poppins-Regular.ttf"),
-    "Poppins-SemiBold": require("../assets/fonts/Poppins-SemiBold.ttf"),
-    "Poppins-Thin": require("../assets/fonts/Poppins-Thin.ttf"),
+    'Poppins-Black': require('../assets/fonts/Poppins-Black.ttf'),
+    'Poppins-Bold': require('../assets/fonts/Poppins-Bold.ttf'),
+    'Poppins-ExtraBold': require('../assets/fonts/Poppins-ExtraBold.ttf'),
+    'Poppins-ExtraLight': require('../assets/fonts/Poppins-ExtraLight.ttf'),
+    'Poppins-Light': require('../assets/fonts/Poppins-Light.ttf'),
+    'Poppins-Medium': require('../assets/fonts/Poppins-Medium.ttf'),
+    'Poppins-Regular': require('../assets/fonts/Poppins-Regular.ttf'),
+    'Poppins-SemiBold': require('../assets/fonts/Poppins-SemiBold.ttf'),
+    'Poppins-Thin': require('../assets/fonts/Poppins-Thin.ttf'),
   });
 
   useEffect(() => {
     if (error) throw error;
     if (fontsLoaded) SplashScreen.hideAsync();
-  }, [fontsLoaded, error])
+  }, [fontsLoaded, error]);
 
   if (!fontsLoaded && !error) return null;
 
   return (
-    // <GlobalProvider>
-      <Stack >
-        <Stack.Screen name="index" options={{
-            headerShown:false
-        }} />
-        <Stack.Screen name="(auth)" options={{
-            headerShown:true
-        }} />
-        <Stack.Screen name="(tabs)" options={{
-            // headerShown:true
-            header: CustomHeader
-        }} />
-
-        <Stack.Screen name="news" options={{ title: 'News' }} />
-        <Stack.Screen name="information" options={{ title: 'Information' }} />
-        <Stack.Screen name="events" options={{ title: 'Events' }} />
+    <>
+     <Stack>
+      <Stack.Screen
+        name="index"
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="(auth)"
+        options={{ headerShown: true }}
+      />
+      {/* <Stack.Screen
+        name="(tabs)"
+        options={{header: CustomHeader}}
         
-      </Stack>
-    // </GlobalProvider>
-    )
-}
+      /> */}
 
-export default RootLayout
+      <Stack.Screen
+        name="(drawer)"
+        options={{header: CustomHeader }}
+      />
+
+      <Stack.Screen name="wallet" options={{ title: 'Wallet' }} />
+
+      <Stack.Screen name="news" options={{ title: 'News' }} />
+      <Stack.Screen name="information" options={{ title: 'Information' }} />
+      <Stack.Screen name="events" options={{ title: 'Events' }} />
+    </Stack>
+    </>
+  );
+};
+
+export default RootLayout;

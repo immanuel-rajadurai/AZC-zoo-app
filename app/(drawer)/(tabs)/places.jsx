@@ -1,6 +1,6 @@
 import { View, Text, FlatList, Image, StyleSheet } from 'react-native';
 import React from 'react';
-import {placesData, images} from '../../data/places';
+import {placesData, images} from '../../../data/places';
 
 
 const PlaceItem = ({ place }) => {
@@ -17,6 +17,8 @@ const PlaceItem = ({ place }) => {
 };
 
 const Places = () => {
+
+  console.log("entered place page")
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Places</Text>
