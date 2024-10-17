@@ -6,7 +6,7 @@ import { CustomHeader } from '../_layout';
 
 //green CSS colour #187c3c
 
-const TabIcon = ({ icon, color, name, focused }) => {
+const TabIcon = ({ icon, color, name, focused, style }) => {
   return (
     <View className="items-center justify-center gap-2">
       <Image
@@ -14,6 +14,7 @@ const TabIcon = ({ icon, color, name, focused }) => {
         resizeMethod='contain'
         tintColor={color}
         className="w-15 h-15"
+        style={[{ tintColor: color }, style]}
       />
       <Text className={`${focused ? 'font-psemibold' : 'font-pregular'} text-xs`} style={{ color: color }}>
         {name}
@@ -32,9 +33,9 @@ const TabsLayout = () => {
           tabBarInactiveTintColor: '#CDCDE0',
           tabBarStyle: {
             backgroundColor: '#187c3c',
-            borderTopWidth: 1,
+            borderTopWidth: 0,
             borderTopColor: '#232533',
-            height:84,
+            height:80,
           }
         }}
       >
@@ -62,10 +63,11 @@ const TabsLayout = () => {
             //header: CustomHeader,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.eye}
+                icon={icons.showsgreen}
                 color={color}
                 name="Places"
                 focused={focused}
+                style={{ width: 35, height: 35}}
               />
             )
           }}
@@ -78,11 +80,12 @@ const TabsLayout = () => {
             //header: CustomHeader,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.binoculars}
+                icon={icons.paw}
                 color={color}
                 name="Animals"
                 focused={focused}
                 className="w-52 h-72"
+                style={{ width: 45, height: 40}}
               />
             )
           }}
@@ -95,7 +98,7 @@ const TabsLayout = () => {
             //header: CustomHeader,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.profile1}
+                icon={icons.binoculars}
                 color={color}
                 name="Challenge"
                 focused={focused}

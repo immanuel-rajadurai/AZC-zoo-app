@@ -47,7 +47,7 @@ const CustomHeader = ({ route }) => {
 
   return (
     <SafeAreaView className="bg-green-700">
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 10, paddingHorizontal: 15, position: 'relative' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 1, paddingHorizontal: 15, position: 'relative'}}>
         {!isSearchVisible ? (
           <>
             <TouchableOpacity
@@ -77,7 +77,7 @@ const CustomHeader = ({ route }) => {
             onPress={handleSearchToggle} 
           >
           <Image
-            source={isSearchVisible ? icons.close : icons.search} 
+            source={isSearchVisible ? icons.close : icons.searchgreen} 
             className="w-5 h-5"
             style={{
               width: 20,
@@ -113,21 +113,19 @@ const RootLayout = () => {
   if (!fontsLoaded && !error) return null;
 
   return (
+    // <GlobalProvider>
     <>
-     <Stack>
-      <Stack.Screen
-        name="index"
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="(auth)"
-        options={{ headerShown: true }}
-      />
-      {/* <Stack.Screen
-        name="(tabs)"
-        options={{header: CustomHeader}}
+      <Stack>
+        <Stack.Screen name="index" options={{
+            headerShown:false
+        }} />
+
+        <Stack.Screen name="easychallenge" options={{ title: 'Easy Challenge' }} />
+
+        <Stack.Screen name="hardchallenge" options={{ title: 'Mystery Challenge (hard)' }} />
+
+        <Stack.Screen name="schedule" options={{ title: 'Your Scheduled Animals' }} />
         
-      /> */}
 
       <Stack.Screen
         name="(drawer)"

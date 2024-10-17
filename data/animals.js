@@ -1,4 +1,3 @@
-
 const animals = [
     {
       key: "1",
@@ -28,123 +27,64 @@ const animals = [
 
   const animalData = [
     {
-      "name": "Lion",
-      "image": "lion",
-      "species": "Panthera leo",
-      "diet": "Carnivorous (Buffaloes, leopards, baby elephants)",
-      "length": "0.00m",
-      "height": "0.00m",
-      "weightM": "0Kg",
-      "weightF": "0Kg",
-      "habitat": "Earth",
-      "conservationStatus": "Endangered",
-      "funFacts": ["Its an animal", "Its alive", "Its in this zoo", "", "", ""]
+        "key": "1",
+        "name": "Lion",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/7/73/Lion_waiting_in_Namibia.jpg",
+        "species": "Panthera leo",
+        "diet": "Carnivorous (Buffaloes, leopards, baby elephants)",
+        "length": "0.00m",
+        "height": "0.00m",
+        "weightM": "0Kg",
+        "weightF": "0Kg",
+        "habitat": "Earth",
+        "conservationStatus": "Endangered",
+        "funFacts": ["Its an animal", "Its alive", "Its in this zoo", "", "", ""]
     },
     {
-      "name": "Giraffe",
-      "image": "giraffe",
-      "species": "Giraffa camelopardalis",
-      "diet": "Herbivorous (Leaves, herbs, flowers)",
-      "length": "0.00m",
-      "height": "0.00m",
-      "weightM": "0Kg",
-      "weightF": "0Kg",
-      "habitat": "Earth",
-      "conservationStatus": "Endangered",
-      "funFacts": ["Its an animal", "Its alive", "Its in this zoo", "", "", ""]
+        "key": "2",
+        "name": "Giraffe",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/9/9f/Giraffe_standing.jpg",
+        "species": "Giraffa camelopardalis",
+        "diet": "Herbivorous (Leaves, herbs, flowers)",
+        "length": "0.00m",
+        "height": "0.00m",
+        "weightM": "0Kg",
+        "weightF": "0Kg",
+        "habitat": "Earth",
+        "conservationStatus": "Endangered",
+        "funFacts": ["Its an animal", "Its alive", "Its in this zoo", "", "", ""]
     },
     {
-      "name": "Tiger",
-      "image": "tiger",
-      "species": "Panthera tigris",
-      "diet": "Carnivorous (Monkeys, wild boar, deer)",
-      "length": "0.00m",
-      "height": "0.00m",
-      "weightM": "0Kg",
-      "weightF": "0Kg",
-      "habitat": "Earth",
-      "conservationStatus": "Endangered",
-      "funFacts": ["Its an animal", "Its alive", "Its in this zoo", "", "", ""]
+        "key": "3",
+        "name": "Tiger",
+        "image": "https://cdn.britannica.com/83/195983-138-66807699/numbers-tiger-populations.jpg?w=800&h=450&c=crop",
+        "species": "Panthera tigris",
+        "diet": "Carnivorous (Monkeys, wild boar, deer)",
+        "length": "0.00m",
+        "height": "0.00m",
+        "weightM": "0Kg",
+        "weightF": "0Kg",
+        "habitat": "Earth",
+        "conservationStatus": "Endangered",
+        "funFacts": ["Its an animal", "Its alive", "Its in this zoo", "", "", ""]
     },
+
     {
-      "name": "Monkey",
-      "image": "monkey",
-      "species": "Cercopithecidae",
-      "diet": "Omnivorous (Fruit, insects, lizards)",
-      "length": "0.00m",
-      "height": "0.00m",
-      "weightM": "0Kg",
-      "weightF": "0Kg",
-      "habitat": "Earth",
-      "conservationStatus": "Endangered",
-      "funFacts": ["Its an animal", "Its alive", "Its in this zoo", "", "", ""]
-    },
-    {
-      "name": "Panda",
-      "image": "panda",
-      "species": "Ailuropoda melanoleuca",
-      "diet": "Omnivorous (Bamboo, eggs, carrion)",
-      "length": "0.00m",
-      "height": "0.00m",
-      "weightM": "0Kg",
-      "weightF": "0Kg",
-      "habitat": "Earth",
-      "conservationStatus": "Endangered",
-      "funFacts": ["Its an animal", "Its alive", "Its in this zoo", "", "", ""]
-    },
-    {
-      "name": "Camel",
-      "image": "camel",
-      "species": "Camelus",
-      "diet": "Herbivorous (Grass, grains, wheat)",
-      "length": "0.00m",
-      "height": "0.00m",
-      "weightM": "0Kg",
-      "weightF": "0Kg",
-      "habitat": "Earth",
-      "conservationStatus": "Endangered",
-      "funFacts": ["Its an animal", "Its alive", "Its in this zoo", "", "", ""]
-    },
-    {
-      "name": "Hawk",
-      "image": "hawk",
-      "species": "Accipitrinae urotriorchis",
-      "diet": "Carnivorous (Snakes, fish, smaller birds)",
-      "length": "0.00m",
-      "height": "0.00m",
-      "weightM": "0Kg",
-      "weightF": "0Kg",
-      "habitat": "Earth",
-      "conservationStatus": "Endangered",
-      "funFacts": ["Its an animal", "Its alive", "Its in this zoo", "", "", ""]
-    },
-    {
-      "name": "Hippopotamus",
-      "image": "hippo",
-      "species": "Hippopotamus amphibius",
-      "diet": "Herbivorous (Grass, flowers, fruit)",
-      "length": "0.00m",
-      "height": "0.00m",
-      "weightM": "0Kg",
-      "weightF": "0Kg",
-      "habitat": "Earth",
-      "conservationStatus": "Endangered",
-      "funFacts": ["Its an animal", "Its alive", "Its in this zoo", "", "", ""]
-    },
-    {
-      "name": "Llama",
-      "image": "llama",
-      "species": "Lama glama",
-      "diet": "Herbivorous (Grass, shrubs, trees)",
-      "length": "0.00m",
-      "height": "0.00m",
-      "weightM": "0Kg",
-      "weightF": "0Kg",
-      "habitat": "Earth",
-      "conservationStatus": "Endangered",
-      "funFacts": ["Its an animal", "Its alive", "Its in this zoo", "", "", ""]
+        "key": "5",
+        "name": "Panda",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/0/0f/Grosser_Panda.JPG",
+        "species": "Ailuropoda melanoleuca",
+        "diet": "Omnivorous (Bamboo, eggs, carrion)",
+        "length": "0.00m",
+        "height": "0.00m",
+        "weightM": "0Kg",
+        "weightF": "0Kg",
+        "habitat": "Earth",
+        "conservationStatus": "Endangered",
+        "funFacts": ["Its an animal", "Its alive", "Its in this zoo", "", "", ""]
     }
-  ];
+];
+
   
   const animalImages = {
     lion: require('../assets/amimalicons/lion.png'),

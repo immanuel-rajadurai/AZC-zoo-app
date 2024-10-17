@@ -15,6 +15,10 @@ import binoculars from "../assets/icons/binoculars.png";
 import profile1 from "../assets/icons/profile1.png";
 import home1 from "../assets/icons/home1.png";
 import notification from "../assets/icons/notification.png";
+import paw from "../assets/icons/paw.png"
+import searchgreen from "../assets/icons/searchgreen.png"
+import showsgreen from "../assets/icons/showsgreen.png"
+import challengegreen from "../assets/icons/challengegreen.png"
 import burgerMenu from "../assets/icons/burgerMenu.png";
 
 
@@ -36,5 +40,9 @@ export default {
   notification, 
   profile1,
   home1,
-  burgerMenu,
+  paw,
+  searchgreen,
+  showsgreen,
+  challengegreen,
+  burgerMenu
 };
