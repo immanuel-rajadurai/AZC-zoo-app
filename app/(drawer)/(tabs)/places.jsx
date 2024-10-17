@@ -1,7 +1,7 @@
 import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity, Modal, SafeAreaView, ScrollView, Button } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import { animalImages, animalData } from '../../data/animals';
-import { placesData } from '../../data/places';
+import { animalImages, animalData } from '../../../data/animals';
+import { placesData, images } from '../../../data/places';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';

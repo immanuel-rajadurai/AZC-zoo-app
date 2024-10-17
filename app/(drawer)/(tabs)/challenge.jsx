@@ -21,7 +21,7 @@ const Challenge = () => {
       <ScrollView contentContainerStyle={styles.content}>
 
       <TouchableOpacity style={styles.easyButton} onPress={NavigateToEasyChallenge}>
-        <ImageBackground source={require('../../assets/thumbnails/easy_background.png')} style={styles.imageBackground}>
+        <ImageBackground source={require('../../../assets/thumbnails/easy_background.png')} style={styles.imageBackground}>
           <Text style={styles.buttonText}>Easy Challenge</Text>
         </ImageBackground>
       </TouchableOpacity>
@@ -29,7 +29,7 @@ const Challenge = () => {
       <Text></Text>
       <Text></Text>
       <TouchableOpacity style={styles.hardButton} onPress={NavigateToHardChallenge}>
-        <ImageBackground source={require('../../assets/thumbnails/hard_background.png')} style={styles.imageBackground}>
+        <ImageBackground source={require('../../../assets/thumbnails/hard_background.png')} style={styles.imageBackground}>
           <Text style={styles.buttonText}>Hard Challenge</Text>
         </ImageBackground>
       </TouchableOpacity>

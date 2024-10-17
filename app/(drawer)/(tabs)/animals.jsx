@@ -1,10 +1,9 @@
 import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity, Modal, SafeAreaView, ScrollView, Button } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import { animalImages, animalData } from '../../data/animals';
+import { animalImages, animalData } from '../../../data/animals';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-
 
 
 const Animals = () => {

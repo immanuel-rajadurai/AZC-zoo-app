@@ -4,11 +4,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import MapView, { Marker, Overlay } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { useRouter } from 'expo-router'; // Import useRouter
-import CustomButton from '../../components/CustomButton';
-import { mapstyle1 } from "../../styling/mapstyles";
-import Events from "../../components/Events"
-import animals from "../../data/animals";
-import eventsDummy from "../../data/events";
+import CustomButton from '../../../components/CustomButton';
+import { mapstyle1 } from "../../../styling/mapstyles";
+import Events from "../../../components/Events"
+import animals from "../../../data/animals";
+import eventsDummy from "../../../data/events";
 
 // import { generateClient } from 'aws-amplify/api';
 // import { listEvents } from '../../src/graphql/queries';
@@ -148,7 +148,7 @@ const Home = () => {
       >
 
         <Overlay  
-          image={require("../../assets/mapoverlays/zoomap3.png")}
+          image={require("../../../assets/mapoverlays/zoomap3.png")}
           bounds={imageBounds}
           bearing={0}
           style={styles.overlay}

@@ -19,6 +19,8 @@ import paw from "../assets/icons/paw.png"
 import searchgreen from "../assets/icons/searchgreen.png"
 import showsgreen from "../assets/icons/showsgreen.png"
 import challengegreen from "../assets/icons/challengegreen.png"
+import burgerMenu from "../assets/icons/burgerMenu.png";
+
 
 export default {
   play,
@@ -41,5 +43,6 @@ export default {
   paw,
   searchgreen,
   showsgreen,
-  challengegreen
+  challengegreen,
+  burgerMenu
 };
