@@ -123,11 +123,11 @@ const RootLayout = () => {
         name="(auth)"
         options={{ headerShown: true }}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="(tabs)"
         options={{header: CustomHeader}}
         
-      />
+      /> */}
 
       <Stack.Screen
         name="(drawer)"

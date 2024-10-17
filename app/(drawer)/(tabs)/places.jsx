@@ -17,6 +17,8 @@ const PlaceItem = ({ place }) => {
 };
 
 const Places = () => {
+
+  console.log("entered place page")
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Places</Text>
