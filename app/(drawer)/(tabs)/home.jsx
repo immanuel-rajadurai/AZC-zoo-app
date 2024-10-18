@@ -216,6 +216,8 @@ const Home = () => {
         </View>
       </Modal>
 
+      <View style={styles.halfCircle} />
+
       <View style={styles.eventButton}>
         <Button title={eventButtonTitle} onPress={toggleEvents} />
       </View>
@@ -247,6 +249,16 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     margin: 10,
+  },
+  halfCircle: {
+    position: 'absolute',
+    bottom: -40,  // Ensures it overlaps other components slightly
+    width: 200,  // Width of the half-circle
+    height: 80,  // Height of the half-circle
+    backgroundColor: '#234e35',  // Dark green color
+    borderTopLeftRadius: 100,  // Creates a rounded top left corner
+    borderTopRightRadius: 100,  // Creates a rounded top right corner
+    zIndex: 2,  // Ensure it stays above other components
   },
   eventButton: {
     width: "100%",

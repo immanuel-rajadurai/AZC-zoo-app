@@ -8,7 +8,7 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 
 
-const Places = () => {
+const Shows = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [scheduledAnimals, setScheduledAnimals] = useState([]);
@@ -24,6 +24,7 @@ const Places = () => {
   const NavigateToSchedule = () => {
     navigation.navigate('schedule'); 
   };
+
 
   const PlaceItem = ({ animal, onPress }) => {
     return (
@@ -64,7 +65,7 @@ const Places = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Places</Text>
+      <Text style={styles.title}>Shows</Text>
       <FlatList
         data={placesData}
         renderItem={({ item }) => <PlaceItem animal={item} onPress={handlePress} />}
@@ -142,7 +143,7 @@ const Places = () => {
   );
 };
 
-export default Places;
+export default Shows;
 
 const styles = StyleSheet.create({
   container: {

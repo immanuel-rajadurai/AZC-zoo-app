@@ -23,6 +23,9 @@ import burgerMenu from "../assets/icons/burgerMenu.png";
 import elephantlogo from "../assets/icons/elephantlogo.png";
 import sidetabgreen from "../assets/icons/sidetabgreen.png";
 import londonzooheader from "../assets/icons/londonzooheader.png";
+import mapicon from "../assets/icons/mapicon.png";
+import cafe from "../assets/icons/cafe.png";
+
 
 
 export default {
@@ -50,5 +53,7 @@ export default {
   burgerMenu,
   elephantlogo,
   sidetabgreen,
-  londonzooheader
+  londonzooheader,
+  mapicon,
+  cafe
 };

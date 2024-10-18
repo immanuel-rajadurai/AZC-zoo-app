@@ -6,7 +6,7 @@ import { CustomHeader } from '../_layout';
 
 //green CSS colour #187c3c
 
-const TabIcon = ({ icon, color, name, focused, style }) => {
+const TabIcon = ({ icon, color, name, focused, style, textColor }) => {
   return (
     <View className="items-center justify-center gap-2">
       <Image
@@ -16,7 +16,7 @@ const TabIcon = ({ icon, color, name, focused, style }) => {
         className="w-15 h-15"
         style={[{ tintColor: color }, style]}
       />
-      <Text className={`${focused ? 'font-psemibold' : 'font-pregular'} text-xs`} style={{ color: color }}>
+      <Text className={`${focused ? 'font-psemibold' : 'font-pregular'} text-xs`} style={{ color: textColor }}>
         {name}
       </Text>
     </View>
@@ -26,6 +26,7 @@ const TabIcon = ({ icon, color, name, focused, style }) => {
 const TabsLayout = () => {
   return (
     <>
+   
       <Tabs
         screenOptions={{
           tabBarShowLabel: false,
@@ -40,17 +41,19 @@ const TabsLayout = () => {
         }}
       >
         <Tabs.Screen
-          name="home"
+          name="shows"
           options={{
-            title:'Home',
+            title:'Shows',
             headerShown: false,
             //header: CustomHeader,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.home1}
+                icon={icons.showsgreen}
                 color={color}
-                name="Home"
+                textColor="#619837"
+                name="Shows"
                 focused={focused}
+                style={{ width: 35, height: 35}}
               />
             )
           }}
@@ -63,11 +66,48 @@ const TabsLayout = () => {
             //header: CustomHeader,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.showsgreen}
-                color={color}
+                icon={icons.cafe}
+                // color={color}
+                textColor="#619837"
                 name="Places"
                 focused={focused}
                 style={{ width: 35, height: 35}}
+              />
+            )
+          }}
+        />
+        <Tabs.Screen
+          name="home"
+          options={{
+            title:'Home',
+            headerShown: false,
+            //header: CustomHeader,
+            tabBarIcon: ({ color, focused }) => (
+              <TabIcon
+                icon={icons.mapicon}
+                // color={color}
+                textColor="#234e35"
+                name="Home"
+                focused={focused}
+                style={{ width: 70, height: 70}}
+              />
+            )
+          }}
+        />
+        <Tabs.Screen
+          name="challenge"
+          options={{
+            title:'Challenge',
+            headerShown: false,
+            //header: CustomHeader,
+            tabBarIcon: ({ color, focused }) => (
+              <TabIcon
+                icon={icons.challengegreen}
+                // color={color}
+                textColor="#619837"
+                name="Challenge"
+                style={{ width: 45, height: 40}}
+                focused={focused}
               />
             )
           }}
@@ -82,6 +122,7 @@ const TabsLayout = () => {
               <TabIcon
                 icon={icons.paw}
                 color={color}
+                textColor="#619837"
                 name="Animals"
                 focused={focused}
                 className="w-52 h-72"
@@ -90,22 +131,7 @@ const TabsLayout = () => {
             )
           }}
         />
-        <Tabs.Screen
-          name="challenge"
-          options={{
-            title:'Challenge',
-            headerShown: false,
-            //header: CustomHeader,
-            tabBarIcon: ({ color, focused }) => (
-              <TabIcon
-                icon={icons.binoculars}
-                color={color}
-                name="Challenge"
-                focused={focused}
-              />
-            )
-          }}
-        />
+       
       </Tabs>
     </>
   )
