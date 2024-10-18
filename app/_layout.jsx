@@ -46,7 +46,7 @@ const CustomHeader = ({ route }) => {
   };
 
   return (
-    <SafeAreaView className="bg-green-700">
+    <SafeAreaView style={{ backgroundColor: '#234e35' }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 1, paddingHorizontal: 15, position: 'relative'}}>
         {!isSearchVisible ? (
           <>
@@ -55,12 +55,17 @@ const CustomHeader = ({ route }) => {
               onPress={toggleDrawer}
             >
               <Image
-                source={icons.burgerMenu}
-                style={{ width: 40, height: 35, tintColor: "white" }}
+                source={icons.sidetabgreen}
+                style={{ width: 40, height: 35, tintColor: "#7BC144" }}
                 resizeMode="contain"
               />
             </TouchableOpacity>
-            <Text className="text-2xl font-psemibold text-white mb-3 mt-3">Zoo App</Text>
+            {/* <Text className="text-2xl font-psemibold text-white mb-3 mt-3">Zoo App</Text> */}
+            <Image
+                source={icons.londonzooheader}
+                style={{ width: 160, height: 50, tintColor: "#7BC144" }}
+                resizeMode="contain"
+              />
           </>
         ) : (
           <SearchInput
@@ -82,7 +87,7 @@ const CustomHeader = ({ route }) => {
             style={{
               width: 20,
               height: 20,
-              tintColor: isSearchVisible ? 'black' : 'white', 
+              tintColor: isSearchVisible ? 'black' : '#7BC144', 
             }}
             resizeMode="contain"
           />

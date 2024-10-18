@@ -20,6 +20,9 @@ import searchgreen from "../assets/icons/searchgreen.png"
 import showsgreen from "../assets/icons/showsgreen.png"
 import challengegreen from "../assets/icons/challengegreen.png"
 import burgerMenu from "../assets/icons/burgerMenu.png";
+import elephantlogo from "../assets/icons/elephantlogo.png";
+import sidetabgreen from "../assets/icons/sidetabgreen.png";
+import londonzooheader from "../assets/icons/londonzooheader.png";
 
 
 export default {
@@ -44,5 +47,8 @@ export default {
   searchgreen,
   showsgreen,
   challengegreen,
-  burgerMenu
+  burgerMenu,
+  elephantlogo,
+  sidetabgreen,
+  londonzooheader
 };
