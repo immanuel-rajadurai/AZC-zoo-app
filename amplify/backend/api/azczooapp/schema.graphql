@@ -20,7 +20,15 @@ type Place @model {
 type Animal @model {
   id: ID!
   name: String!
+  scientificName: String!
+  habitat: String
+  diet: String
+  behaviour: String
+  weightMale: String
+  weightFemale: String
   image: String
+  conservationStatus: String
+  funFacts: String
 }
 
 # Connection table for Place and Animal
@@ -35,4 +43,14 @@ type EventPlace @model {
   id: ID!
   placeID: ID!
   eventID: ID!
+}
+
+type Tag @model {
+  name: String! @primaryKey
+}
+
+type EventTag @model {
+  id: ID!
+  eventID: ID! 
+  tagName: String! 
 }

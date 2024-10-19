@@ -87,7 +87,15 @@ export const onCreateAnimal = /* GraphQL */ `
     onCreateAnimal(filter: $filter) {
       id
       name
+      scientificName
+      habitat
+      diet
+      behaviour
+      weightMale
+      weightFemale
       image
+      conservationStatus
+      funFacts
       createdAt
       updatedAt
       __typename
@@ -99,7 +107,15 @@ export const onUpdateAnimal = /* GraphQL */ `
     onUpdateAnimal(filter: $filter) {
       id
       name
+      scientificName
+      habitat
+      diet
+      behaviour
+      weightMale
+      weightFemale
       image
+      conservationStatus
+      funFacts
       createdAt
       updatedAt
       __typename
@@ -111,7 +127,15 @@ export const onDeleteAnimal = /* GraphQL */ `
     onDeleteAnimal(filter: $filter) {
       id
       name
+      scientificName
+      habitat
+      diet
+      behaviour
+      weightMale
+      weightFemale
       image
+      conservationStatus
+      funFacts
       createdAt
       updatedAt
       __typename
@@ -196,6 +220,72 @@ export const onDeleteEventPlace = /* GraphQL */ `
       id
       placeID
       eventID
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateTag = /* GraphQL */ `
+  subscription OnCreateTag($filter: ModelSubscriptionTagFilterInput) {
+    onCreateTag(filter: $filter) {
+      name
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateTag = /* GraphQL */ `
+  subscription OnUpdateTag($filter: ModelSubscriptionTagFilterInput) {
+    onUpdateTag(filter: $filter) {
+      name
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteTag = /* GraphQL */ `
+  subscription OnDeleteTag($filter: ModelSubscriptionTagFilterInput) {
+    onDeleteTag(filter: $filter) {
+      name
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateEventTag = /* GraphQL */ `
+  subscription OnCreateEventTag($filter: ModelSubscriptionEventTagFilterInput) {
+    onCreateEventTag(filter: $filter) {
+      id
+      eventID
+      tagName
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateEventTag = /* GraphQL */ `
+  subscription OnUpdateEventTag($filter: ModelSubscriptionEventTagFilterInput) {
+    onUpdateEventTag(filter: $filter) {
+      id
+      eventID
+      tagName
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteEventTag = /* GraphQL */ `
+  subscription OnDeleteEventTag($filter: ModelSubscriptionEventTagFilterInput) {
+    onDeleteEventTag(filter: $filter) {
+      id
+      eventID
+      tagName
       createdAt
       updatedAt
       __typename

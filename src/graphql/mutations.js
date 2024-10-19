@@ -108,7 +108,15 @@ export const createAnimal = /* GraphQL */ `
     createAnimal(input: $input, condition: $condition) {
       id
       name
+      scientificName
+      habitat
+      diet
+      behaviour
+      weightMale
+      weightFemale
       image
+      conservationStatus
+      funFacts
       createdAt
       updatedAt
       __typename
@@ -123,7 +131,15 @@ export const updateAnimal = /* GraphQL */ `
     updateAnimal(input: $input, condition: $condition) {
       id
       name
+      scientificName
+      habitat
+      diet
+      behaviour
+      weightMale
+      weightFemale
       image
+      conservationStatus
+      funFacts
       createdAt
       updatedAt
       __typename
@@ -138,7 +154,15 @@ export const deleteAnimal = /* GraphQL */ `
     deleteAnimal(input: $input, condition: $condition) {
       id
       name
+      scientificName
+      habitat
+      diet
+      behaviour
+      weightMale
+      weightFemale
       image
+      conservationStatus
+      funFacts
       createdAt
       updatedAt
       __typename
@@ -229,6 +253,90 @@ export const deleteEventPlace = /* GraphQL */ `
       id
       placeID
       eventID
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createTag = /* GraphQL */ `
+  mutation CreateTag(
+    $input: CreateTagInput!
+    $condition: ModelTagConditionInput
+  ) {
+    createTag(input: $input, condition: $condition) {
+      name
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateTag = /* GraphQL */ `
+  mutation UpdateTag(
+    $input: UpdateTagInput!
+    $condition: ModelTagConditionInput
+  ) {
+    updateTag(input: $input, condition: $condition) {
+      name
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteTag = /* GraphQL */ `
+  mutation DeleteTag(
+    $input: DeleteTagInput!
+    $condition: ModelTagConditionInput
+  ) {
+    deleteTag(input: $input, condition: $condition) {
+      name
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createEventTag = /* GraphQL */ `
+  mutation CreateEventTag(
+    $input: CreateEventTagInput!
+    $condition: ModelEventTagConditionInput
+  ) {
+    createEventTag(input: $input, condition: $condition) {
+      id
+      eventID
+      tagName
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateEventTag = /* GraphQL */ `
+  mutation UpdateEventTag(
+    $input: UpdateEventTagInput!
+    $condition: ModelEventTagConditionInput
+  ) {
+    updateEventTag(input: $input, condition: $condition) {
+      id
+      eventID
+      tagName
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteEventTag = /* GraphQL */ `
+  mutation DeleteEventTag(
+    $input: DeleteEventTagInput!
+    $condition: ModelEventTagConditionInput
+  ) {
+    deleteEventTag(input: $input, condition: $condition) {
+      id
+      eventID
+      tagName
       createdAt
       updatedAt
       __typename

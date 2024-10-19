@@ -76,7 +76,15 @@ export const getAnimal = /* GraphQL */ `
     getAnimal(id: $id) {
       id
       name
+      scientificName
+      habitat
+      diet
+      behaviour
+      weightMale
+      weightFemale
       image
+      conservationStatus
+      funFacts
       createdAt
       updatedAt
       __typename
@@ -93,7 +101,15 @@ export const listAnimals = /* GraphQL */ `
       items {
         id
         name
+        scientificName
+        habitat
+        diet
+        behaviour
+        weightMale
+        weightFemale
         image
+        conservationStatus
+        funFacts
         createdAt
         updatedAt
         __typename
@@ -158,6 +174,74 @@ export const listEventPlaces = /* GraphQL */ `
         id
         placeID
         eventID
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getTag = /* GraphQL */ `
+  query GetTag($name: String!) {
+    getTag(name: $name) {
+      name
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listTags = /* GraphQL */ `
+  query ListTags(
+    $name: String
+    $filter: ModelTagFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listTags(
+      name: $name
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getEventTag = /* GraphQL */ `
+  query GetEventTag($id: ID!) {
+    getEventTag(id: $id) {
+      id
+      eventID
+      tagName
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listEventTags = /* GraphQL */ `
+  query ListEventTags(
+    $filter: ModelEventTagFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listEventTags(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        eventID
+        tagName
         createdAt
         updatedAt
         __typename
