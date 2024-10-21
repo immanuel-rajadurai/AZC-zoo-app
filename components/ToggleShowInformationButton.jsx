@@ -16,7 +16,7 @@ const ToggleShowInformationButton = ({ title, handlePress, containerStyles, text
       ]}
     >
       <Text className={`text-primary font-pbold text-lg ${textStyles}`}>
-        ^
+        ^ ^
       </Text>
       <Text className={`text-primary font-pbold text-lg ${textStyles}`}>
         {title}

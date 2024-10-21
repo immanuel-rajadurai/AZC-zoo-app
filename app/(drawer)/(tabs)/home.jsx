@@ -228,10 +228,8 @@ const Home = () => {
           <Events events={events} />
         </Animated.View>
       )}
-
     </View>
   );
-
 }
 
 const styles = StyleSheet.create({

@@ -34,6 +34,7 @@ const Challenge = () => {
         </ImageBackground>
       </TouchableOpacity>
       </ScrollView>
+      <View style={styles.halfCircle} />
     </SafeAreaView>
   );
 };
@@ -42,6 +43,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    alignItems: 'center',
   },
   header: {
     backgroundColor: '#4CAF50',
@@ -59,6 +61,7 @@ const styles = StyleSheet.create({
   easyButton: {
     width: '100%',
     height: 100,
+    width: 300,
     marginBottom: 20,
     borderRadius: 25,
     overflow: 'hidden', 
@@ -81,6 +84,17 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#fff',
     fontWeight: 'bold',
+  },
+  halfCircle: {
+    position: 'absolute',
+    bottom: -40,  // Ensures it overlaps other components slightly
+    width: 200,  // Width of the half-circle
+    height: 80,  // Height of the half-circle
+    backgroundColor: '#234e35',  // Dark green color
+    borderTopLeftRadius: 80,  // Creates a rounded top left corner
+    borderTopRightRadius: 80,  // Creates a rounded top right corner
+    zIndex: 2,  // Ensure it stays above other components
+    alignItems: 'center'
   },
 });
 

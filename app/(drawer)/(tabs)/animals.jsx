@@ -197,6 +197,7 @@ const Animals = () => {
           </View>
         </SafeAreaView>
       </Modal>
+      <View style={styles.halfCircle} />
     </View>
   );
 };
@@ -209,6 +210,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
+  },
+  halfCircle: {
+    position: 'absolute',
+    bottom: -40,  // Ensures it overlaps other components slightly
+    width: 200,  // Width of the half-circle
+    height: 80,  // Height of the half-circle
+    backgroundColor: '#234e35',  // Dark green color
+    borderTopLeftRadius: 80,  // Creates a rounded top left corner
+    borderTopRightRadius: 80,  // Creates a rounded top right corner
+    zIndex: 2,  // Ensure it stays above other components
+    alignItems: 'center'
   },
   title: {
     fontSize: 24,

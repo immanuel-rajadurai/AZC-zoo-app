@@ -25,6 +25,10 @@ import sidetabgreen from "../assets/icons/sidetabgreen.png";
 import londonzooheader from "../assets/icons/londonzooheader.png";
 import mapicon from "../assets/icons/mapicon.png";
 import cafe from "../assets/icons/cafe.png";
+import privacyicon from "../assets/icons/privacyicon.png";
+import supporticon from "../assets/icons/supporticon.png";
+import zoodrawericon from "../assets/icons/zoodrawericon.png";
+
 
 
 
@@ -55,5 +59,8 @@ export default {
   sidetabgreen,
   londonzooheader,
   mapicon,
-  cafe
+  cafe,
+  privacyicon,
+  supporticon,
+  zoodrawericon
 };

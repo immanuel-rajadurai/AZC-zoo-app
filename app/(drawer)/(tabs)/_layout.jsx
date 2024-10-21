@@ -89,7 +89,7 @@ const TabsLayout = () => {
                 textColor="#234e35"
                 name="Home"
                 focused={focused}
-                style={{ width: 70, height: 70}}
+                style={{ width: 85, height: 95}}
               />
             )
           }}
