@@ -34,9 +34,13 @@ const CustomDrawerContent = (props) => {
         />
 
         <DrawerItem
-          label={"Membership"}
+          label={() => (
+            <Text style={styles.drawerLabel}>
+              Membership
+            </Text>
+          )}
           onPress={() => {
-              navigation.navigate('wallet');
+              navigation.navigate('membership');
           }}
           options={{ headerShown: false }}
         />
@@ -48,7 +52,7 @@ const CustomDrawerContent = (props) => {
             </Text>
           )}
           onPress={() => {
-              navigation.navigate('wallet');
+              navigation.navigate('experiences');
           }}
           options={{ headerShown: false }}
         />
@@ -60,7 +64,7 @@ const CustomDrawerContent = (props) => {
             </Text>
           )}
           onPress={() => {
-              navigation.navigate('wallet');
+              navigation.navigate('venuehire');
           }}
           options={{ headerShown: false }}
         />
