@@ -28,9 +28,13 @@ const Places = () => {
   const PlaceItem = ({ place, onPress }) => {
     return (
       <TouchableOpacity style={styles.placeItem}>
+
         <View style={styles.header}>
         <Image source={{ uri: place.image }} style={styles.placeImage} />
-          <Text style={styles.placeName}>{place.name}</Text>
+          <View style={styles.column}>
+            <Text style={styles.placeName}>{place.name}</Text>
+            <Text style={styles.text}>{place.description}</Text>
+          </View>
           <Image source={icons.rightChevron} style={styles.chevron} />
         </View>
       </TouchableOpacity>
@@ -72,6 +76,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 10,
     justifyContent: 'space-between', // Ensure chevron stays within bounds
+    flex: 1,
+  },
+  column: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    margin: 10,
+    justifyContent: 'space-between', // Ensure chevron stays within bounds
+    flex: 1,
   },
   halfCircle: {
     position: 'absolute',
@@ -97,7 +109,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   text: {
-    fontSize: 18,
+    fontSize: 12,
+    flex: 1,
   },
   animalList: {
     width: '100%',
