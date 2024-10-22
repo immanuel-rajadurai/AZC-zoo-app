@@ -5,7 +5,7 @@ import { placesData, images } from '../../../data/places';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-
+import { icons } from '../../../constants';
 
 
 const Places = () => {
@@ -25,119 +25,34 @@ const Places = () => {
     navigation.navigate('schedule'); 
   };
 
-  const PlaceItem = ({ animal, onPress }) => {
+  const PlaceItem = ({ place, onPress }) => {
     return (
-      <TouchableOpacity style={styles.animalItem}>
-        <Image source={{ uri: animal.image }} style={styles.animalImage} />
-        <Text style={styles.animalName}>{animal.name}</Text>
+      <TouchableOpacity style={styles.placeItem}>
+        <View style={styles.header}>
+        <Image source={{ uri: place.image }} style={styles.placeImage} />
+          <Text style={styles.placeName}>{place.name}</Text>
+          <Image source={icons.rightChevron} style={styles.chevron} />
+        </View>
       </TouchableOpacity>
     );
   }
-
 
   const handlePress = (animal) => {
     setSelectedAnimal(animal);
     setModalVisible(true);
   };
 
-  async function addToSchedule(animalName) {
-
-    try {
-
-      if (!scheduledAnimals.includes(animalName)) {
-
-        let currentScheduledAnimals = scheduledAnimals
-
-        currentScheduledAnimals.push(animalName)
-
-        setScheduledAnimals(currentScheduledAnimals)
-
-        await AsyncStorage.setItem('scheduledAnimals', JSON.stringify(currentScheduledAnimals));
-
-      }
-
-    } catch (error) {
-      console.error('Failed to modify scheduled animals', error);
-    }
-  };
-
-
+ 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Places</Text>
       <FlatList
         data={placesData}
-        renderItem={({ item }) => <PlaceItem animal={item} onPress={handlePress} />}
+        renderItem={({ item }) => <PlaceItem place={item} onPress={handlePress} />}
         keyExtractor={(item) => item.name}
         style={styles.animalList}
       />
 
-      <Modal
-        visible={modalVisible}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={closeModal}
-      >
-        <SafeAreaView style={modalStyle.modalContainer}>
-          <View style={modalStyle.modalContent}>
-            <ScrollView>
-              {selectedAnimal && (
-                <>
-                  <Text style={modalStyle.modalTitle}>{selectedAnimal.name} Exhibit</Text>
-                  <Image
-                    source={animalImages[selectedAnimal.image]}
-                    style={modalStyle.image}
-                  />
-                  <Text style={modalStyle.animalName}>{selectedAnimal.name}</Text>
-                  <Text style={modalStyle.species}>{selectedAnimal.species}</Text>
-                  <Text>
-                    <Text style={modalStyle.sectionTitle}>Diet: </Text>
-                    <Text style={modalStyle.sectionText}>{selectedAnimal.diet}</Text>
-                  </Text>
-                  <Text>
-                    <Text style={modalStyle.sectionTitle}>Length: </Text>
-                    <Text style={modalStyle.sectionText}>{selectedAnimal.length}</Text>
-                  </Text>
-                  <Text>
-                    <Text style={modalStyle.sectionTitle}>Height: </Text>
-                    <Text style={modalStyle.sectionText}>{selectedAnimal.height}</Text>
-                  </Text>
-                  <Text>
-                    <Text style={modalStyle.sectionTitle}>Weight:{"\n"}</Text>
-                    <Text style={modalStyle.sectionText}>
-                      {"\u2022"} Male: {selectedAnimal.weightM}
-                    </Text>
-                    {"\n"}
-                    <Text style={modalStyle.sectionText}>
-                      {"\u2022"} Female: {selectedAnimal.weightF}
-                    </Text>
-                  </Text>
-                  <Text>
-                    <Text style={modalStyle.sectionTitle}>Habitat: </Text>
-                    <Text style={modalStyle.sectionText}>{selectedAnimal.habitat}</Text>
-                  </Text>
-                  <Text>
-                    <Text style={modalStyle.sectionTitle}>Conservation Status: </Text>
-                    <Text style={modalStyle.sectionText}>{selectedAnimal.conservationStatus}</Text>
-                  </Text>
-                  <Text>
-                    <Text style={modalStyle.sectionTitle}>Fun Facts:{"\n"}</Text>
-                    {selectedAnimal.funFacts.map((fact, index) => (
-                      <Text key={index} style={modalStyle.sectionText}>
-                        {"\u2022"} {fact}
-                        {"\n"}
-                      </Text>
-                    ))}
-                  </Text>
-                </>
-              )}
-            </ScrollView>
-            <TouchableOpacity onPress={closeModal} style={modalStyle.closeButton}>
-              <Text style={modalStyle.closeButtonText}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </SafeAreaView>
-      </Modal>
       <View style={styles.halfCircle} />
     </View>
   );
@@ -152,6 +67,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    margin: 10,
+    justifyContent: 'space-between', // Ensure chevron stays within bounds
+  },
   halfCircle: {
     position: 'absolute',
     bottom: -40,  // Ensures it overlaps other components slightly
@@ -162,6 +83,12 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 80,  // Creates a rounded top right corner
     zIndex: 2,  // Ensure it stays above other components
     alignItems: 'center'
+  },
+  chevron: {
+    tintColor: '#234e35',
+    width: 24, // Adjust width
+    height: 24, // Adjust height
+    marginRight: 10, // Ensure it stays within bounds
   },
   title: {
     fontSize: 24,
@@ -175,7 +102,7 @@ const styles = StyleSheet.create({
   animalList: {
     width: '100%',
   },
-  animalItem: {
+  placeItem: {
     borderRadius: 10, // Rounded corners
     shadowColor: '#000', // Shadow color
     shadowOffset: { width: 0, height: 2 }, // Shadow offset
@@ -186,20 +113,22 @@ const styles = StyleSheet.create({
     padding: 10, // Optional: Add padding to the component
     margin: 10, // Optional: Add margin to the component
   },
-  animalImage: {
+  placeImage: {
     width: 100,
     height: 100,
     marginRight: 10,
     borderRadius: 10
   },
-  animalName: {
+  placeName: {
     fontSize: 20,
     fontWeight: 'bold',
     color: 'darkgreen',
-    marginTop: 10,
-    marginBottom: 10,
+    marginTop: 2,
+    marginBottom: 2,
     textAlign: 'left',
-    paddingRight: 17,
+    paddingRight: 2,
+    flexWrap: 'wrap',
+    flex: 1, // Allows text to wrap correctly
   },
   buttonContainer: {
     flexDirection: 'row', // Arrange children in a row
@@ -209,77 +138,5 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     fontSize: 12,
     color: 'gray',
-  },
-});
-
-const modalStyle = StyleSheet.create({
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    width: '95%',
-    maxHeight: '75%',
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 10,
-    elevation: 5,
-  },
-  modalTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: 'green',
-    marginBottom: 15,
-    marginTop: 30,
-  },
-  animalListElement: {
-    borderRadius: 10, // Rounded corners
-    shadowColor: '#000', // Shadow color
-    shadowOffset: { width: 0, height: 2 }, // Shadow offset
-    shadowOpacity: 0.25, // Shadow opacity
-    shadowRadius: 3.84, // Shadow radius
-    elevation: 5, // For Android shadow
-  },
-  animalImage: {
-    width: 90,
-    height: 90,
-    borderRadius: 15,
-  },
-  animalName: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: 'black',
-  },
-  species: {
-    fontSize: 16,
-    fontStyle: 'italic',
-    textAlign: 'center',
-    color: 'grey',
-    marginBottom: 20,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  sectionText: {
-    fontSize: 16,
-    color: 'black',
-  },
-  closeButton: {
-    backgroundColor: 'green',
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 20,
-  },
-  closeButtonText: {
-    color: '#fff',
-    textAlign: 'center',
-    fontSize: 16,
   },
 });

@@ -28,7 +28,7 @@ import cafe from "../assets/icons/cafe.png";
 import privacyicon from "../assets/icons/privacyicon.png";
 import supporticon from "../assets/icons/supporticon.png";
 import zoodrawericon from "../assets/icons/zoodrawericon.png";
-
+import rightChevron from "../assets/icons/right-chevron.png";
 
 
 
@@ -62,5 +62,6 @@ export default {
   cafe,
   privacyicon,
   supporticon,
-  zoodrawericon
+  zoodrawericon,
+  rightChevron
 };

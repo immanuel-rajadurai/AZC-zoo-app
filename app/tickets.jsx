@@ -7,7 +7,6 @@ import WebView from 'react-native-webview';
 
 const Tickets = () => {
 
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
         <WebView 
