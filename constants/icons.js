@@ -23,7 +23,8 @@ import burgerMenu from "../assets/icons/burgerMenu.png";
 import elephantlogo from "../assets/icons/elephantlogo.png";
 import sidetabgreen from "../assets/icons/sidetabgreen.png";
 import londonzooheader from "../assets/icons/londonzooheader.png";
-
+import plusButton from "../assets/icons/plusButton.png"
+import deleteX from "../assets/icons/deleteX.png";
 
 export default {
   play,
@@ -50,5 +51,7 @@ export default {
   burgerMenu,
   elephantlogo,
   sidetabgreen,
-  londonzooheader
+  londonzooheader,
+  plusButton,
+  deleteX,
 };
