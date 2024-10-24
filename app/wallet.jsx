@@ -1,28 +1,32 @@
-import { View, Text, StyleSheet, Button, FlatList, Alert, Image, Modal, Linking } from 'react-native';
-import { React, useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Button, FlatList, Alert, Image, Modal } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import * as DocumentPicker from 'expo-document-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as FileSystem from 'expo-file-system';
+import { WebView } from 'react-native-webview';
 
 const Wallet = () => {
   const [fileList, setFileList] = useState([]);
-  const [selectedImage, setSelectedImage] = useState(null); // State to hold the selected image
+  const [selectedFileUri, setSelectedFileUri] = useState(null); // State to hold the selected file URI
   const [modalVisible, setModalVisible] = useState(false); // State to control modal visibility
+  const [base64PDF, setBase64PDF] = useState(null); // State to hold the Base64 PDF string
 
+  // Function to fetch files from the document directory
+  const fetchFiles = async () => {
+    try {
+      const files = await FileSystem.readDirectoryAsync(FileSystem.documentDirectory);
+      const filteredFiles = files.filter(file =>
+        file.endsWith('.jpg') || file.endsWith('.png') || file.endsWith('.pdf')
+      );
+      console.log('Files in document directory:', filteredFiles);
+      setFileList(filteredFiles);
+    } catch (error) {
+      console.error('Error reading document directory:', error);
+    }
+  };
+
+  // Use effect to fetch files on component mount
   useEffect(() => {
-    const fetchFiles = async () => {
-      try {
-        const files = await FileSystem.readDirectoryAsync(FileSystem.documentDirectory);
-        const filteredFiles = files.filter(file =>
-          file.endsWith('.jpg') || file.endsWith('.png') || file.endsWith('.pdf')
-        );
-        console.log('Files in document directory:', filteredFiles);
-        setFileList(filteredFiles);
-      } catch (error) {
-        console.error('Error reading document directory:', error);
-      }
-    };
-
     fetchFiles();
   }, []);
 
@@ -38,15 +42,26 @@ const Wallet = () => {
     console.log('Attempting to open:', fileUri);
 
     if (fileName.endsWith('.pdf')) {
-      // Use Linking to open PDF files
-      await Linking.openURL(fileUri);
+      try {
+        // Read the PDF file as Base64
+        const base64 = await FileSystem.readAsStringAsync(fileUri, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+        setBase64PDF(base64); // Set the Base64 PDF string
+        setSelectedFileUri(fileUri); // Set the selected file URI for reference
+      } catch (error) {
+        console.error('Error reading PDF file:', error);
+        Alert.alert('Error', 'Unable to open the PDF file.');
+        return;
+      }
     } else if (fileName.endsWith('.jpg') || fileName.endsWith('.png')) {
-      // Display image in a modal or new screen
-      setSelectedImage(fileUri); // Set the selected image URI
-      setModalVisible(true); // Show the modal
+      setSelectedFileUri(fileUri); // Set the selected image URI
     } else {
-      Alert.alert('File Format Not Supported', 'Currently, only PDF files can be opened in a browser.');
+      Alert.alert('File Format Not Supported', 'Currently, only PDF files and images can be opened.');
+      return;
     }
+
+    setModalVisible(true); // Show the modal
   };
 
   const pickDocument = async () => {
@@ -91,16 +106,31 @@ const Wallet = () => {
         )}
       </View>
 
-      {/* Modal for displaying images */}
+      {/* Modal for displaying images and PDFs */}
       <Modal
         animationType="slide"
         transparent={false}
         visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
+        onRequestClose={() => {
+          setModalVisible(false);
+          setBase64PDF(null); // Reset Base64 string when closing modal
+        }}
       >
         <View style={styles.modalContainer}>
-          <Image source={{ uri: selectedImage }} style={styles.image} />
-          <Button title="Close" onPress={() => setModalVisible(false)} />
+          {selectedFileUri && selectedFileUri.endsWith('.pdf') && base64PDF ? (
+            <WebView 
+              source={{ uri: `data:application/pdf;base64,${base64PDF}` }} 
+              style={{ flex: 1 }} 
+              onError={() => Alert.alert('Error loading PDF')}
+              startInLoadingState={true}
+            />
+          ) : (
+            selectedFileUri && <Image source={{ uri: selectedFileUri }} style={styles.image} />
+          )}
+          <Button title="Close" onPress={() => {
+            setModalVisible(false);
+            setSelectedFileUri(null); // Reset selected file URI when closing modal
+          }} />
         </View>
       </Modal>
     </SafeAreaView>
