@@ -5,15 +5,13 @@ import { placesData, images } from '../../../data/places';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { icons } from '../../../constants';
 
-
-
-const Shows = () => {
+const Places = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [scheduledAnimals, setScheduledAnimals] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const navigation = useNavigation();
 
   const closeModal = () => {
@@ -22,57 +20,38 @@ const Shows = () => {
   };
 
   const NavigateToSchedule = () => {
-    navigation.navigate('schedule'); 
+    navigation.navigate('schedule');
   };
 
-
-  const PlaceItem = ({ animal, onPress }) => {
+  const PlaceItem = ({ place, onPress }) => {
     return (
-      <TouchableOpacity style={styles.animalItem}>
-        <Image source={{ uri: animal.image }} style={styles.animalImage} />
-        <Text style={styles.animalName}>{animal.name}</Text>
+      <TouchableOpacity style={styles.placeItem} onPress={() => onPress(place)}>
+        <View style={styles.header}>
+          <Image source={{ uri: place.image }} style={styles.placeImage} />
+          <View style={styles.column}>
+            <Text style={styles.placeName}>{place.name}</Text>
+            <Text style={styles.text}>{place.description}</Text>
+          </View>
+          <Image source={icons.rightChevron} style={styles.chevron} />
+        </View>
       </TouchableOpacity>
     );
-  }
+  };
 
-
-  const handlePress = (animal) => {
-    setSelectedAnimal(animal);
+  const handlePress = (place) => {
+    setSelectedAnimal(place); // Adjust to set the selected place
     setModalVisible(true);
   };
-
-  async function addToSchedule(animalName) {
-
-    try {
-
-      if (!scheduledAnimals.includes(animalName)) {
-
-        let currentScheduledAnimals = scheduledAnimals
-
-        currentScheduledAnimals.push(animalName)
-
-        setScheduledAnimals(currentScheduledAnimals)
-
-        await AsyncStorage.setItem('scheduledAnimals', JSON.stringify(currentScheduledAnimals));
-
-      }
-
-    } catch (error) {
-      console.error('Failed to modify scheduled animals', error);
-    }
-  };
-
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Shows</Text>
       <FlatList
         data={placesData}
-        renderItem={({ item }) => <PlaceItem animal={item} onPress={handlePress} />}
+        renderItem={({ item }) => <PlaceItem place={item} onPress={handlePress} />}
         keyExtractor={(item) => item.name}
         style={styles.animalList}
       />
-
       <Modal
         visible={modalVisible}
         transparent={true}
@@ -84,52 +63,9 @@ const Shows = () => {
             <ScrollView>
               {selectedAnimal && (
                 <>
-                  <Text style={modalStyle.modalTitle}>{selectedAnimal.name} Exhibit</Text>
-                  <Image
-                    source={animalImages[selectedAnimal.image]}
-                    style={modalStyle.image}
-                  />
-                  <Text style={modalStyle.animalName}>{selectedAnimal.name}</Text>
-                  <Text style={modalStyle.species}>{selectedAnimal.species}</Text>
-                  <Text>
-                    <Text style={modalStyle.sectionTitle}>Diet: </Text>
-                    <Text style={modalStyle.sectionText}>{selectedAnimal.diet}</Text>
-                  </Text>
-                  <Text>
-                    <Text style={modalStyle.sectionTitle}>Length: </Text>
-                    <Text style={modalStyle.sectionText}>{selectedAnimal.length}</Text>
-                  </Text>
-                  <Text>
-                    <Text style={modalStyle.sectionTitle}>Height: </Text>
-                    <Text style={modalStyle.sectionText}>{selectedAnimal.height}</Text>
-                  </Text>
-                  <Text>
-                    <Text style={modalStyle.sectionTitle}>Weight:{"\n"}</Text>
-                    <Text style={modalStyle.sectionText}>
-                      {"\u2022"} Male: {selectedAnimal.weightM}
-                    </Text>
-                    {"\n"}
-                    <Text style={modalStyle.sectionText}>
-                      {"\u2022"} Female: {selectedAnimal.weightF}
-                    </Text>
-                  </Text>
-                  <Text>
-                    <Text style={modalStyle.sectionTitle}>Habitat: </Text>
-                    <Text style={modalStyle.sectionText}>{selectedAnimal.habitat}</Text>
-                  </Text>
-                  <Text>
-                    <Text style={modalStyle.sectionTitle}>Conservation Status: </Text>
-                    <Text style={modalStyle.sectionText}>{selectedAnimal.conservationStatus}</Text>
-                  </Text>
-                  <Text>
-                    <Text style={modalStyle.sectionTitle}>Fun Facts:{"\n"}</Text>
-                    {selectedAnimal.funFacts.map((fact, index) => (
-                      <Text key={index} style={modalStyle.sectionText}>
-                        {"\u2022"} {fact}
-                        {"\n"}
-                      </Text>
-                    ))}
-                  </Text>
+                  <Text style={modalStyle.modalTitle}>{selectedAnimal.name}</Text>
+                  <Image source={{ uri: selectedAnimal.image }} style={styles.placeImage} />
+                  <Text style={modalStyle.species}>{selectedAnimal.description}</Text> 
                 </>
               )}
             </ScrollView>
@@ -144,7 +80,7 @@ const Shows = () => {
   );
 };
 
-export default Shows;
+export default Places;
 
 const styles = StyleSheet.create({
   container: {
@@ -152,6 +88,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    margin: 10,
+    justifyContent: 'space-between', // Ensure chevron stays within bounds
+    flex: 1,
+  },
+  column: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    margin: 10,
+    justifyContent: 'space-between', // Ensure chevron stays within bounds
+    flex: 1,
   },
   halfCircle: {
     position: 'absolute',
@@ -164,6 +114,12 @@ const styles = StyleSheet.create({
     zIndex: 2,  // Ensure it stays above other components
     alignItems: 'center'
   },
+  chevron: {
+    tintColor: '#234e35',
+    width: 24, // Adjust width
+    height: 24, // Adjust height
+    marginRight: 10, // Ensure it stays within bounds
+  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -171,12 +127,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   text: {
-    fontSize: 18,
+    fontSize: 12,
+    flex: 1,
   },
   animalList: {
     width: '100%',
   },
-  animalItem: {
+  placeItem: {
     borderRadius: 10, // Rounded corners
     shadowColor: '#000', // Shadow color
     shadowOffset: { width: 0, height: 2 }, // Shadow offset
@@ -187,20 +144,22 @@ const styles = StyleSheet.create({
     padding: 10, // Optional: Add padding to the component
     margin: 10, // Optional: Add margin to the component
   },
-  animalImage: {
+  placeImage: {
     width: 100,
     height: 100,
     marginRight: 10,
     borderRadius: 10
   },
-  animalName: {
+  placeName: {
     fontSize: 20,
     fontWeight: 'bold',
     color: 'darkgreen',
-    marginTop: 10,
-    marginBottom: 10,
+    marginTop: 2,
+    marginBottom: 2,
     textAlign: 'left',
-    paddingRight: 17,
+    paddingRight: 2,
+    flexWrap: 'wrap',
+    flex: 1, // Allows text to wrap correctly
   },
   buttonContainer: {
     flexDirection: 'row', // Arrange children in a row
@@ -212,6 +171,7 @@ const styles = StyleSheet.create({
     color: 'gray',
   },
 });
+
 
 const modalStyle = StyleSheet.create({
   modalContainer: {
@@ -236,6 +196,8 @@ const modalStyle = StyleSheet.create({
     fontWeight: 'bold',
     color: 'green',
     marginBottom: 15,
+    justifyContent: 'center',
+    textAlign: 'center',
     marginTop: 30,
   },
   animalListElement: {

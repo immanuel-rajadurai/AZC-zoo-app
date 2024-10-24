@@ -7,13 +7,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { icons } from '../../../constants';
 
-
 const Places = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [scheduledAnimals, setScheduledAnimals] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const navigation = useNavigation();
 
   const closeModal = () => {
@@ -22,15 +20,14 @@ const Places = () => {
   };
 
   const NavigateToSchedule = () => {
-    navigation.navigate('schedule'); 
+    navigation.navigate('schedule');
   };
 
   const PlaceItem = ({ place, onPress }) => {
     return (
-      <TouchableOpacity style={styles.placeItem}>
-
+      <TouchableOpacity style={styles.placeItem} onPress={() => onPress(place)}>
         <View style={styles.header}>
-        <Image source={{ uri: place.image }} style={styles.placeImage} />
+          <Image source={{ uri: place.image }} style={styles.placeImage} />
           <View style={styles.column}>
             <Text style={styles.placeName}>{place.name}</Text>
             <Text style={styles.text}>{place.description}</Text>
@@ -39,14 +36,13 @@ const Places = () => {
         </View>
       </TouchableOpacity>
     );
-  }
+  };
 
-  const handlePress = (animal) => {
-    setSelectedAnimal(animal);
+  const handlePress = (place) => {
+    setSelectedAnimal(place); // Adjust to set the selected place
     setModalVisible(true);
   };
 
- 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Places</Text>
@@ -56,7 +52,29 @@ const Places = () => {
         keyExtractor={(item) => item.name}
         style={styles.animalList}
       />
-
+      <Modal
+        visible={modalVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={closeModal}
+      >
+        <SafeAreaView style={modalStyle.modalContainer}>
+          <View style={modalStyle.modalContent}>
+            <ScrollView>
+              {selectedAnimal && (
+                <>
+                  <Text style={modalStyle.modalTitle}>{selectedAnimal.name}</Text>
+                  <Image source={{ uri: selectedAnimal.image }} style={styles.placeImage} />
+                  <Text style={modalStyle.species}>{selectedAnimal.description}</Text> 
+                </>
+              )}
+            </ScrollView>
+            <TouchableOpacity onPress={closeModal} style={modalStyle.closeButton}>
+              <Text style={modalStyle.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      </Modal>
       <View style={styles.halfCircle} />
     </View>
   );
@@ -151,5 +169,80 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     fontSize: 12,
     color: 'gray',
+  },
+});
+
+
+const modalStyle = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    width: '95%',
+    maxHeight: '75%',
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 10,
+    elevation: 5,
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'green',
+    marginBottom: 15,
+    justifyContent: 'center',
+    textAlign: 'center',
+    marginTop: 30,
+  },
+  animalListElement: {
+    borderRadius: 10, // Rounded corners
+    shadowColor: '#000', // Shadow color
+    shadowOffset: { width: 0, height: 2 }, // Shadow offset
+    shadowOpacity: 0.25, // Shadow opacity
+    shadowRadius: 3.84, // Shadow radius
+    elevation: 5, // For Android shadow
+  },
+  animalImage: {
+    width: 90,
+    height: 90,
+    borderRadius: 15,
+  },
+  animalName: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: 'black',
+  },
+  species: {
+    fontSize: 16,
+    fontStyle: 'italic',
+    textAlign: 'center',
+    color: 'grey',
+    marginBottom: 20,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  sectionText: {
+    fontSize: 16,
+    color: 'black',
+  },
+  closeButton: {
+    backgroundColor: 'green',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 20,
+  },
+  closeButtonText: {
+    color: '#fff',
+    textAlign: 'center',
+    fontSize: 16,
   },
 });
