@@ -32,14 +32,16 @@ const Animals = () => {
         <View style={styles.header}>
         <View style={styles.column}>
           <Image source={{ uri: animal.image }} style={styles.animalImage} />
-          {!scheduledAnimals.includes(animal.name) && (
-                <TouchableOpacity
+          {/* {!scheduledAnimals.includes(animal.name) && ( */}
+              <TouchableOpacity
                 style={styles.customButton}
                 onPress={() => addToSchedule(animal.name)}
-                >
-                  <Text style={styles.customButtonText}>Add to Plan</Text>
-                </TouchableOpacity>
-          )}
+              >
+                <Text style={styles.customButtonText}>
+                  {scheduledAnimals.includes(animal.name) ? 'Added to Plan' : 'Add to Plan'}
+                </Text>
+              </TouchableOpacity>
+          {/* )} */}
         </View>
         <View style={styles.column}>
             <Text style={styles.animalName}>{animal.name}</Text>
@@ -117,36 +119,53 @@ const Animals = () => {
     setModalVisible(true);
   };
 
+  // async function addToSchedule(animalName) {
+
+  //   try {
+
+  //     if (!scheduledAnimals.includes(animalName)) {
+
+  //       let currentScheduledAnimals = scheduledAnimals
+
+  //       currentScheduledAnimals.push(animalName)
+
+  //       setScheduledAnimals(currentScheduledAnimals)
+
+  //       await AsyncStorage.setItem('scheduledAnimals', JSON.stringify(currentScheduledAnimals));
+  //     }
+
+  //   } catch (error) {
+  //     console.error('Failed to modify scheduled animals', error);
+  //   }
+  // };
+
   async function addToSchedule(animalName) {
-
     try {
-
       if (!scheduledAnimals.includes(animalName)) {
-
-        let currentScheduledAnimals = scheduledAnimals
-
-        currentScheduledAnimals.push(animalName)
-
-        setScheduledAnimals(currentScheduledAnimals)
-
-        await AsyncStorage.setItem('scheduledAnimals', JSON.stringify(currentScheduledAnimals));
+        const updatedAnimals = [...scheduledAnimals, animalName];
+        setScheduledAnimals(updatedAnimals);
+        await AsyncStorage.setItem('scheduledAnimals', JSON.stringify(updatedAnimals));
       }
-
     } catch (error) {
       console.error('Failed to modify scheduled animals', error);
     }
-  };
+  }
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Animals</Text>
+      <View style={styles.infoBox}>
+        <Text style={styles.infoText}>
+          Make a plan of animals that you want to visit throughout the zoo
+        </Text>
+      </View>
       <View style={styles.buttonContainer}>
-             <TouchableOpacity
-                style={styles.customButton}
+      <TouchableOpacity
+                style={styles.planButton}
                 onPress={NavigateToSchedule}
                 >
                   <Text style={styles.customButtonText}>My Plan</Text>
-              </TouchableOpacity>
+      </TouchableOpacity>
         </View>
       <FlatList
         data={animalData}
@@ -195,6 +214,7 @@ const Animals = () => {
                     <Text style={modalStyle.sectionTitle}>Conservation Status: </Text>
                     <Text style={modalStyle.sectionText}>{selectedAnimal.conservationStatus}</Text>
                   </Text>
+
                   <Text>
                     <Text style={modalStyle.sectionTitle}>Fun Facts:{"\n"}</Text>
                   <Text style={modalStyle.sectionText}>{selectedAnimal.funFacts}</Text>
@@ -216,6 +236,20 @@ const Animals = () => {
 export default Animals;
 
 const styles = StyleSheet.create({
+  infoBox: {
+    borderWidth: 2,
+    borderColor: 'darkgreen',
+    borderRadius: 10,
+    padding: 15,
+    margin: 10,
+    backgroundColor: '#f0fff0', // Optional light green background for contrast
+    alignItems: 'center',
+  },
+  infoText: {
+    fontSize: 14,
+    color: 'darkgreen',
+    textAlign: 'center',
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -295,13 +329,21 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: 'gray',
   },
+  planButton: {
+    backgroundColor: 'darkgreen',
+    borderRadius: 20,
+    paddingVertical: 10, // Smaller vertical padding
+    paddingHorizontal: 8, // Smaller horizontal padding
+    alignItems: 'center',
+    width: 150, // Reduce minimum width
+  },
   customButton: {
     backgroundColor: 'darkgreen',
     borderRadius: 10,
     paddingVertical: 3, // Smaller vertical padding
     paddingHorizontal: 8, // Smaller horizontal padding
     alignItems: 'center',
-    width: 80, // Reduce minimum width
+    width: 80,
     marginTop:10
   },
   customButtonText: {
