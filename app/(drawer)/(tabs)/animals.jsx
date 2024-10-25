@@ -4,9 +4,11 @@ import { animalImages, animalData } from '../../../data/animals';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import CustomButton from '../../../components/CustomButton';
 
 
 const Animals = () => {
+
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [scheduledAnimals, setScheduledAnimals] = useState([]);
@@ -23,17 +25,36 @@ const Animals = () => {
     navigation.navigate('schedule'); 
   };
 
-
   const AnimalItem = ({ animal, onPress }) => {
+
     return (
-      <TouchableOpacity onPress={() => onPress(animal)} style={styles.animalItem}>
-        <Image source={{ uri: animal.image }} style={styles.animalImage} />
-        <Text style={styles.animalName}>{animal.name}</Text>
-        {!scheduledAnimals.includes(animal.name) && (
-          <View style={styles.buttonContainer}>
-            <Button title="add to schedule" style={styles.text} color="green" onPress={() => addToSchedule(animal.name)} />
+      <TouchableOpacity style={styles.animalItem} onPress={() => onPress(animal)}>
+        <View style={styles.header}>
+        <View style={styles.column}>
+          <Image source={{ uri: animal.image }} style={styles.animalImage} />
+          {!scheduledAnimals.includes(animal.name) && (
+                <TouchableOpacity
+                style={styles.customButton}
+                onPress={() => addToSchedule(animal.name)}
+                >
+                  <Text style={styles.customButtonText}>Add to Plan</Text>
+                </TouchableOpacity>
+          )}
+        </View>
+        <View style={styles.column}>
+            <Text style={styles.animalName}>{animal.name}</Text>
+
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={styles.cardSectionTitle}>Scientific Name: </Text>
+              <Text style={styles.text}> {animal.scientificName}</Text>
+            </View>
+            
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={styles.cardSectionTitle}>Habitat: </Text>
+              <Text style={styles.text}>{animal.habitat}</Text>
+            </View>
           </View>
-        )}
+        </View>
       </TouchableOpacity>
     );
   };
@@ -109,7 +130,6 @@ const Animals = () => {
         setScheduledAnimals(currentScheduledAnimals)
 
         await AsyncStorage.setItem('scheduledAnimals', JSON.stringify(currentScheduledAnimals));
-
       }
 
     } catch (error) {
@@ -117,12 +137,16 @@ const Animals = () => {
     }
   };
 
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Animals</Text>
       <View style={styles.buttonContainer}>
-          <Button title="My schedule" style={styles.text} color="green" onPress={NavigateToSchedule} />
+             <TouchableOpacity
+                style={styles.customButton}
+                onPress={NavigateToSchedule}
+                >
+                  <Text style={styles.customButtonText}>My Plan</Text>
+              </TouchableOpacity>
         </View>
       <FlatList
         data={animalData}
@@ -139,23 +163,15 @@ const Animals = () => {
       >
         <SafeAreaView style={modalStyle.modalContainer}>
           <View style={modalStyle.modalContent}>
-            <ScrollView>
+            <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
               {selectedAnimal && (
                 <>
-                  <Text style={modalStyle.modalTitle}>{selectedAnimal.name} Exhibit</Text>
-                  <Image
-                    source={animalImages[selectedAnimal.image]}
-                    style={modalStyle.image}
-                  />
+                  <Image source={{ uri: selectedAnimal.image }} style={modalStyle.image} />
                   <Text style={modalStyle.animalName}>{selectedAnimal.name}</Text>
-                  <Text style={modalStyle.species}>{selectedAnimal.species}</Text>
+                  <Text style={modalStyle.species}>{selectedAnimal.scientificName}</Text>
                   <Text>
                     <Text style={modalStyle.sectionTitle}>Diet: </Text>
                     <Text style={modalStyle.sectionText}>{selectedAnimal.diet}</Text>
-                  </Text>
-                  <Text>
-                    <Text style={modalStyle.sectionTitle}>Length: </Text>
-                    <Text style={modalStyle.sectionText}>{selectedAnimal.length}</Text>
                   </Text>
                   <Text>
                     <Text style={modalStyle.sectionTitle}>Height: </Text>
@@ -164,11 +180,11 @@ const Animals = () => {
                   <Text>
                     <Text style={modalStyle.sectionTitle}>Weight:{"\n"}</Text>
                     <Text style={modalStyle.sectionText}>
-                      {"\u2022"} Male: {selectedAnimal.weightM}
+                      {"\u2022"} Male: {selectedAnimal.weightMale}
                     </Text>
                     {"\n"}
                     <Text style={modalStyle.sectionText}>
-                      {"\u2022"} Female: {selectedAnimal.weightF}
+                      {"\u2022"} Female: {selectedAnimal.weightFemale}
                     </Text>
                   </Text>
                   <Text>
@@ -181,12 +197,7 @@ const Animals = () => {
                   </Text>
                   <Text>
                     <Text style={modalStyle.sectionTitle}>Fun Facts:{"\n"}</Text>
-                    {selectedAnimal.funFacts.map((fact, index) => (
-                      <Text key={index} style={modalStyle.sectionText}>
-                        {"\u2022"} {fact}
-                        {"\n"}
-                      </Text>
-                    ))}
+                  <Text style={modalStyle.sectionText}>{selectedAnimal.funFacts}</Text>
                   </Text>
                 </>
               )}
@@ -211,6 +222,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    margin: 10,
+    justifyContent: 'space-between', // Ensure chevron stays within bounds
+    flex: 1,
+  },
+  column: {
+    flexDirection: 'column',
+    alignItems: 'left',
+    margin: 1,
+    justifyContent: 'space-between', // Ensure chevron stays within bounds
+    flex: 1,
+  },
   halfCircle: {
     position: 'absolute',
     bottom: -40,  // Ensures it overlaps other components slightly
@@ -229,7 +254,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   text: {
-    fontSize: 18,
+    fontSize: 12,
+    flex: 1,
   },
   animalList: {
     width: '100%',
@@ -242,13 +268,13 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84, // Shadow radius
     elevation: 5, // Elevation for Android shadow
     backgroundColor: '#fff', // Background color to make the shadow visible
-    padding: 10, // Optional: Add padding to the component
+    padding: 2, // Optional: Add padding to the component
     margin: 10, // Optional: Add margin to the component
   },
   animalImage: {
     width: 100,
     height: 100,
-    marginRight: 10,
+    marginRight: 1,
     borderRadius: 10
   },
   animalName: {
@@ -260,14 +286,33 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     paddingRight: 17,
   },
-  buttonContainer: {
-    flexDirection: 'row', // Arrange children in a row
-    justifyContent: 'flex-end', // Move children to the far right
-  },
+  // buttonContainer: {
+  //   flexDirection: 'row', // Arrange children in a row
+  //   justifyContent: 'flex-end', // Move children to the far right
+  // },
   checkboxText: {
     marginLeft: 8,
     fontSize: 12,
     color: 'gray',
+  },
+  customButton: {
+    backgroundColor: 'darkgreen',
+    borderRadius: 10,
+    paddingVertical: 3, // Smaller vertical padding
+    paddingHorizontal: 8, // Smaller horizontal padding
+    alignItems: 'center',
+    width: 80, // Reduce minimum width
+    marginTop:10
+  },
+  customButtonText: {
+    color: 'white',
+    fontSize: 12, // Slightly smaller font size
+    fontWeight: 'bold',
+  },
+  cardSectionTitle: {
+    fontWeight: 'bold',
+    marginBottom: 10,
+    fontSize: 12,
   },
 });
 
@@ -276,69 +321,63 @@ const modalStyle = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
-    width: '95%',
-    maxHeight: '75%',
-    backgroundColor: '#fff',
+    width: '90%',
+    backgroundColor: 'white',
     borderRadius: 10,
     padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 10,
-    elevation: 5,
+    alignItems: 'center',
+    position: 'relative',
+    borderWidth: 2, 
+    borderColor: 'green', 
+  },
+  closeButton: {
+    position: 'absolute',
+    bottom: 20,
+    alignSelf: 'center',
+    backgroundColor: '#068c08',
+    padding: 10,
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
   modalTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: 'green',
-    marginBottom: 15,
-    marginTop: 30,
+    marginBottom: 10,
+    textAlign: 'center',
   },
-  animalListElement: {
-    borderRadius: 10, // Rounded corners
-    shadowColor: '#000', // Shadow color
-    shadowOffset: { width: 0, height: 2 }, // Shadow offset
-    shadowOpacity: 0.25, // Shadow opacity
-    shadowRadius: 3.84, // Shadow radius
-    elevation: 5, // For Android shadow
-  },
-  animalImage: {
-    width: 90,
-    height: 90,
-    borderRadius: 15,
+  image: {
+    width: 150, 
+    height: 150,
+    borderRadius: 10, 
+    borderWidth: 2, 
+    borderColor: 'green',
+    alignSelf: 'center',
   },
   animalName: {
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: 'black',
   },
   species: {
-    fontSize: 16,
+    fontSize: 18,
     fontStyle: 'italic',
     textAlign: 'center',
-    color: 'grey',
-    marginBottom: 20,
+    marginBottom: 10,
   },
   sectionTitle: {
-    fontSize: 18,
     fontWeight: 'bold',
+    marginBottom: 20,
   },
+  
   sectionText: {
     fontSize: 16,
-    color: 'black',
-  },
-  closeButton: {
-    backgroundColor: 'green',
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 20,
-  },
-  closeButtonText: {
-    color: '#fff',
-    textAlign: 'center',
-    fontSize: 16,
+    marginBottom: 20,
   },
 });
+
