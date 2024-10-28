@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, Modal } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, Modal, Alert } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import * as DocumentPicker from 'expo-document-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -6,7 +6,7 @@ import * as FileSystem from 'expo-file-system';
 import { icons } from '../constants';
 import FileCard from '../components/FileCard'; // Import your FileCard component
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Pdf from 'react-native-pdf'; // Import Pdf for PDF viewing
+//import Pdf from 'react-native-pdf'; // Import Pdf for PDF viewing
 
 const Wallet = () => {
   const [files, setFiles] = useState([]); // Store files
@@ -29,6 +29,12 @@ const Wallet = () => {
       const { uri, name, mimeType } = result.assets[0]; // Access first asset
       console.log('URI:', uri, 'Name: ', name, 'mimeType: ', mimeType );
       const localPath = FileSystem.documentDirectory + name;
+
+      const isDuplicate = files.some((file) => file.name === name || file.uri === uri);
+      if (isDuplicate) {
+      Alert.alert("Duplicate File", "This file has already been selected.");
+      return; // Stop here if file is a duplicate
+      }
 
       // Copy file to local filesystem
       await FileSystem.copyAsync({
@@ -75,19 +81,38 @@ const Wallet = () => {
   };
 
   const deleteFile = async (fileUri) => {
-    try {
-      const updatedFiles = files.filter((file) => file.uri !== fileUri);
-      setFiles(updatedFiles);
+    Alert.alert(
+      "Delete File",
+      "Are you sure you want to delete this file?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        {
+          text: "Yes",
+          onPress: async () => {
+            try {
+              const updatedFiles = files.filter((file) => file.uri !== fileUri);
+              setFiles(updatedFiles);
+        
+              // Update AsyncStorage with the remaining files
+              await AsyncStorage.setItem('files', JSON.stringify(updatedFiles));
+        
+              // Optionally, delete the file from the local file system if needed
+              await FileSystem.deleteAsync(fileUri);
+              console.log('File deleted:', fileUri);
+            } catch (error) {
+              console.error('Error deleting file:', error);
+            }
+            
 
-      // Update AsyncStorage with the remaining files
-      await AsyncStorage.setItem('files', JSON.stringify(updatedFiles));
-
-      // Optionally, delete the file from the local file system if needed
-      await FileSystem.deleteAsync(fileUri);
-      console.log('File deleted:', fileUri);
-    } catch (error) {
-      console.error('Error deleting file:', error);
-    }
+          }
+        }
+      ],
+      { cancelable: true }
+    )
+    
   };
 
   const FileList = ({ files, onFilePress }) => {
@@ -148,7 +173,7 @@ const Wallet = () => {
               style={styles.closeButton}
               onPress={() => setShowViewer(false)}
             >
-              <Text style={styles.closeButtonText}>X</Text>
+              <Text style={{color: 'white', fontWeight: 'bold'}}>X</Text>
             </TouchableOpacity>
             {selectedFile.type.startsWith('image/') ? (
               <Image source={{ uri: selectedFile.uri }} style={styles.fullScreenImage} />
@@ -192,8 +217,7 @@ const styles = StyleSheet.create({
     top: 40,
     right: 20,
     backgroundColor: 'transparent',
-    padding: 6,
-    borderRadius: 4,
+    padding: 15,   
   },
   closeButtonText: {
     fontSize: 18,
