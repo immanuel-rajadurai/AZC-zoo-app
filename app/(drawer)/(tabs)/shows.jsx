@@ -45,7 +45,7 @@ const Places = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Places</Text>
+      <Text style={styles.title}>Shows</Text>
       <FlatList
         data={placesData}
         renderItem={({ item }) => <PlaceItem place={item} onPress={handlePress} />}
