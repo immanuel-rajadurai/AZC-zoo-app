@@ -147,7 +147,7 @@ const Wallet = () => {
       {/* If no files, show a message */}
       {files.length === 0 ? (
         <View style={styles.centeredView}>
-          <Text style={styles.noFilesText}>Please select your Ticket</Text>
+          <Text style={styles.noFilesText}>Please upload Tickets and Annual Passes</Text>
         </View>
       ) : (
         <FileList files={files} onFilePress={handleFilePress} />
