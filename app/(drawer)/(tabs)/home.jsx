@@ -17,6 +17,7 @@ import ToggleShowInformationButton from '../../../components/ToggleShowInformati
 // const client = generateClient();
 
 const Home = () => {
+  
   const mapRef = useRef(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
