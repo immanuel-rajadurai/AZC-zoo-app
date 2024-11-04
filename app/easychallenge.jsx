@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { StyleSheet, Text, View, Button, Image, ActivityIndicator, TouchableOpacity, ScrollView, SafeAreaView, Modal } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, ActivityIndicator, TouchableOpacity, ScrollView, SafeAreaView, Modal, ImageBackground } from 'react-native';
 import * as tf from '@tensorflow/tfjs';
 import * as jpeg from 'jpeg-js';
 import * as FileSystem from 'expo-file-system';
@@ -12,7 +12,7 @@ import { Asset } from 'expo-asset';
 import { fetch } from '@tensorflow/tfjs-react-native';
 import animalPhoto from '../assets/animalImages/ostrich.jpg';
 import { bundleResourceIO } from '@tensorflow/tfjs-react-native';
-
+import { images } from '../constants';
 
 const Challenge = () => {
 
@@ -115,9 +115,13 @@ const Challenge = () => {
 
     return (
       <View style={styles.container}>
+        
+
         <View style={styles.contentContainer}>
           <View>
+            <View style={styles.subTitleContainer}>
             <Text style={styles.subtitle}>Animals to snap</Text>
+            </View>
             <ScrollView style={styles.scrollView} persistentScrollbar={true}>  
               {targetAnimals.map((animal, index) => {
                 const info = animalInfo[animal.toLowerCase()];
@@ -136,7 +140,9 @@ const Challenge = () => {
           </View>
           <View style={styles.verticalLine} />
           <View>
+          <View style={styles.subTitleContainer}>
           <Text style={styles.subtitle}>Snapped Animals</Text>
+          </View>
           <ScrollView style={styles.scrollView} persistentScrollbar={true}>
               {scannedAnimals.map((animal, index) => {
                 console.log("animal: " + animal);
@@ -177,7 +183,7 @@ const Challenge = () => {
           setTargetAnimals(initialTargetAnimals);
           await AsyncStorage.setItem('targetAnimals', JSON.stringify(initialTargetAnimals));
 
-          await AsyncStorage.setItem('targetAnimals', initialTargetAnimals);
+          // await AsyncStorage.setItem('targetAnimals', initialTargetAnimals); commented out as it is likely error causing
         }
 
       } catch (error) {
@@ -461,24 +467,27 @@ const Challenge = () => {
   };
 
   return (
+    
     <View style={styles.container}>
+    <ImageBackground source={images.easyAnimalChallengeBackground} style={styles.backgroundImage}>
     <View style={styles.titleContainer}>
         <Text style={styles.title}>Easy Animal Scavenger Hunt</Text>
     </View>
     <ScannedAnimalsList targetAnimals={targetAnimals} scannedAnimals={scannedAnimals} />
 
+    <View style={styles.cameraBar}>
     {modelLoaded ? (
       <>
-        <View style={styles.cameraBar}>
           <TouchableOpacity style={styles.cameraButton} onPress={takePicture}>
             <Icon name="camera-alt" size={30} color="#fff" />
           </TouchableOpacity>
-        </View>
+        
       </>
     ) : (
       <Text>Loading AI</Text>,
       <ActivityIndicator size="large" color="#0000ff" />
     )}
+    </View>
 
     {/* <Button title="Show popup" onPress={showModal} /> */}
 
@@ -544,9 +553,7 @@ const Challenge = () => {
       </View>
     </SafeAreaView>
   </Modal>
-
-
-
+  </ImageBackground>
   </View>
   )
 }
@@ -558,12 +565,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
     paddingBottom: 1,
   },
   verticalLine: {
     width: 2,
-    backgroundColor: 'darkgreen',
+    backgroundColor: 'white',
     marginHorizontal: 10,
   },
   contentContainer: {
@@ -573,11 +580,20 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     backgroundColor: '#d4edda', // Light green background
-    borderRadius: 10, // Curved edges
-    padding: 16, // Padding inside the box
+    borderRadius: 20, // Curved edges
+    padding: 10, // Padding inside the box
     marginBottom: 20, // Space below the box
     alignItems: 'center', // Center the text horizontally
-    marginTop:2
+    marginTop:5,
+    zIndex:10
+  },
+  subTitleContainer: {
+    backgroundColor: '#d4edda', // Light green background
+    borderRadius: 20, // Curved edges
+    padding: 5, // Padding inside the box
+    marginBottom: 0, // Space below the box
+    alignItems: 'center', // Center the text horizontally
+    marginTop:30,
   },
   title: {
     fontSize: 24,
@@ -617,9 +633,10 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100%',
     position: 'absolute',
     bottom: 0,
+    left: 0, // Ensure it starts from the left edge
+    right: 0, 
   },
   cameraButton: {
     backgroundColor: '#068c08',
@@ -643,7 +660,7 @@ const styles = StyleSheet.create({
     paddingBottom: 20
   },
   animalCard: {
-    backgroundColor: '#fff',
+    backgroundColor: '#5a8c66',
     borderRadius: 10,
     padding: 15,
     marginVertical: 10,
@@ -690,7 +707,7 @@ const styles = StyleSheet.create({
   animalName: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: 'white',
   },
 });
 

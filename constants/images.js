@@ -18,5 +18,7 @@ import zoo1 from "../assets/placeholders/zoo1.jpg"
 import zoo2 from "../assets/placeholders/zoo2.jpg"
 import tigerCover1 from "../assets/placeholders/tiger-cover-1.jpg"
 import londonZooIcon from "../assets/images/londonzoologo.png"
+import easyAnimalChallengeBackground from "../assets/images/easyanimalchallengebackground.png"
 
-export default { profile, thumbnail, cards, path, logo, logoSmall, empty, zooIcon, newsThumbnail, eventsThumbnail, informationThumbnail, tigerCover1, tour1, tour2, tour3, zoo1, zoo2, londonZooIcon, mysteryChallenge, youngAdventurerChallenge };
+
+export default { profile, thumbnail, cards, path, logo, logoSmall, empty, zooIcon, newsThumbnail, eventsThumbnail, informationThumbnail, tigerCover1, tour1, tour2, tour3, zoo1, zoo2, londonZooIcon, mysteryChallenge, youngAdventurerChallenge, easyAnimalChallengeBackground };

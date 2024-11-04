@@ -175,7 +175,7 @@ const Challenge = () => {
           setTargetAnimals(initialTargetAnimals);
           await AsyncStorage.setItem('targetAnimals', JSON.stringify(initialTargetAnimals));
 
-          await AsyncStorage.setItem('targetAnimals', initialTargetAnimals);
+          // await AsyncStorage.setItem('targetAnimals', initialTargetAnimals);
         }
 
       } catch (error) {

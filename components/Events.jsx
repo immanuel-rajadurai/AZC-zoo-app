@@ -27,10 +27,10 @@ const Events = () => {
     setSelectedAnimal(event);
     setModalVisible(true);
 
-    if (event.name === 'News') {
-      navigation.navigate('news');
-    } else if (event.name === 'Information') {
-      navigation.navigate('information');
+    if (event.name === 'Young adventurer challenge') {
+      navigation.navigate('easychallenge');
+    } else if (event.name === 'Mystery animal challenge') {
+      navigation.navigate('hardchallenge');
     } else if (event.name === 'Events') {
       navigation.navigate('events');
     }
@@ -59,8 +59,7 @@ const Events = () => {
 
   const hardcodedEvents = [
     { id: '1', name: 'Young adventurer challenge', description: 'Events happening at the zoo', thumbnail: images.youngAdventurerChallenge },
-    { id: '2', name: 'News', description: 'News about the zoo', thumbnail: images.mysteryChallenge},
-    // { id: '3', name: 'Information', description: 'Information about the zoo', thumbnail: images.informationThumbnail },
+    { id: '2', name: 'Mystery animal challenge', description: 'News about the zoo', thumbnail: images.mysteryChallenge},
   ];
 
   return (
@@ -138,7 +137,7 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     // Common header styles
-    padding: 16,
+    padding: 10,
     backgroundColor: '#fff',
   },
   alternateHeaderContainer: {
@@ -171,7 +170,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
     width: '100%',
-    height:200,
+    height:190,
     position: 'relative', // Position the header absolutely
     top: 0, // Position it at the top
     left: 0, // Align it to the left
@@ -204,7 +203,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   itemContainer: {
-    padding: 10,
+    padding: 5,
     margin: 1,
     backgroundColor: '#fff',
     borderRadius: 20,
@@ -238,8 +237,8 @@ const styles = StyleSheet.create({
     transform: [{ translateY: -12 }],
   },
   chevron: {
-    width: 24,
-    height: 24,
+    width: 30,
+    height: 30,
   },
 });
 
