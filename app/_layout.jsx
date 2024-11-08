@@ -125,6 +125,10 @@ const RootLayout = () => {
             headerShown:false
         }} />
 
+        <Stack.Screen name="(auth)" options={{
+          headerShown: false
+        }} />
+
         <Stack.Screen name="easychallenge" options={{ title: 'Easy Challenge' }} />
 
         <Stack.Screen name="hardchallenge" options={{ title: 'Mystery Challenge (hard)' }} />

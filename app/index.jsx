@@ -56,7 +56,7 @@ export default function App() {
 
                 <CustomButtonBlack
                   title="Continue"
-                  handlePress={() => router.push('/home')}
+                  handlePress={() => router.push('/sign-up')}
                   containerStyles="w-full mt-6"
                 />
                 
