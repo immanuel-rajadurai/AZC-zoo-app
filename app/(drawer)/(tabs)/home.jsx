@@ -33,6 +33,22 @@ const Home = () => {
     // await refetch();
     setRefreshing(false);
   }
+
+  const fetchEvents2 = async () => { 
+
+    try {
+      const eventsResult = await client.graphql(
+        {query: listEvents}
+      );
+
+      console.log(eventsResult);
+
+      setEvents(eventsResult.data.listEvents.items)
+      console.log(events);
+    } catch (error) {
+      console.log('error on fetching events', error)
+    }
+  }
  
   const [region, setRegion] = useState({
     latitude: 48.7460,
@@ -44,7 +60,11 @@ const Home = () => {
   const [events, setEvents] = useState([]);
   
   const toggleEvents = () => {
+
+    fetchEvents2();
     if (eventsVisible) {
+
+      
       Animated.timing(translateY, {
         toValue: 0,
         duration: 500,
