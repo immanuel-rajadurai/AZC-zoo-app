@@ -30,7 +30,7 @@ import supporticon from "../assets/icons/supporticon.png";
 import zoodrawericon from "../assets/icons/zoodrawericon.png";
 import rightChevron from "../assets/icons/right-chevron.png";
 import leftChevron from "../assets/icons/left-chevron.png";
-
+import camera from "../assets/icons/camera.png";
 
 
 export default {
@@ -65,5 +65,6 @@ export default {
   supporticon,
   zoodrawericon,
   rightChevron,
-  leftChevron
+  leftChevron,
+  camera
 };

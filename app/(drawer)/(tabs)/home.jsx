@@ -147,6 +147,7 @@ const Home = () => {
         customMapStyle={mapstyle1}
         onRegionChangeComplete={(region) => setRegion(region)}
         provider={MapView.PROVIDER_GOOGLE}
+        rotateEnabled={false}
       >
 
         <Overlay  

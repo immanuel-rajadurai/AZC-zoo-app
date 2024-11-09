@@ -125,11 +125,36 @@ const RootLayout = () => {
             headerShown:false
         }} />
 
-        <Stack.Screen name="easychallenge" options={{ title: 'Easy Challenge' }} />
+        {/* <Stack.Screen name="easychallenge" options={{ title: 'Easy Challenge' }} /> */}
+
+        <Stack.Screen
+            name="easychallenge"
+            // component={EasyChallengeScreen}
+            options={{
+              title: 'Easy Animal Scavenger Hunt',
+              headerStyle: {
+                backgroundColor: '#5a8c66', // Custom background color for this screen
+              },
+              headerTintColor: '#fff', // Custom color of the back arrow and title for this screen
+              headerTitleStyle: {
+                fontWeight: 'bold', // Custom title style for this screen
+              },
+            }}
+          />
 
         <Stack.Screen name="hardchallenge" options={{ title: 'Mystery Challenge (hard)' }} />
 
-        <Stack.Screen name="schedule" options={{ title: 'Your Scheduled Animals' }} />
+        <Stack.Screen name="schedule" options={{
+              title: 'Your zoo plan',
+              headerStyle: {
+                backgroundColor: '#5a8c66', // Custom background color for this screen
+              },
+              headerTintColor: '#fff', // Custom color of the back arrow and title for this screen
+              headerTitleStyle: {
+                fontWeight: 'bold', // Custom title style for this screen
+              },
+            }} 
+        />
         
 
       <Stack.Screen

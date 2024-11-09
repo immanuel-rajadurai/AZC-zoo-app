@@ -69,7 +69,7 @@ const TabsLayout = () => {
                 icon={icons.cafe}
                 // color={color}
                 textColor="#619837"
-                name="Places"
+                name="Food"
                 focused={focused}
                 style={{ width: 35, height: 35}}
               />

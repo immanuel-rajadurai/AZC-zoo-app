@@ -12,7 +12,8 @@ import { Asset } from 'expo-asset';
 import { fetch } from '@tensorflow/tfjs-react-native';
 import animalPhoto from '../assets/animalImages/ostrich.jpg';
 import { bundleResourceIO } from '@tensorflow/tfjs-react-native';
-import { images } from '../constants';
+import { images, icons } from '../constants';
+
 
 const Challenge = () => {
 
@@ -470,16 +471,16 @@ const Challenge = () => {
     
     <View style={styles.container}>
     <ImageBackground source={images.easyAnimalChallengeBackground} style={styles.backgroundImage}>
-    <View style={styles.titleContainer}>
+    {/* <View style={styles.titleContainer}>
         <Text style={styles.title}>Easy Animal Scavenger Hunt</Text>
-    </View>
+    </View> */}
     <ScannedAnimalsList targetAnimals={targetAnimals} scannedAnimals={scannedAnimals} />
 
     <View style={styles.cameraBar}>
     {modelLoaded ? (
       <>
           <TouchableOpacity style={styles.cameraButton} onPress={takePicture}>
-            <Icon name="camera-alt" size={30} color="#fff" />
+            <Image source={icons.camera} style={{ width: 60, height: 60 }} />
           </TouchableOpacity>
         
       </>
@@ -593,7 +594,10 @@ const styles = StyleSheet.create({
     padding: 5, // Padding inside the box
     marginBottom: 0, // Space below the box
     alignItems: 'center', // Center the text horizontally
-    marginTop:30,
+    marginTop:70,
+    alignSelf: 'center',
+    // width: '90%',
+    paddingHorizontal: 10
   },
   title: {
     fontSize: 24,
@@ -639,8 +643,7 @@ const styles = StyleSheet.create({
     right: 0, 
   },
   cameraButton: {
-    backgroundColor: '#068c08',
-    borderRadius: 50,
+    // borderRadius: 50,
     padding: 15,
     alignItems: 'center',
     justifyContent: 'center',
@@ -661,7 +664,7 @@ const styles = StyleSheet.create({
   },
   animalCard: {
     backgroundColor: '#5a8c66',
-    borderRadius: 10,
+    borderRadius: 30,
     padding: 15,
     marginVertical: 10,
     alignItems: 'center',

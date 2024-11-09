@@ -23,6 +23,14 @@ const animals = [
       image: require("../assets/amimalicons/giraffe.png"),
       facts: 'Giraffes are the tallest mammals on Earth.\n\nGiraffes are herbivores!\n\nOther facts'
     },
+    {
+      key:"4",
+      name: 'Building',
+      species: 'None',
+      coordinates: { latitude: 51.5345, longitude: -0.15455 },
+      image: require("../assets/amimalicons/3d-house.png"),
+      facts: 'Giraffes are the tallest mammals on Earth.\n\nGiraffes are herbivores!\n\nOther facts'
+    },
   ];
 
   const animalData = [
