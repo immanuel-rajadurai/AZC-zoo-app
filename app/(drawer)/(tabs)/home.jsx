@@ -3,8 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MapView, { Marker, Overlay } from 'react-native-maps';
 import * as Location from 'expo-location';
-import { useRouter } from 'expo-router'; // Import useRouter
-import CustomButton from '../../../components/CustomButton';
+import { useRouter } from 'expo-router';
 import { mapstyle1 } from "../../../styling/mapstyles";
 import Events from "../../../components/Events"
 import animals from "../../../data/animals";
@@ -22,7 +21,7 @@ const Home = () => {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
-  const router = useRouter(); // Initialize useRouter
+  const router = useRouter(); 
   const [refreshing, setRefreshing] = useState(false)
   const [eventsVisible, setEventsVisible] = useState(false);
   const translateY = useRef(new Animated.Value(200)).current;
@@ -72,6 +71,12 @@ const Home = () => {
     longitudeDelta: 0.003,
   };
 
+  const overlayBoundCoords = [
+    [51.532581594564654, -0.15931530103070354], //southwest
+    [51.536631441307364, -0.15031572508956532], //northeast
+  ];
+  
+
   useEffect(() => {
 
     const getLocation = async () => {
@@ -113,30 +118,11 @@ const Home = () => {
     // fetchEvents();
   }, []);
 
-  const goToZoo = () => {
-    mapRef.current.animateToRegion(zooRegion, 500);
-
-    console.log(events);
-  };
-
   const handleAnimalPress = (animal) => {
     setSelectedAnimal(animal);
     setModalVisible(true);
   };
 
-  const handleShowMore = () => {
-      setModalVisible(false);
-      router.push({
-          pathname: '/ExhibitDetails',
-          params: { animalName: selectedAnimal.name }
-      });
-  };
-
-  const imageBounds = [
-    [51.532581594564654, -0.15931530103070354], //southwest
-    [51.536631441307364, -0.15031572508956532], //northeast
-  ];
-  
   return (
     <View style={styles.container}>
       <MapView
@@ -152,7 +138,7 @@ const Home = () => {
 
         <Overlay  
           image={require("../../../assets/mapoverlays/zoomap3.png")}
-          bounds={imageBounds}
+          bounds={overlayBoundCoords}
           bearing={0}
           style={styles.overlay}
           opacity={1}
@@ -172,10 +158,6 @@ const Home = () => {
           </Marker>
         ))}
       </MapView>
-
-      {/* <CustomButton handlePress={() => goToZoo()} title="Go to Zoo" /> */}
-      {/* <Text style={styles.text}>Current latitude: {region.latitude}</Text>
-      <Text style={styles.text}>Current longitude: {region.longitude}</Text> */}
 
       <Modal
         animationType="slide"
@@ -206,13 +188,6 @@ const Home = () => {
                 >
                   <Text style={modalStyles.textStyle}>Close</Text>
                 </TouchableOpacity>
-
-                {/* <TouchableOpacity
-                    style={[modalStyles.button, modalStyles.buttonMore]}
-                    onPress={handleShowMore}
-                >
-                    <Text style={modalStyles.textStyle}>Show More</Text>
-                </TouchableOpacity> */}
               </>
             )}
           </View>
@@ -253,13 +228,13 @@ const styles = StyleSheet.create({
   },
   halfCircle: {
     position: 'absolute',
-    bottom: -40,  // Ensures it overlaps other components slightly
-    width: 200,  // Width of the half-circle
-    height: 80,  // Height of the half-circle
-    backgroundColor: '#234e35',  // Dark green color
-    borderTopLeftRadius: 80,  // Creates a rounded top left corner
-    borderTopRightRadius: 80,  // Creates a rounded top right corner
-    zIndex: 2,  // Ensure it stays above other components
+    bottom: -40,  
+    width: 200,  
+    height: 80,  
+    backgroundColor: '#234e35', 
+    borderTopLeftRadius: 80,  
+    borderTopRightRadius: 80, 
+    zIndex: 2, 
   },
   eventButton: {
     width: "70%",
@@ -267,7 +242,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     zIndex: 1,
-    alignItems: 'center', // Center horizontally
+    alignItems: 'center', 
   }
 });
 
@@ -331,7 +306,7 @@ const modalStyles = StyleSheet.create({
     marginBottom: 15,
   },
   scrollContainer: {
-    maxHeight: 100, // Set a max height for the scrollable area
+    maxHeight: 100,
   },
   buttonContainer: {
     paddingTop: 20,

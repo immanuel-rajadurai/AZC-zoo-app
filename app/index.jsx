@@ -20,7 +20,6 @@ import CustomButtonBlack from '../components/CustomButtonBlack';
 export default function App() {
 
     return (
-        // <ModelProvider>
           <SafeAreaView className="h-full" backgroundColor='#234e35'>
             <ScrollView contentContainerStyle={{ height: '100%'}}>
               <View className="w-full justify-center items-center min-h-[85vh] px-4" backgroundColor='#234e35'>
@@ -31,22 +30,12 @@ export default function App() {
                   resizeMode="contain"
                 />
 
-                {/* <View className="relative mt-5">
-                  <Text className="text-3xl text-green-500 font-bold text-center">
-                    Welcome to London zoo
-                  </Text>
-                </View> */}
-
                 <Text></Text>
                 <Text></Text>
                 <Text></Text>
                 <Text></Text>
                 <Text></Text>
                 <Text></Text>
-
-                {/* <Text className="text-sm font-pregular text-green-600 mt-7 text-center">
-                    Join the zoo on this digital zoo app 
-                </Text> */}
 
                 <Image
                   source={icons.elephantlogo}
@@ -68,6 +57,5 @@ export default function App() {
 
             <StatusBar backgroundColor='#161622' style='light'/>
           </SafeAreaView>
-        // </ModelProvider>
       )
 }
