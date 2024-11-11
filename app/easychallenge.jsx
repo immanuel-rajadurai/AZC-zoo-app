@@ -28,6 +28,7 @@ const Challenge = () => {
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [isInfoModal, setIsInfoModal] = useState(null);
   const [predictedAnimal, setPredictedAnimal] = useState(null);
+  const [classifyingModalVisible, setClassifyingModalVisible] = useState(false);
 
   const animalInfo = {
     leopard: {
@@ -116,8 +117,6 @@ const Challenge = () => {
 
     return (
       <View style={styles.container}>
-        
-
         <View style={styles.contentContainer}>
           <View>
             <View style={styles.subTitleContainer}>
@@ -368,6 +367,8 @@ const Challenge = () => {
   async function classifyImage(imageUri) {
     if (model) {
       try {
+
+        console.log("decoding image...");
         const base64String = await FileSystem.readAsStringAsync(imageUri, {
           encoding: FileSystem.EncodingType.Base64,
         });
@@ -380,6 +381,8 @@ const Challenge = () => {
         });
         
         console.log("classifying image...")
+
+        
         const prediction = await model.predict(imageTensor).data();
         const highestPredictionIndex = prediction.indexOf(Math.max(...prediction));
         const predictedClassEntry = labels[highestPredictionIndex];
@@ -387,7 +390,6 @@ const Challenge = () => {
 
         console.log('Predicted Class:', predictedClass);
         console.log("highest prediction " + Math.max(...prediction))
-        console.log("Predictions: " + prediction)
 
         console.log("type of predictions: " + typeof prediction)
         
@@ -402,9 +404,13 @@ const Challenge = () => {
         console.log("third highest prediction: " + thirdHighestPrediction + " class: " + labels[prediction.indexOf(thirdHighestPrediction)][1]);
 
         setPredictions(predictedClass);
+        setPredictedAnimal(predictedClass);
+
+        return predictedClass;
 
       } catch (error) {
         console.error('Error classifying image:', error);
+        return null;
       }
     }
   }
@@ -420,28 +426,59 @@ const Challenge = () => {
   };
 
   const takePicture = async () => {
-    // Request camera permissions
-    // const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
-    // if (permissionResult.granted === false) {
-    //   alert("You've refused to allow this app to access your camera!");
-    //   return;
-    // }
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+    if (permissionResult.granted === false) {
+      alert("You've refused to allow this app to access your camera!");
+      return;
+    }
 
-    // // Launch the camera to take a picture
-    // const result = await ImagePicker.launchCameraAsync({
-    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    //   allowsEditing: false,
-    //   aspect: [4, 3],
-    //   quality: 1,
-    // });
+    // Launch the camera to take a picture
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: false,
+      aspect: [4, 3],
+      quality: 1,
+    });
 
-    // if (!result.canceled) {
-      // setImage(result.assets[0].uri);
-      // classifyImage(result.assets[0].uri);
+    console.log("image picker closed")
 
-      classifyImageTest();
-      // console.log(result.assets[0].uri);
-    // }
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+
+      setClassifyingModalVisible(true);
+      let predictedAnimalResult = await classifyImage(result.assets[0].uri);
+      setClassifyingModalVisible(false);
+      
+      //check whether the animal is correct or not
+      if (Object.values(targetAnimals).includes(predictedAnimalResult)) {
+
+        showModal({predictedAnimal:predictedAnimalResult}); 
+  
+        try {
+  
+          if (!scannedAnimals.includes(predictedAnimalResult)) {
+            scannedAnimals.push(predictedAnimalResult);
+            setScannedAnimals(scannedAnimals);
+  
+            let updatedTargetAnimals = targetAnimals.filter(animal => animal !== predictedAnimalResult);
+            setTargetAnimals(updatedTargetAnimals);
+            await AsyncStorage.setItem('targetAnimals', JSON.stringify(updatedTargetAnimals));
+          }
+  
+          await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
+  
+        } catch (error) {
+          console.error('Failed to load scanned animals', error);
+        }
+  
+      } else {
+          console.log("IN takePicture: " + predictedAnimalResult + " is not in targetAnimals: " + targetAnimals)
+      }
+
+      console.log("file location: ", result.assets[0].uri);
+    }
+
+    // classifyImageTest();
   };
 
   const showModal = ({predictedAnimal="tiger", info=false} = {} ) => {
@@ -467,13 +504,18 @@ const Challenge = () => {
     setModalVisible(false);
   };
 
+  const showClassifyingModal = () => {
+    setClassifyingModalVisible(true);
+  };
+  
+  const closeClassifyingModal = () => {
+    setClassifyingModalVisible(false);
+  };
+
   return (
     
     <View style={styles.container}>
     <ImageBackground source={images.easyAnimalChallengeBackground} style={styles.backgroundImage}>
-    {/* <View style={styles.titleContainer}>
-        <Text style={styles.title}>Easy Animal Scavenger Hunt</Text>
-    </View> */}
     <ScannedAnimalsList targetAnimals={targetAnimals} scannedAnimals={scannedAnimals} />
 
     <View style={styles.cameraBar}>
@@ -490,10 +532,19 @@ const Challenge = () => {
     )}
     </View>
 
-    {/* <Button title="Show popup" onPress={showModal} /> */}
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={classifyingModalVisible}
+      onRequestClose={closeClassifyingModal}
+    >
+      <SafeAreaView style={modalStyle.modalContainer}>
+        <View style={modalStyle.modalContent}>
+          <Text style={styles.title}>Classifying image...</Text>
+        </View>
+      </SafeAreaView>
+    </Modal>
 
-    {image && <Image source={{ uri: image }} style={styles.image} />}
-    
     <Modal
       animationType="slide"
       transparent={true}

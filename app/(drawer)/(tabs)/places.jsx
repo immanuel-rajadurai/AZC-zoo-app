@@ -39,7 +39,7 @@ const Places = () => {
   };
 
   const handlePress = (place) => {
-    setSelectedAnimal(place); // Adjust to set the selected place
+    setSelectedAnimal(place);
     setModalVisible(true);
   };
 
