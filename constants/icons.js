@@ -23,8 +23,15 @@ import burgerMenu from "../assets/icons/burgerMenu.png";
 import elephantlogo from "../assets/icons/elephantlogo.png";
 import sidetabgreen from "../assets/icons/sidetabgreen.png";
 import londonzooheader from "../assets/icons/londonzooheader.png";
+import mapicon from "../assets/icons/mapicon.png";
+import cafe from "../assets/icons/cafe.png";
+import privacyicon from "../assets/icons/privacyicon.png";
+import supporticon from "../assets/icons/supporticon.png";
+import zoodrawericon from "../assets/icons/zoodrawericon.png";
+import rightChevron from "../assets/icons/right-chevron.png";
 import plusButton from "../assets/icons/plusButton.png"
 import deleteX from "../assets/icons/deleteX.png";
+
 
 export default {
   play,
@@ -52,6 +59,12 @@ export default {
   elephantlogo,
   sidetabgreen,
   londonzooheader,
+  mapicon,
+  cafe,
+  privacyicon,
+  supporticon,
+  zoodrawericon,
+  rightChevron,
   plusButton,
   deleteX,
 };

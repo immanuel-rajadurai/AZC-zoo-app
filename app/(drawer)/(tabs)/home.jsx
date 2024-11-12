@@ -9,6 +9,7 @@ import { mapstyle1 } from "../../../styling/mapstyles";
 import Events from "../../../components/Events"
 import animals from "../../../data/animals";
 import eventsDummy from "../../../data/events";
+import ToggleShowInformationButton from '../../../components/ToggleShowInformationButton';
 
 // import { generateClient } from 'aws-amplify/api';
 // import { listEvents } from '../../src/graphql/queries';
@@ -25,7 +26,7 @@ const Home = () => {
   const [eventsVisible, setEventsVisible] = useState(false);
   const translateY = useRef(new Animated.Value(200)).current;
   const { height: screenHeight } = Dimensions.get('window');
-  const [eventButtonTitle, setButtonTitle] = useState("Show Events");
+  const [eventButtonTitle, setButtonTitle] = useState("Show Information");
   
   const onRefresh = async () => {
     setRefreshing(true);
@@ -170,7 +171,7 @@ const Home = () => {
         ))}
       </MapView>
 
-      <CustomButton handlePress={() => goToZoo()} title="Go to Zoo" />
+      {/* <CustomButton handlePress={() => goToZoo()} title="Go to Zoo" /> */}
       {/* <Text style={styles.text}>Current latitude: {region.latitude}</Text>
       <Text style={styles.text}>Current longitude: {region.longitude}</Text> */}
 
@@ -216,8 +217,10 @@ const Home = () => {
         </View>
       </Modal>
 
+      <View style={styles.halfCircle} />
+
       <View style={styles.eventButton}>
-        <Button title={eventButtonTitle} onPress={toggleEvents} />
+        <ToggleShowInformationButton title={eventButtonTitle} textStyles="text-white" handlePress={toggleEvents} />
       </View>
 
       {eventsVisible && (
@@ -225,10 +228,8 @@ const Home = () => {
           <Events events={events} />
         </Animated.View>
       )}
-
     </View>
   );
-
 }
 
 const styles = StyleSheet.create({
@@ -248,13 +249,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
     margin: 10,
   },
+  halfCircle: {
+    position: 'absolute',
+    bottom: -40,  // Ensures it overlaps other components slightly
+    width: 200,  // Width of the half-circle
+    height: 80,  // Height of the half-circle
+    backgroundColor: '#234e35',  // Dark green color
+    borderTopLeftRadius: 80,  // Creates a rounded top left corner
+    borderTopRightRadius: 80,  // Creates a rounded top right corner
+    zIndex: 2,  // Ensure it stays above other components
+  },
   eventButton: {
-    width: "100%",
-    backgroundColor: "white",
-    padding: 10,
+    width: "70%",
+    padding: 5,
     position: "absolute",
     bottom: 0,
     zIndex: 1,
+    alignItems: 'center', // Center horizontally
   }
 });
 
