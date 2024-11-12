@@ -29,7 +29,8 @@ import privacyicon from "../assets/icons/privacyicon.png";
 import supporticon from "../assets/icons/supporticon.png";
 import zoodrawericon from "../assets/icons/zoodrawericon.png";
 import rightChevron from "../assets/icons/right-chevron.png";
-
+import plusButton from "../assets/icons/plusButton.png"
+import deleteX from "../assets/icons/deleteX.png";
 
 
 export default {
@@ -63,5 +64,7 @@ export default {
   privacyicon,
   supporticon,
   zoodrawericon,
-  rightChevron
+  rightChevron,
+  plusButton,
+  deleteX,
 };
