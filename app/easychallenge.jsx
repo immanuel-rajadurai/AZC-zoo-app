@@ -7,10 +7,9 @@ import labels from '../assets/labels.json';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import mysteryAnimalImage from '../assets/animalImages/mystery_animal.jpg';
 import { Asset } from 'expo-asset';
 import { fetch } from '@tensorflow/tfjs-react-native';
-import animalPhoto from '../assets/animalImages/ostrich.jpg';
+import animalPhoto from '../assets/animalImages/tiger.jpg';
 import { bundleResourceIO } from '@tensorflow/tfjs-react-native';
 import { images, icons } from '../constants';
 
@@ -29,6 +28,7 @@ const Challenge = () => {
   const [isInfoModal, setIsInfoModal] = useState(null);
   const [predictedAnimal, setPredictedAnimal] = useState(null);
   const [classifyingModalVisible, setClassifyingModalVisible] = useState(false);
+  const [incorrectAnimalModalVisible, setIncorrectAnimalModalVisible] = useState(false);
 
   const animalInfo = {
     leopard: {
@@ -182,8 +182,6 @@ const Challenge = () => {
           const initialTargetAnimals = ['lion', 'african_elephant', 'leopard', 'ostrich', 'tiger'];
           setTargetAnimals(initialTargetAnimals);
           await AsyncStorage.setItem('targetAnimals', JSON.stringify(initialTargetAnimals));
-
-          // await AsyncStorage.setItem('targetAnimals', initialTargetAnimals); commented out as it is likely error causing
         }
 
       } catch (error) {
@@ -200,7 +198,8 @@ const Challenge = () => {
           setScannedAnimals(emptyScannedAnimals);
           await AsyncStorage.setItem('scannedAnimals', JSON.stringify(emptyScannedAnimals));
         }
-
+        
+        //Experimental code to reset scanned animals
         // let emptyScannedAnimals = [];
         // setScannedAnimals(emptyScannedAnimals);
         // await AsyncStorage.setItem('scannedAnimals', JSON.stringify(emptyScannedAnimals));
@@ -263,35 +262,6 @@ const Challenge = () => {
 
   async function classifyImageTest() {
     
-    // const predictedAnimal = "tiger";
-
-    // setPredictedAnimal(predictedAnimal);
-
-    // if (Object.values(targetAnimals).includes(predictedAnimal)) {
-
-    //   showModal(predictedAnimal); 
-
-    //   try {
-
-    //     if (!scannedAnimals.includes(predictedAnimal)) {
-    //       scannedAnimals.push(predictedAnimal);
-    //       setScannedAnimals(scannedAnimals);
-
-    //       let updatedTargetAnimals = targetAnimals.filter(animal => animal !== predictedAnimal);
-    //       setTargetAnimals(updatedTargetAnimals);
-    //       await AsyncStorage.setItem('targetAnimals', JSON.stringify(updatedTargetAnimals));
-    //     }
-
-    //     await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
-
-    //   } catch (error) {
-    //     console.error('Failed to load scanned animals', error);
-    //   }
-
-    // } else {
-    //   console.log(predictedAnimal + " is not in targetAnimals: " + targetAnimals)
-    // }
-    
     if (model) {
 
       console.log("loading image")
@@ -318,22 +288,6 @@ const Challenge = () => {
       const predictedAnimal = predictedClassEntry ? predictedClassEntry[1] : 'Unknown'; // class name
 
       console.log("Predicted Animal: " + predictedAnimal)
-
-      //add scanned animal to scanned animals list
-
-      // try {
-      //   let storedScannedAnimals = await AsyncStorage.getItem('scannedAnimals');
-      //   storedScannedAnimals = storedScannedAnimals ? JSON.parse(storedScannedAnimals) : [];
-      //   storedScannedAnimals.push(predictedAnimal);
-      //   await AsyncStorage.setItem('scannedAnimals', JSON.stringify(storedScannedAnimals));
-      
-      // } catch (error) {
-      //   console.error("failed to save scanned animals", error);
-      // }
-
-      // setPredictedAnimal(predictedAnimal);
-
-      // console.log("showing popup")
 
       if (Object.values(targetAnimals).includes(predictedAnimal)) {
 
@@ -415,16 +369,6 @@ const Challenge = () => {
     }
   }
 
-  const getAnimalInfo = (animal) => {
-    // Replace this with actual logic to fetch animal information
-    const animalData = {
-      leopard: "Cats are small, carnivorous mammals that are often kept as pets.",
-      tiger: "Dogs are domesticated mammals, not natural wild animals.",
-      // Add more animals as needed
-    };
-    return animalData[animal] || "Information not available.";
-  };
-
   const takePicture = async () => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
     if (permissionResult.granted === false) {
@@ -446,24 +390,31 @@ const Challenge = () => {
       setImage(result.assets[0].uri);
 
       setClassifyingModalVisible(true);
-      let predictedAnimalResult = await classifyImage(result.assets[0].uri);
+
+      // let predictedAnimalResult = await classifyImage(result.assets[0].uri);
+      const asset = Asset.fromModule(animalPhoto);
+      await asset.downloadAsync();
+      const imageUri = asset.localUri || asset.uri;
+      let predictedAnimalResult = await classifyImage(imageUri);
+      let predictedAnimal = predictedAnimalResult.toLowerCase()
+
       setClassifyingModalVisible(false);
       
       //check whether the animal is correct or not
-      if (Object.values(targetAnimals).includes(predictedAnimalResult)) {
+      if (Object.values(targetAnimals).includes(predictedAnimal)) {
 
-        showModal({predictedAnimal:predictedAnimalResult}); 
+        showModal({predictedAnimal:predictedAnimal}); 
   
         try {
   
-          if (!scannedAnimals.includes(predictedAnimalResult)) {
-            scannedAnimals.push(predictedAnimalResult);
+          if (!scannedAnimals.includes(predictedAnimal)) {
+            scannedAnimals.push(predictedAnimal);
             setScannedAnimals(scannedAnimals);
   
-            let updatedTargetAnimals = targetAnimals.filter(animal => animal !== predictedAnimalResult);
+            let updatedTargetAnimals = targetAnimals.filter(animal => animal !== predictedAnimal);
             setTargetAnimals(updatedTargetAnimals);
             await AsyncStorage.setItem('targetAnimals', JSON.stringify(updatedTargetAnimals));
-          }
+          } 
   
           await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
   
@@ -472,7 +423,9 @@ const Challenge = () => {
         }
   
       } else {
-          console.log("IN takePicture: " + predictedAnimalResult + " is not in targetAnimals: " + targetAnimals)
+          console.log("IN takePicture: " + predictedAnimal + " is not in targetAnimals: " + targetAnimals)
+
+          setIncorrectAnimalModalVisible(true);
       }
 
       console.log("file location: ", result.assets[0].uri);
@@ -512,6 +465,14 @@ const Challenge = () => {
     setClassifyingModalVisible(false);
   };
 
+  const showIncorrectAnimalModal = () => {
+    setIncorrectAnimalModalVisible(true);
+  };
+
+  const closeIncorrectAnimalModal = () => {
+    setIncorrectAnimalModalVisible(false);
+  }
+
   return (
     
     <View style={styles.container}>
@@ -544,6 +505,22 @@ const Challenge = () => {
         </View>
       </SafeAreaView>
     </Modal>
+
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={incorrectAnimalModalVisible}
+      onRequestClose={closeIncorrectAnimalModal}
+    >
+      <SafeAreaView style={modalStyle.modalContainer}>
+        <View style={modalStyle.modalContent}>
+          <Text style={styles.title}>Animal not on list</Text>
+          <Text style={styles.subtitle}>You have either not photographed an animal on the list or your picture isn't clear enough</Text>
+          <Button title="Close" onPress={closeIncorrectAnimalModal} />
+        </View>
+      </SafeAreaView>
+    </Modal>
+
 
     <Modal
       animationType="slide"
