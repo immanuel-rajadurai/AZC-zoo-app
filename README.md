@@ -4,4 +4,8 @@
 
 An app that to digitalise and gamify the visitor attraction experience
 
+## How to install all related packages
 
+### 1. Clear your npm cache
+
+`npm cache clean --force`
