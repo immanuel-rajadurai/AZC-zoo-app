@@ -162,7 +162,7 @@ const RootLayout = () => {
         options={{header: CustomHeader }}
       />
 
-      <Stack.Screen name="wallet" options={{ title: 'Wallet' }} />
+      <Stack.Screen name="wallet" options={{ title: 'Wallet', headerStyle: { backgroundColor: '#234e35' } }} />
 
       <Stack.Screen name="news" options={{ title: 'News' }} />
       <Stack.Screen name="information" options={{ title: 'Information' }} />
