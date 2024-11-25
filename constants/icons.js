@@ -29,8 +29,11 @@ import privacyicon from "../assets/icons/privacyicon.png";
 import supporticon from "../assets/icons/supporticon.png";
 import zoodrawericon from "../assets/icons/zoodrawericon.png";
 import rightChevron from "../assets/icons/right-chevron.png";
+import leftChevron from "../assets/icons/left-chevron.png";
+import camera from "../assets/icons/camera.png";
 import plusButton from "../assets/icons/plusButton.png"
 import deleteX from "../assets/icons/deleteX.png";
+
 
 
 export default {
@@ -65,6 +68,8 @@ export default {
   supporticon,
   zoodrawericon,
   rightChevron,
+  leftChevron,
+  camera
   plusButton,
   deleteX,
 };

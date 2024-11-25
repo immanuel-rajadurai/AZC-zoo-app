@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { StyleSheet, Text, View, Button, Image, ActivityIndicator, TouchableOpacity, ScrollView, SafeAreaView, Modal } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, ActivityIndicator, TouchableOpacity, ScrollView, SafeAreaView, Modal, ImageBackground } from 'react-native';
 import * as tf from '@tensorflow/tfjs';
 import * as jpeg from 'jpeg-js';
 import * as FileSystem from 'expo-file-system';
@@ -7,11 +7,11 @@ import labels from '../assets/labels.json';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import mysteryAnimalImage from '../assets/animalImages/mystery_animal.jpg';
 import { Asset } from 'expo-asset';
 import { fetch } from '@tensorflow/tfjs-react-native';
-import animalPhoto from '../assets/animalImages/ostrich.jpg';
+import animalPhoto from '../assets/animalImages/tiger.jpg';
 import { bundleResourceIO } from '@tensorflow/tfjs-react-native';
+import { images, icons } from '../constants';
 
 
 const Challenge = () => {
@@ -27,6 +27,8 @@ const Challenge = () => {
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [isInfoModal, setIsInfoModal] = useState(null);
   const [predictedAnimal, setPredictedAnimal] = useState(null);
+  const [classifyingModalVisible, setClassifyingModalVisible] = useState(false);
+  const [incorrectAnimalModalVisible, setIncorrectAnimalModalVisible] = useState(false);
 
   const animalInfo = {
     leopard: {
@@ -117,7 +119,9 @@ const Challenge = () => {
       <View style={styles.container}>
         <View style={styles.contentContainer}>
           <View>
+            <View style={styles.subTitleContainer}>
             <Text style={styles.subtitle}>Animals to snap</Text>
+            </View>
             <ScrollView style={styles.scrollView} persistentScrollbar={true}>  
               {targetAnimals.map((animal, index) => {
                 const info = animalInfo[animal.toLowerCase()];
@@ -136,7 +140,9 @@ const Challenge = () => {
           </View>
           <View style={styles.verticalLine} />
           <View>
+          <View style={styles.subTitleContainer}>
           <Text style={styles.subtitle}>Snapped Animals</Text>
+          </View>
           <ScrollView style={styles.scrollView} persistentScrollbar={true}>
               {scannedAnimals.map((animal, index) => {
                 console.log("animal: " + animal);
@@ -176,8 +182,6 @@ const Challenge = () => {
           const initialTargetAnimals = ['lion', 'african_elephant', 'leopard', 'ostrich', 'tiger'];
           setTargetAnimals(initialTargetAnimals);
           await AsyncStorage.setItem('targetAnimals', JSON.stringify(initialTargetAnimals));
-
-          await AsyncStorage.setItem('targetAnimals', initialTargetAnimals);
         }
 
       } catch (error) {
@@ -194,7 +198,8 @@ const Challenge = () => {
           setScannedAnimals(emptyScannedAnimals);
           await AsyncStorage.setItem('scannedAnimals', JSON.stringify(emptyScannedAnimals));
         }
-
+        
+        //Experimental code to reset scanned animals
         // let emptyScannedAnimals = [];
         // setScannedAnimals(emptyScannedAnimals);
         // await AsyncStorage.setItem('scannedAnimals', JSON.stringify(emptyScannedAnimals));
@@ -257,35 +262,6 @@ const Challenge = () => {
 
   async function classifyImageTest() {
     
-    // const predictedAnimal = "tiger";
-
-    // setPredictedAnimal(predictedAnimal);
-
-    // if (Object.values(targetAnimals).includes(predictedAnimal)) {
-
-    //   showModal(predictedAnimal); 
-
-    //   try {
-
-    //     if (!scannedAnimals.includes(predictedAnimal)) {
-    //       scannedAnimals.push(predictedAnimal);
-    //       setScannedAnimals(scannedAnimals);
-
-    //       let updatedTargetAnimals = targetAnimals.filter(animal => animal !== predictedAnimal);
-    //       setTargetAnimals(updatedTargetAnimals);
-    //       await AsyncStorage.setItem('targetAnimals', JSON.stringify(updatedTargetAnimals));
-    //     }
-
-    //     await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
-
-    //   } catch (error) {
-    //     console.error('Failed to load scanned animals', error);
-    //   }
-
-    // } else {
-    //   console.log(predictedAnimal + " is not in targetAnimals: " + targetAnimals)
-    // }
-    
     if (model) {
 
       console.log("loading image")
@@ -312,22 +288,6 @@ const Challenge = () => {
       const predictedAnimal = predictedClassEntry ? predictedClassEntry[1] : 'Unknown'; // class name
 
       console.log("Predicted Animal: " + predictedAnimal)
-
-      //add scanned animal to scanned animals list
-
-      // try {
-      //   let storedScannedAnimals = await AsyncStorage.getItem('scannedAnimals');
-      //   storedScannedAnimals = storedScannedAnimals ? JSON.parse(storedScannedAnimals) : [];
-      //   storedScannedAnimals.push(predictedAnimal);
-      //   await AsyncStorage.setItem('scannedAnimals', JSON.stringify(storedScannedAnimals));
-      
-      // } catch (error) {
-      //   console.error("failed to save scanned animals", error);
-      // }
-
-      // setPredictedAnimal(predictedAnimal);
-
-      // console.log("showing popup")
 
       if (Object.values(targetAnimals).includes(predictedAnimal)) {
 
@@ -361,6 +321,8 @@ const Challenge = () => {
   async function classifyImage(imageUri) {
     if (model) {
       try {
+
+        console.log("decoding image...");
         const base64String = await FileSystem.readAsStringAsync(imageUri, {
           encoding: FileSystem.EncodingType.Base64,
         });
@@ -373,6 +335,8 @@ const Challenge = () => {
         });
         
         console.log("classifying image...")
+
+        
         const prediction = await model.predict(imageTensor).data();
         const highestPredictionIndex = prediction.indexOf(Math.max(...prediction));
         const predictedClassEntry = labels[highestPredictionIndex];
@@ -380,7 +344,6 @@ const Challenge = () => {
 
         console.log('Predicted Class:', predictedClass);
         console.log("highest prediction " + Math.max(...prediction))
-        console.log("Predictions: " + prediction)
 
         console.log("type of predictions: " + typeof prediction)
         
@@ -395,46 +358,80 @@ const Challenge = () => {
         console.log("third highest prediction: " + thirdHighestPrediction + " class: " + labels[prediction.indexOf(thirdHighestPrediction)][1]);
 
         setPredictions(predictedClass);
+        setPredictedAnimal(predictedClass);
+
+        return predictedClass;
 
       } catch (error) {
         console.error('Error classifying image:', error);
+        return null;
       }
     }
   }
 
-  const getAnimalInfo = (animal) => {
-    // Replace this with actual logic to fetch animal information
-    const animalData = {
-      leopard: "Cats are small, carnivorous mammals that are often kept as pets.",
-      tiger: "Dogs are domesticated mammals, not natural wild animals.",
-      // Add more animals as needed
-    };
-    return animalData[animal] || "Information not available.";
-  };
-
   const takePicture = async () => {
-    // Request camera permissions
-    // const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
-    // if (permissionResult.granted === false) {
-    //   alert("You've refused to allow this app to access your camera!");
-    //   return;
-    // }
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+    if (permissionResult.granted === false) {
+      alert("You've refused to allow this app to access your camera!");
+      return;
+    }
 
-    // // Launch the camera to take a picture
-    // const result = await ImagePicker.launchCameraAsync({
-    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    //   allowsEditing: false,
-    //   aspect: [4, 3],
-    //   quality: 1,
-    // });
+    // Launch the camera to take a picture
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: false,
+      aspect: [4, 3],
+      quality: 1,
+    });
 
-    // if (!result.canceled) {
-      // setImage(result.assets[0].uri);
-      // classifyImage(result.assets[0].uri);
+    console.log("image picker closed")
 
-      classifyImageTest();
-      // console.log(result.assets[0].uri);
-    // }
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+
+      setClassifyingModalVisible(true);
+
+      // let predictedAnimalResult = await classifyImage(result.assets[0].uri);
+      const asset = Asset.fromModule(animalPhoto);
+      await asset.downloadAsync();
+      const imageUri = asset.localUri || asset.uri;
+      let predictedAnimalResult = await classifyImage(imageUri);
+      let predictedAnimal = predictedAnimalResult.toLowerCase()
+
+      setClassifyingModalVisible(false);
+      
+      //check whether the animal is correct or not
+      if (Object.values(targetAnimals).includes(predictedAnimal)) {
+
+        showModal({predictedAnimal:predictedAnimal}); 
+  
+        try {
+  
+          if (!scannedAnimals.includes(predictedAnimal)) {
+            scannedAnimals.push(predictedAnimal);
+            setScannedAnimals(scannedAnimals);
+  
+            let updatedTargetAnimals = targetAnimals.filter(animal => animal !== predictedAnimal);
+            setTargetAnimals(updatedTargetAnimals);
+            await AsyncStorage.setItem('targetAnimals', JSON.stringify(updatedTargetAnimals));
+          } 
+  
+          await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
+  
+        } catch (error) {
+          console.error('Failed to load scanned animals', error);
+        }
+  
+      } else {
+          console.log("IN takePicture: " + predictedAnimal + " is not in targetAnimals: " + targetAnimals)
+
+          setIncorrectAnimalModalVisible(true);
+      }
+
+      console.log("file location: ", result.assets[0].uri);
+    }
+
+    // classifyImageTest();
   };
 
   const showModal = ({predictedAnimal="tiger", info=false} = {} ) => {
@@ -460,30 +457,71 @@ const Challenge = () => {
     setModalVisible(false);
   };
 
+  const showClassifyingModal = () => {
+    setClassifyingModalVisible(true);
+  };
+  
+  const closeClassifyingModal = () => {
+    setClassifyingModalVisible(false);
+  };
+
+  const showIncorrectAnimalModal = () => {
+    setIncorrectAnimalModalVisible(true);
+  };
+
+  const closeIncorrectAnimalModal = () => {
+    setIncorrectAnimalModalVisible(false);
+  }
+
   return (
+    
     <View style={styles.container}>
-    <View style={styles.titleContainer}>
-        <Text style={styles.title}>Easy Animal Scavenger Hunt</Text>
-    </View>
+    <ImageBackground source={images.easyAnimalChallengeBackground} style={styles.backgroundImage}>
     <ScannedAnimalsList targetAnimals={targetAnimals} scannedAnimals={scannedAnimals} />
 
+    <View style={styles.cameraBar}>
     {modelLoaded ? (
       <>
-        <View style={styles.cameraBar}>
           <TouchableOpacity style={styles.cameraButton} onPress={takePicture}>
-            <Icon name="camera-alt" size={30} color="#fff" />
+            <Image source={icons.camera} style={{ width: 60, height: 60 }} />
           </TouchableOpacity>
-        </View>
+        
       </>
     ) : (
       <Text>Loading AI</Text>,
       <ActivityIndicator size="large" color="#0000ff" />
     )}
+    </View>
 
-    {/* <Button title="Show popup" onPress={showModal} /> */}
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={classifyingModalVisible}
+      onRequestClose={closeClassifyingModal}
+    >
+      <SafeAreaView style={modalStyle.modalContainer}>
+        <View style={modalStyle.modalContent}>
+          <Text style={styles.title}>Classifying image...</Text>
+        </View>
+      </SafeAreaView>
+    </Modal>
 
-    {image && <Image source={{ uri: image }} style={styles.image} />}
-    
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={incorrectAnimalModalVisible}
+      onRequestClose={closeIncorrectAnimalModal}
+    >
+      <SafeAreaView style={modalStyle.modalContainer}>
+        <View style={modalStyle.modalContent}>
+          <Text style={styles.title}>Animal not on list</Text>
+          <Text style={styles.subtitle}>You have either not photographed an animal on the list or your picture isn't clear enough</Text>
+          <Button title="Close" onPress={closeIncorrectAnimalModal} />
+        </View>
+      </SafeAreaView>
+    </Modal>
+
+
     <Modal
       animationType="slide"
       transparent={true}
@@ -544,9 +582,7 @@ const Challenge = () => {
       </View>
     </SafeAreaView>
   </Modal>
-
-
-
+  </ImageBackground>
   </View>
   )
 }
@@ -558,12 +594,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
     paddingBottom: 1,
   },
   verticalLine: {
     width: 2,
-    backgroundColor: 'darkgreen',
+    backgroundColor: 'white',
     marginHorizontal: 10,
   },
   contentContainer: {
@@ -573,11 +609,23 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     backgroundColor: '#d4edda', // Light green background
-    borderRadius: 10, // Curved edges
-    padding: 16, // Padding inside the box
+    borderRadius: 20, // Curved edges
+    padding: 10, // Padding inside the box
     marginBottom: 20, // Space below the box
     alignItems: 'center', // Center the text horizontally
-    marginTop:2
+    marginTop:5,
+    zIndex:10
+  },
+  subTitleContainer: {
+    backgroundColor: '#d4edda', // Light green background
+    borderRadius: 20, // Curved edges
+    padding: 5, // Padding inside the box
+    marginBottom: 0, // Space below the box
+    alignItems: 'center', // Center the text horizontally
+    marginTop:70,
+    alignSelf: 'center',
+    // width: '90%',
+    paddingHorizontal: 10
   },
   title: {
     fontSize: 24,
@@ -617,13 +665,13 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100%',
     position: 'absolute',
     bottom: 0,
+    left: 0, // Ensure it starts from the left edge
+    right: 0, 
   },
   cameraButton: {
-    backgroundColor: '#068c08',
-    borderRadius: 50,
+    // borderRadius: 50,
     padding: 15,
     alignItems: 'center',
     justifyContent: 'center',
@@ -643,8 +691,8 @@ const styles = StyleSheet.create({
     paddingBottom: 20
   },
   animalCard: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
+    backgroundColor: '#5a8c66',
+    borderRadius: 30,
     padding: 15,
     marginVertical: 10,
     alignItems: 'center',
@@ -690,7 +738,7 @@ const styles = StyleSheet.create({
   animalName: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: 'white',
   },
 });
 

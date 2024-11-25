@@ -17,6 +17,7 @@ import ToggleShowInformationButton from '../../../components/ToggleShowInformati
 // const client = generateClient();
 
 const Home = () => {
+  
   const mapRef = useRef(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -26,7 +27,7 @@ const Home = () => {
   const [eventsVisible, setEventsVisible] = useState(false);
   const translateY = useRef(new Animated.Value(200)).current;
   const { height: screenHeight } = Dimensions.get('window');
-  const [eventButtonTitle, setButtonTitle] = useState("Show Information");
+  const [eventButtonTitle, setButtonTitle] = useState("Challenge");
   
   const onRefresh = async () => {
     setRefreshing(true);
@@ -51,11 +52,11 @@ const Home = () => {
         useNativeDriver: true,
       }).start(() => {
         setEventsVisible(false);
-        setButtonTitle("Information");
+        setButtonTitle("Challenge");
       });
     } else {
       setEventsVisible(true);
-      setButtonTitle("Hide Information");
+      setButtonTitle("Hide Challenge");
       Animated.timing(translateY, {
         toValue: -10,
         duration: 5,
@@ -146,6 +147,7 @@ const Home = () => {
         customMapStyle={mapstyle1}
         onRegionChangeComplete={(region) => setRegion(region)}
         provider={MapView.PROVIDER_GOOGLE}
+        rotateEnabled={false}
       >
 
         <Overlay  
@@ -169,6 +171,8 @@ const Home = () => {
             />
           </Marker>
         ))}
+
+         
       </MapView>
 
       {/* <CustomButton handlePress={() => goToZoo()} title="Go to Zoo" /> */}
