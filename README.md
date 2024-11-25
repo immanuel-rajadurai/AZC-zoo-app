@@ -30,4 +30,5 @@ NOTE: The --legacy-peer-deps flag helps get around conflicting packages
 
 either `npx expo start -c` or `npm expo start --tunnel`
 
+*the first option is preferred as it runs locally whereas the second option hosts a remote tunnel which can result in slower load times
 
