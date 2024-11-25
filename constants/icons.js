@@ -69,7 +69,7 @@ export default {
   zoodrawericon,
   rightChevron,
   leftChevron,
-  camera
+  camera,
   plusButton,
-  deleteX,
+  deleteX
 };
