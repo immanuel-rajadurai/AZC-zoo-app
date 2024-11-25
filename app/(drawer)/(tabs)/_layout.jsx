@@ -8,7 +8,7 @@ import { CustomHeader } from '../_layout';
 
 const TabIcon = ({ icon, color, name, focused, style, textColor }) => {
   return (
-    <View className="items-center justify-center gap-2">
+    <View style={{ alignItems: 'center', justifyContent: 'center', gap: 2 }}>
       <Image
         source={icon}
         resizeMethod='contain'
@@ -29,16 +29,28 @@ const TabsLayout = () => {
    
       <Tabs
         screenOptions={{
-          tabBarShowLabel: false,
-          tabBarActiveTintColor: '#619837',
-          tabBarInactiveTintColor: '#7BC144',
-          tabBarStyle: {
-            backgroundColor: '#234e35',
-            borderTopWidth: 0,
-            borderTopColor: '#232533',
-            height:80,
-          }
-        }}
+        tabBarShowLabel: false,
+        tabBarActiveTintColor: '#619837',
+        tabBarInactiveTintColor: '#7BC144',
+        tabBarStyle: {
+          backgroundColor: '#234e35',
+          borderTopWidth: 0,
+          borderTopColor: '#232533',
+          height: 80,
+          paddingBottom: 0,
+          paddingTop: 20,
+        },
+        tabBarItemStyle: {
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: 'auto',
+        },
+        tabBarLabelStyle: {
+          flex: 1,
+          flexWrap: 'nowrap',
+          textAlign: 'center',
+        },
+      }}
       >
         <Tabs.Screen
           name="shows"
