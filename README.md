@@ -5,7 +5,7 @@
 
 An app that to digitalise and gamify the visitor attraction experience
 
-## How to install all related packages (assuming you have already setup react native and expo)
+## How to install all related packages (assuming you have already set up react native and expo)
 
 ### 1. Clear your npm cache
 
