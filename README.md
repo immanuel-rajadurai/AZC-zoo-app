@@ -26,4 +26,8 @@ An app that to digitalise and gamify the visitor attraction experience
 
 NOTE: The --legacy-peer-deps flag helps get around conflicting packages
 
+### 5. Run the app 
+
+either `npx expo start -c` or `npm expo start --tunnel`
+
 
