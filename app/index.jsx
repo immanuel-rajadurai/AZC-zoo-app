@@ -7,6 +7,7 @@ import CustomButton from '../components/CustomButton';
 import { useGlobalContext } from '../context/GlobalProvider';
 import { ModelProvider } from './modelContext';
 import CustomButtonBlack from '../components/CustomButtonBlack';
+import { NavigationContainer } from '@react-navigation/native';
 
 
 
