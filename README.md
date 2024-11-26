@@ -11,6 +11,8 @@ An app that to digitalise and gamify the visitor attraction experience
 
 `npm cache clean --force`
 
+NOTE: If you are on windows CMD or Powershell you should need to use the windows versions of these commands
+
  ### 2. Delete package-lock.json
  This removes the file that tracks all your currently stored packages 
  
