@@ -33,7 +33,7 @@ import leftChevron from "../assets/icons/left-chevron.png";
 import camera from "../assets/icons/camera.png";
 import plusButton from "../assets/icons/plusButton.png"
 import deleteX from "../assets/icons/deleteX.png";
-
+import pulldownbutton from "../assets/icons/pulldownbutton.png";
 
 
 export default {
@@ -71,5 +71,6 @@ export default {
   leftChevron,
   camera,
   plusButton,
-  deleteX
+  deleteX,
+  pulldownbutton
 };

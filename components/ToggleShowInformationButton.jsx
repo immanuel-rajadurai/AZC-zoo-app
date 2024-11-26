@@ -6,8 +6,6 @@ const ToggleShowInformationButton = ({ title, handlePress, containerStyles, text
     <TouchableOpacity 
       onPress={handlePress}
       activeOpacity={0.7}
-      // className={`bg-green-500 rounded-xl min-h-[62px] justify-center items-center 
-      // ${containerStyles} ${isLoading ? 'opacity-50':''}`}
       disabled={isLoading}
       style={[
         styles.button,

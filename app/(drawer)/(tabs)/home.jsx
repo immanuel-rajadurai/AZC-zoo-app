@@ -10,6 +10,7 @@ import Events from "../../../components/Events"
 import animals from "../../../data/animals";
 import eventsDummy from "../../../data/events";
 import ToggleShowInformationButton from '../../../components/ToggleShowInformationButton';
+import { icons } from '../../../constants';
 
 // import { generateClient } from 'aws-amplify/api';
 // import { listEvents } from '../../src/graphql/queries';
@@ -28,6 +29,7 @@ const Home = () => {
   const translateY = useRef(new Animated.Value(200)).current;
   const { height: screenHeight } = Dimensions.get('window');
   const [eventButtonTitle, setButtonTitle] = useState("Challenge");
+  const [isShowEventsButtonVisible, setShowEventsButtonVisible] = useState(true);
   
   const onRefresh = async () => {
     setRefreshing(true);
@@ -45,7 +47,10 @@ const Home = () => {
   const [events, setEvents] = useState([]);
   
   const toggleEvents = () => {
+    
+  
     if (eventsVisible) {
+      setShowEventsButtonVisible(true);
       Animated.timing(translateY, {
         toValue: 0,
         duration: 500,
@@ -56,12 +61,14 @@ const Home = () => {
       });
     } else {
       setEventsVisible(true);
+      
       setButtonTitle("Hide Challenge");
       Animated.timing(translateY, {
         toValue: -10,
         duration: 5,
         useNativeDriver: true,
       }).start();
+      setShowEventsButtonVisible(false);
     }
   };
 
@@ -222,15 +229,33 @@ const Home = () => {
       </Modal>
 
       <View style={styles.halfCircle} />
-
-      <View style={styles.eventButton}>
-        <ToggleShowInformationButton title={eventButtonTitle} textStyles="text-white" handlePress={toggleEvents} />
-      </View>
+      
+      {isShowEventsButtonVisible && (
+        <View style={styles.eventButton}>
+          <ToggleShowInformationButton title={eventButtonTitle} textStyles="text-white" handlePress={toggleEvents} />
+        </View>
+      )}
 
       {eventsVisible && (
+
         <Animated.View style={[styles.animatedContainer, { transform: [{ translateY }] }]}>
-          <Events events={events} />
+          
+          <View style={styles.eventsContainer}>
+            {/* <Button title="Close" styles={styles.closeButton} onPress={toggleEvents} /> */}
+
+            <TouchableOpacity
+              style={styles.deleteButton}
+              onPress={toggleEvents} // Pass the fileUri to the deleteFile function
+            >
+              <Image
+                source={icons.pulldownbutton} // Replace with your delete icon
+                style={styles.deleteIcon}
+              />
+            </TouchableOpacity>
+            <Events styles={styles.test} events={events} />
+          </View>
         </Animated.View>
+
       )}
     </View>
   );
@@ -248,6 +273,14 @@ const styles = StyleSheet.create({
   },
   overlay: {
     transform: [{ rotate: '90deg' }],
+  },
+  eventsContainer: {
+    position: 'relative',
+    top: 100, // Adjust this value to move the events component further down
+    width: '100%',
+    alignItems: 'center',
+    padding: 0,
+    zIndex: 1,
   },
   text: {
     fontSize: 16,
@@ -270,7 +303,14 @@ const styles = StyleSheet.create({
     bottom: 0,
     zIndex: 1,
     alignItems: 'center', // Center horizontally
-  }
+  },
+  // closeButton: {
+  //   position: 'absolute',
+  //   // top:100,
+  //   // flex: 1,
+  //   zIndex: 2,
+  //   bottom: -50,
+  // }
 });
 
 const modalStyles = StyleSheet.create({
