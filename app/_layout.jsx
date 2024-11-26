@@ -51,7 +51,7 @@ const CustomHeader = ({ route }) => {
         {!isSearchVisible ? (
           <>
             <TouchableOpacity
-              style={{ position: 'absolute', left: 50 }}
+              style={{ position: 'absolute', left: 10 }}
               onPress={toggleDrawer}
             >
               <Image
@@ -88,6 +88,7 @@ const CustomHeader = ({ route }) => {
               width: 20,
               height: 20,
               tintColor: isSearchVisible ? 'black' : '#7BC144', 
+              left: 35
             }}
             resizeMode="contain"
           />

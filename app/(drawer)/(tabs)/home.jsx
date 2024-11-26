@@ -62,7 +62,7 @@ const Home = () => {
     } else {
       setEventsVisible(true);
       
-      setButtonTitle("Hide Challenge");
+      setButtonTitle("Challenge");
       Animated.timing(translateY, {
         toValue: -10,
         duration: 5,
@@ -229,10 +229,12 @@ const Home = () => {
       </Modal>
 
       <View style={styles.halfCircle} />
+
+      <View style={styles.bottombar} />
       
       {isShowEventsButtonVisible && (
         <View style={styles.eventButton}>
-          <ToggleShowInformationButton title={eventButtonTitle} textStyles="text-white" handlePress={toggleEvents} />
+          <ToggleShowInformationButton title={eventButtonTitle}  handlePress={toggleEvents} />
         </View>
       )}
 
@@ -295,6 +297,13 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 80,  // Creates a rounded top left corner
     borderTopRightRadius: 80,  // Creates a rounded top right corner
     zIndex: 2,  // Ensure it stays above other components
+  },
+  bottombar: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    height: 10, // Adjust the thickness as needed
+    backgroundColor: '#8BC33A',
   },
   eventButton: {
     width: "70%",

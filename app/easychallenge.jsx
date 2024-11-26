@@ -120,12 +120,14 @@ const Challenge = () => {
         <View style={styles.contentContainer}>
           <View>
             <View style={styles.subTitleContainer}>
-            <Text style={styles.subtitle}>Animals to snap</Text>
+              <Text style={styles.subtitle}>Animals to snap</Text>
             </View>
+
             <ScrollView style={styles.scrollView} persistentScrollbar={true}>  
               {targetAnimals.map((animal, index) => {
                 const info = animalInfo[animal.toLowerCase()];
                 return (
+                  <>
                   <TouchableOpacity key={index} onPress={() => showModal({ predictedAnimal: animal, info: true })}>
                     <View key={index} style={styles.animalCard}>
                       <View style={styles.imageContainer}>
@@ -134,6 +136,8 @@ const Challenge = () => {
                       <Text style={styles.animalName}>{info.name}</Text>
                     </View>
                   </TouchableOpacity>
+                  </>
+                  
                 );
               })}
             </ScrollView>
@@ -183,7 +187,7 @@ const Challenge = () => {
           setTargetAnimals(initialTargetAnimals);
           await AsyncStorage.setItem('targetAnimals', JSON.stringify(initialTargetAnimals));
         }
-
+ 
       } catch (error) {
         console.error('Failed to load zoo animals', error);
       }
@@ -376,6 +380,8 @@ const Challenge = () => {
       return;
     }
 
+    console.log("image picker opened");
+
     // Launch the camera to take a picture
     const result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -481,15 +487,16 @@ const Challenge = () => {
 
     <View style={styles.cameraBar}>
     {modelLoaded ? (
-      <>
+      // <>
+
           <TouchableOpacity style={styles.cameraButton} onPress={takePicture}>
-            <Image source={icons.camera} style={{ width: 60, height: 60 }} />
+            <Image source={icons.camera} style={{ width: 60, height: 60 }}/>
           </TouchableOpacity>
-        
-      </>
+          
+      // </>
     ) : (
       <Text>Loading AI</Text>,
-      <ActivityIndicator size="large" color="#0000ff" />
+      <ActivityIndicator size="large" color="green" />
     )}
     </View>
 
@@ -520,7 +527,6 @@ const Challenge = () => {
         </View>
       </SafeAreaView>
     </Modal>
-
 
     <Modal
       animationType="slide"
@@ -599,7 +605,7 @@ const styles = StyleSheet.create({
   },
   verticalLine: {
     width: 2,
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
     marginHorizontal: 10,
   },
   contentContainer: {
@@ -618,31 +624,32 @@ const styles = StyleSheet.create({
   },
   subTitleContainer: {
     backgroundColor: '#d4edda', // Light green background
-    borderRadius: 20, // Curved edges
+    borderRadius: 30, // Curved edges
     padding: 5, // Padding inside the box
     marginBottom: 0, // Space below the box
     alignItems: 'center', // Center the text horizontally
     marginTop:70,
     alignSelf: 'center',
-    // width: '90%',
     paddingHorizontal: 10
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: 'darkgreen',
+    color: 'white',
     marginBottom: 2,
     marginTop:1,
     textAlign: 'center',
+    fontFamily: 'serif', // Suitable font
   },
   subtitle: {
-    fontSize: 20,
+    fontSize: 17,
     fontWeight: 'bold',
-    color: 'darkgreen',
+    color: 'black',
     marginTop: 10,
     marginBottom: 10,
     textAlign: 'center',
     paddingRight: 17,
+    fontFamily: 'serif', // Suitable font
   },
   animalsLeft: {
     fontSize: 24, // Increased font size
@@ -656,13 +663,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  camera: {
-    flex: 1,
-    width: '100%',
-  },
   cameraBar: {
-    backgroundColor: '#e8f5e9',
-    padding: 10,
+    // backgroundColor: '#e8f5e9',
+    padding: 120,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
@@ -671,8 +674,9 @@ const styles = StyleSheet.create({
     right: 0, 
   },
   cameraButton: {
-    // borderRadius: 50,
-    padding: 15,
+    // backgroundColor: '#068c08', 
+    borderRadius: 50,
+    padding: 20,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -687,13 +691,15 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     width: '100%',
-    padding: 20,
-    paddingBottom: 20
+    padding: 10,
+    // paddingBottom: 20,
+    marginBottom: 170,
   },
   animalCard: {
     backgroundColor: '#5a8c66',
-    borderRadius: 30,
-    padding: 15,
+    borderTopLeftRadius: 120,
+    borderTopRightRadius: 120,
+    padding: 0,
     marginVertical: 10,
     alignItems: 'center',
     shadowColor: '#000',
@@ -701,7 +707,7 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.8,
     shadowRadius: 4,
     elevation: 5,
   },
@@ -724,9 +730,9 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   animalImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: 150,
+    height: 150,
+    borderRadius: 150,
     marginBottom: 10,
   },
   tickIcon: {
@@ -739,8 +745,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: 'white',
+    fontFamily: 'serif',
   },
-});
+}); 
 
 
 const modalStyle = StyleSheet.create({
@@ -752,25 +759,25 @@ const modalStyle = StyleSheet.create({
   },
   modalContent: {
     width: '90%',
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 20,
-    alignItems: 'center',
+    backgroundColor: '#5a8c66',
+    borderRadius: 30,
+    padding: 0,
+    // alignItems: 'center',
     position: 'relative',
-    borderWidth: 2, 
     borderColor: 'green', 
   },
   closeButton: {
     position: 'absolute',
     bottom: 20,
     alignSelf: 'center',
-    backgroundColor: '#068c08',
+    backgroundColor: 'black',
     padding: 10,
     borderRadius: 5,
   },
   closeButtonText: {
     color: 'white',
     fontWeight: 'bold',
+    fontFamily: 'serif',
   },
   modalTitle: {
     fontSize: 24,
@@ -779,16 +786,15 @@ const modalStyle = StyleSheet.create({
     textAlign: 'center',
   },
   image: {
-    width: 150, 
+    width: '100%', 
     height: 150,
-    borderRadius: 10, 
-    borderWidth: 2, 
-    borderColor: 'green',
   },
   animalName: {
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
+    fontFamily: 'serif',
+    color: 'white',
   },
   species: {
     fontSize: 18,
@@ -796,14 +802,21 @@ const modalStyle = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 10,
+    fontFamily: 'serif',
+    color: 'white',
+    marginLeft: 10,
   },
   sectionTitle: {
     fontWeight: 'bold',
     marginBottom: 20,
+    fontFamily: 'serif',
+    color: 'white',
   },
   sectionText: {
     fontSize: 16,
     marginBottom: 20,
+    fontFamily: 'serif',
+    color: 'white',
   },
 });
 
