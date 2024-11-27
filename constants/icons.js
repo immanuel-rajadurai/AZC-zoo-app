@@ -36,6 +36,7 @@ import deleteX from "../assets/icons/deleteX.png";
 import pulldownbutton from "../assets/icons/pulldownbutton.png";
 import showsicon from "../assets/icons/showsicon.png";
 import upcareticon from "../assets/icons/upcareticon.png";
+import listicon from "../assets/icons/listicon.png";
 
 
 
@@ -78,5 +79,6 @@ export default {
   deleteX,
   pulldownbutton,
   showsicon,
-  upcareticon
+  upcareticon,
+  listicon
 };

@@ -91,12 +91,12 @@ const Home = () => {
       let location = await Location.getCurrentPositionAsync({});
       setCurrentLocation(location.coords);
 
-      setRegion({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-        latitudeDelta: 0.005,
-        longitudeDelta: 0.005,
-      });
+      // setRegion({
+      //   latitude: location.coords.latitude,
+      //   longitude: location.coords.longitude,
+      //   latitudeDelta: 0.005,
+      //   longitudeDelta: 0.005,
+      // });
     };
 
     // const fetchEvents = async () => { 
@@ -115,6 +115,13 @@ const Home = () => {
     // }
 
     setEvents(eventsDummy)
+
+    setRegion({
+      latitude: 48.7460,
+      longitude: 2.66315,
+      latitudeDelta: 0.01,
+      longitudeDelta: 0.01,
+    });
 
     getLocation();
     // fetchEvents();
