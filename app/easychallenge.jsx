@@ -749,7 +749,6 @@ const styles = StyleSheet.create({
   },
 }); 
 
-
 const modalStyle = StyleSheet.create({
   modalContainer: {
     flex: 1,

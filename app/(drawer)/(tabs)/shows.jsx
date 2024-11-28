@@ -2,6 +2,7 @@ import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity, Modal, SafeA
 import React, { useState, useEffect } from 'react';
 import { animalImages, animalData } from '../../../data/animals';
 import { placesData, images } from '../../../data/places';
+import { eventsDummy } from '../../../data/events';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
@@ -142,11 +143,11 @@ const styles = StyleSheet.create({
   },
   placeItem: {
     borderRadius: 10, // Rounded corners
-    shadowColor: '#000', // Shadow color
-    shadowOffset: { width: 0, height: 2 }, // Shadow offset
-    shadowOpacity: 0.25, // Shadow opacity
-    shadowRadius: 3.84, // Shadow radius
-    elevation: 5, // Elevation for Android shadow
+    // shadowColor: '#000', // Shadow color
+    // shadowOffset: { width: 0, height: 2 }, // Shadow offset
+    // shadowOpacity: 0.25, // Shadow opacity
+    // shadowRadius: 3.84, // Shadow radius
+    // elevation: 5, // Elevation for Android shadow
     backgroundColor: '#fff', // Background color to make the shadow visible
     padding: 10, // Optional: Add padding to the component
     margin: 10, // Optional: Add margin to the component
@@ -155,7 +156,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     marginRight: 10,
-    borderRadius: 10
+    borderRadius: 80
   },
   placeName: {
     fontSize: 20,

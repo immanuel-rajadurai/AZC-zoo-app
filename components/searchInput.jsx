@@ -50,23 +50,22 @@ return (
       paddingHorizontal: 16,
       backgroundColor: '#fff',
     }}
-    className="border-2 border-black-200 w-full h-16 px-4 bg-black-100 rounded-2xl focus:border-secondary items-center flex-row space-x-4"
+    className="border-0 border-black-200 w-full h-16 px-4 bg-black-100 rounded-2xl focus:border-secondary items-center flex-row space-x-4"
   >
-    <TextInput
-      ref={ref}
-      style={{
-        fontSize: 16,
-        color: '#000',
-        flex: 1,
-      }}
-      className="text-base mt-0.5 text-white flex-1 font-pregular"
-      value={value}
-      placeholder="Search for something"
-      placeholderTextColor="#7b7b8b"
-      onChangeText={handleChangeText}
-      onSubmitEditing={handleSearchSubmit}
-      secureTextEntry={title === 'Passsword' && !showPassword}
-    />
+    <View style={styles.searchBarContainer}>
+      <TextInput
+        ref={ref}
+        style={styles.textInput}
+        className="text-base mt-0.5 text-white flex-1 font-pregular"
+        value={value}
+        placeholder="Search for something"
+        placeholderTextColor="#7b7b8b"
+        onChangeText={handleChangeText}
+        onSubmitEditing={handleSearchSubmit}
+        secureTextEntry={title === 'Passsword' && !showPassword}
+      />
+    </View>
+
     <Modal
       visible={modalVisible}
       transparent={true}
@@ -170,6 +169,19 @@ return (
 })
 
 const styles = StyleSheet.create({
+  searchBarContainer: {
+    flex: 1,
+    justifyContent: 'flex-end', // Align the container to the bottom
+    paddingTop: 10, // Adjust this value to control how low the input opens
+  },
+  textInput: {
+    fontSize: 16,
+    color: '#000',
+    flex: 1,
+    backgroundColor: '#fff', // Add background color if needed
+    padding: 10, // Add padding if needed
+    borderRadius: 5, // Add border radius if needed
+  },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',

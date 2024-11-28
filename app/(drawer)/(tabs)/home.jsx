@@ -332,24 +332,18 @@ const styles = StyleSheet.create({
 const modalStyles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 20,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    width: '90%',
+    backgroundColor: '#5a8c66',
+    borderRadius: 30,
+    padding: 0,
+    // alignItems: 'center',
+    position: 'relative',
+    borderColor: 'green', 
   },
   button: {
     borderRadius: 20,
@@ -357,7 +351,12 @@ const modalStyles = StyleSheet.create({
     elevation: 2,
   },
   buttonClose: {
-    backgroundColor: "green",
+    position: 'relative',
+    bottom: 20,
+    alignSelf: 'center',
+    backgroundColor: 'black',
+    padding: 10,
+    borderRadius: 5,
   },
   textStyle: {
     color: "white",
@@ -365,28 +364,32 @@ const modalStyles = StyleSheet.create({
     textAlign: "center",
   },
   topicText: {
-    color: "green",
-    fontWeight: "bold",
-    fontSize: 20,
-    margin: 10,
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
+    fontFamily: 'serif',
+    color: 'white',
   },
   subTopicText: {
-    color: "darkgreen",
-    fontSize: 16,
-    fontWeight: "bold",
-    fontStyle: "italic",
+    ontSize: 18,
+    fontStyle: 'italic',
+    fontWeight: 'bold',
+    textAlign: 'center',
     marginBottom: 10,
+    fontFamily: 'serif',
+    color: 'white',
+    marginLeft: 10,
   },
   modalText: {
-    marginBottom: 30,
-    fontSize: 14,
-    fontWeight: "bold",
-    textAlign: "left",
+    fontSize: 16,
+    marginBottom: 20,
+    fontFamily: 'serif',
+    color: 'white',
   },
   image: {
-    width: 100,
-    height: 100,
-    marginBottom: 15,
+    width: '100%', 
+    height: 150,
   },
   scrollContainer: {
     maxHeight: 100, // Set a max height for the scrollable area
@@ -396,10 +399,6 @@ const modalStyles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-  },
-  buttonMore: {
-    
-    backgroundColor: "green",
   },
 });
 
