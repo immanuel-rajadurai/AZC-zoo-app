@@ -60,7 +60,7 @@ const TabsLayout = () => {
             //header: CustomHeader,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.showsgreen}
+                icon={icons.showsicon}
                 color={color}
                 textColor="#619837"
                 name="Shows"

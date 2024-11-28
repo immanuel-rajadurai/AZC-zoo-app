@@ -12,6 +12,7 @@ import { Asset } from 'expo-asset';
 import { fetch } from '@tensorflow/tfjs-react-native';
 import animalPhoto from '../assets/animalImages/ostrich.jpg';
 import { bundleResourceIO } from '@tensorflow/tfjs-react-native';
+import { images, icons } from '../constants';
 
 
 const Challenge = () => {
@@ -117,6 +118,11 @@ const Challenge = () => {
       <View style={styles.container}>
         <View style={styles.contentContainer}>
           <View>
+
+          
+          <TouchableOpacity style={styles.cameraButton} onPress={() => console.log('Pressed')}>
+                <Image source={icons.camera} style={{ width: 60, height: 60 }} />
+              </TouchableOpacity>
             <Text style={styles.subtitle}>Animals to snap</Text>
             <ScrollView style={styles.scrollView} persistentScrollbar={true}>  
               {targetAnimals.map((animal, index) => {
