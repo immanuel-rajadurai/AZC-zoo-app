@@ -191,7 +191,7 @@ const Home = () => {
           resizeMode="contain"
         />
         </Marker>
-      )}, 
+      )}
 
         {animals.map((animal, index) => (
           <Marker
@@ -317,14 +317,14 @@ const styles = StyleSheet.create({
   toggleButton: {
     position: "absolute",
     bottom: 8, 
-    right: 12, 
+    right: 8, 
     backgroundColor: "#234e35",
     paddingTop: 28,
     paddingBottom: 28,
     paddingLeft: 10,
     paddingRight: 10,
-    borderRadius: "50%",
-    width: "22%", 
+    borderRadius: 50,
+    width: 84, 
     alignItems: "center", 
     zIndex: 2,
   },
