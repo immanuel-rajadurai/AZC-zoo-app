@@ -383,7 +383,14 @@ const Challenge = () => {
     console.log("image picker opened");
 
     // Launch the camera to take a picture
-    const result = await ImagePicker.launchCameraAsync({
+    // const result = await ImagePicker.launchCameraAsync({
+    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    //   allowsEditing: false,
+    //   aspect: [4, 3],
+    //   quality: 1,
+    // });
+
+    const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: false,
       aspect: [4, 3],
