@@ -397,11 +397,11 @@ const Challenge = () => {
 
       setClassifyingModalVisible(true);
 
-      // let predictedAnimalResult = await classifyImage(result.assets[0].uri);
-      const asset = Asset.fromModule(animalPhoto);
-      await asset.downloadAsync();
-      const imageUri = asset.localUri || asset.uri;
-      let predictedAnimalResult = await classifyImage(imageUri);
+      let predictedAnimalResult = await classifyImage(result.assets[0].uri);
+      // const asset = Asset.fromModule(animalPhoto);
+      // await asset.downloadAsync();
+      // const imageUri = asset.localUri || asset.uri;
+      // let predictedAnimalResult = await classifyImage(imageUri);
       let predictedAnimal = predictedAnimalResult.toLowerCase()
 
       setClassifyingModalVisible(false);
