@@ -127,16 +127,16 @@ const Challenge = () => {
               {targetAnimals.map((animal, index) => {
                 const info = animalInfo[animal.toLowerCase()];
                 return (
-                  <>
+                  // <>
                   <TouchableOpacity key={index} onPress={() => showModal({ predictedAnimal: animal, info: true })}>
-                    <View key={index} style={styles.animalCard}>
+                    <View style={styles.animalCard}>
                       <View style={styles.imageContainer}>
                         <Image source={{ uri: info.image }} style={styles.animalImage} />
                       </View>
                       <Text style={styles.animalName}>{info.name}</Text>
                     </View>
                   </TouchableOpacity>
-                  </>
+                  // </>
                   
                 );
               })}
@@ -157,7 +157,7 @@ const Challenge = () => {
 
                 return (
                   <TouchableOpacity key={index} onPress={() => showModal({predictedAnimal:animal, info:true})}>
-                    <View key={index} style={styles.animalCard}>
+                    <View style={styles.animalCard}>
                       <View style={styles.imageContainer}>
                         <Image source={{ uri: info.image }} style={styles.animalImage} />
                         <Icon name="check-circle" size={30} color="green" style={styles.tickIcon} />
