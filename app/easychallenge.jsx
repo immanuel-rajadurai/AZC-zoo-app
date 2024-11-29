@@ -818,4 +818,3 @@ const modalStyle = StyleSheet.create({
     color: 'white',
   },
 });
-
