@@ -45,7 +45,6 @@ const Animals = () => {
     }
   }, [animalsRetrieved, scheduledAnimals]);
 
-
   useEffect(() => {
     console.log("scheduled animals in schedule.jsx: " + scheduledAnimals);
   }, [scheduledAnimals]);

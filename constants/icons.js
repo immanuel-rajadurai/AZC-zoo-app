@@ -34,6 +34,10 @@ import camera from "../assets/icons/camera.png";
 import plusButton from "../assets/icons/plusButton.png"
 import deleteX from "../assets/icons/deleteX.png";
 import accessibilityIcon from "../assets/icons/accessibility.png";
+import pulldownbutton from "../assets/icons/pulldownbutton.png";
+import showsicon from "../assets/icons/showsicon.png";
+import upcareticon from "../assets/icons/upcareticon.png";
+import listicon from "../assets/icons/listicon.png";
 
 
 
@@ -74,4 +78,8 @@ export default {
   plusButton,
   deleteX,
   accessibilityIcon
+  pulldownbutton,
+  showsicon,
+  upcareticon,
+  listicon
 };
