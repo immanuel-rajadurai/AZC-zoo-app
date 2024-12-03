@@ -10,11 +10,6 @@
       "StackName": "amplify-azczooapp-dev-37c55",
       "StackId": "arn:aws:cloudformation:eu-west-2:529765591688:stack/amplify-azczooapp-dev-37c55/2817ab50-5a2e-11ef-921e-0217178f59a3",
       "AmplifyAppId": "dokt53l33cnjq"
-    },
-    "categories": {
-      "api": {
-        "azczooapp": {}
-      }
     }
   }
 }
