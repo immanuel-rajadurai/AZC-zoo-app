@@ -6,7 +6,6 @@ import * as FileSystem from 'expo-file-system';
 import { icons } from '../constants';
 import FileCard from '../components/FileCard'; // Import your FileCard component
 import AsyncStorage from '@react-native-async-storage/async-storage';
-//import Pdf from 'react-native-pdf'; // Import Pdf for PDF viewing
 
 const Wallet = () => {
   const [files, setFiles] = useState([]); // Store files

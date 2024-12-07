@@ -383,7 +383,14 @@ const Challenge = () => {
     console.log("image picker opened");
 
     // Launch the camera to take a picture
-    const result = await ImagePicker.launchCameraAsync({
+    // const result = await ImagePicker.launchCameraAsync({
+    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    //   allowsEditing: false,
+    //   aspect: [4, 3],
+    //   quality: 1,
+    // });
+
+    const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: false,
       aspect: [4, 3],
@@ -397,11 +404,11 @@ const Challenge = () => {
 
       setClassifyingModalVisible(true);
 
-      // let predictedAnimalResult = await classifyImage(result.assets[0].uri);
-      const asset = Asset.fromModule(animalPhoto);
-      await asset.downloadAsync();
-      const imageUri = asset.localUri || asset.uri;
-      let predictedAnimalResult = await classifyImage(imageUri);
+      let predictedAnimalResult = await classifyImage(result.assets[0].uri);
+      // const asset = Asset.fromModule(animalPhoto);
+      // await asset.downloadAsync();
+      // const imageUri = asset.localUri || asset.uri;
+      // let predictedAnimalResult = await classifyImage(imageUri);
       let predictedAnimal = predictedAnimalResult.toLowerCase()
 
       setClassifyingModalVisible(false);
@@ -818,4 +825,3 @@ const modalStyle = StyleSheet.create({
     color: 'white',
   },
 });
-
