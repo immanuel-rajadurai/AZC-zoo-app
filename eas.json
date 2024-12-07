@@ -5,6 +5,9 @@
         "image": "latest",
         "buildType": "apk"
       },
+      "ios": {
+        "image": "latest"
+      },
       "env": {
         "EAS_NO_DEFAULT_NPM_INSTALL": "1"
       }
