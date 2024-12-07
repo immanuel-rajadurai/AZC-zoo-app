@@ -10,6 +10,7 @@ import Events from "../../../components/Events"
 import animals from "../../../data/animals";
 import eventsDummy from "../../../data/events";
 import ToggleShowInformationButton from '../../../components/ToggleShowInformationButton';
+import accessibilityIcon from "../../../assets/icons/accessibility.png";
 import { icons } from '../../../constants';
 
 // import { generateClient } from 'aws-amplify/api';
@@ -29,6 +30,7 @@ const Home = () => {
   const translateY = useRef(new Animated.Value(200)).current;
   const { height: screenHeight } = Dimensions.get('window');
   const [eventButtonTitle, setButtonTitle] = useState("Challenge");
+  const [accessibilityVisible, setAccessibilityVisible] = useState(false);
   const [isShowEventsButtonVisible, setShowEventsButtonVisible] = useState(true);
   
   const onRefresh = async () => {
@@ -69,6 +71,25 @@ const Home = () => {
         useNativeDriver: true,
       }).start();
       setShowEventsButtonVisible(false);
+    }
+  };
+
+  const toggleAccessibilityIcon = () => {
+    if (accessibilityVisible) {
+      Animated.timing(translateY, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }).start(() => {
+        setAccessibilityVisible(false);
+      });
+    } else {
+      setAccessibilityVisible(true);
+      Animated.timing(translateY, {
+        toValue: -10,
+        duration: 5,
+        useNativeDriver: true,
+      }).start();
     }
   };
 
@@ -172,6 +193,20 @@ const Home = () => {
           opacity={1}
         />
 
+      {accessibilityVisible && (
+        <Marker
+        key="accessibilityIcon"
+        coordinate={{ latitude: 51.53520, longitude: -0.1553 }}
+        
+        >
+        <Image
+          source={accessibilityIcon}
+          style={{ width: 30, height: 30 }}
+          resizeMode="contain"
+        />
+        </Marker>
+      )}
+
         {animals.map((animal, index) => (
           <Marker
             key={index}
@@ -266,6 +301,13 @@ const Home = () => {
         </Animated.View>
 
       )}
+
+      <TouchableOpacity style={styles.toggleButton} onPress={toggleAccessibilityIcon}>
+        <Text style={styles.buttonText}>
+          {accessibilityVisible ? "Hide Disabled" : "Show Disabled"}
+        </Text>
+      </TouchableOpacity>
+
     </View>
   );
 }
@@ -273,7 +315,7 @@ const Home = () => {
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    flex: 1,
+    flex: 1, 
     justifyContent: "flex-end",
     alignItems: "center",
   },
@@ -313,20 +355,35 @@ const styles = StyleSheet.create({
     backgroundColor: '#8BC33A',
   },
   eventButton: {
-    width: "70%",
+    width: "60%",
     padding: 5,
     position: "absolute",
     bottom: 0,
     zIndex: 1,
     alignItems: 'center', // Center horizontally
   },
-  // closeButton: {
-  //   position: 'absolute',
-  //   // top:100,
-  //   // flex: 1,
-  //   zIndex: 2,
-  //   bottom: -50,
-  // }
+
+
+  toggleButton: {
+    position: "absolute",
+    bottom: 8, 
+    right: 8, 
+    backgroundColor: "#234e35",
+    paddingTop: 28,
+    paddingBottom: 28,
+    paddingLeft: 10,
+    paddingRight: 10,
+    borderRadius: 50,
+    width: 84, 
+    alignItems: "center", 
+    zIndex: 2,
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 12,
+    textAlign: "center",
+  },
 });
 
 const modalStyles = StyleSheet.create({
