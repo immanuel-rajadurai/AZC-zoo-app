@@ -77,7 +77,7 @@ export default {
   camera,
   plusButton,
   deleteX,
-  accessibilityIcon
+  accessibilityIcon,
   pulldownbutton,
   showsicon,
   upcareticon,
