@@ -34,3 +34,7 @@ either `npx expo start -c` or `npm expo start --tunnel`
 
 *the first option is preferred as it runs locally whereas the second option hosts a remote tunnel which can result in slower load times
 
+*If at any point you receive the following error:
+ERROR Use process(css).then(cb) to work with async plugins
+
+run `npm install tailwindcss@3.2.2 --legacy-peer-deps'
