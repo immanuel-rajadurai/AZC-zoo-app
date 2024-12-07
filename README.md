@@ -37,4 +37,4 @@ either `npx expo start -c` or `npm expo start --tunnel`
 *If at any point you receive the following error:
 ERROR Use process(css).then(cb) to work with async plugins
 
-run `npm install tailwindcss@3.2.2 --legacy-peer-deps'
+run `npm install tailwindcss@3.2.2 --legacy-peer-deps`
