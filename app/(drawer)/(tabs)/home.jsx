@@ -40,10 +40,10 @@ const Home = () => {
   }
  
   const [region, setRegion] = useState({
-    latitude: 48.7460,
-    longitude: 2.66315,
-    latitudeDelta: 0.01,
-    longitudeDelta: 0.01,
+    latitude: 51.535121,
+    longitude: -0.154131,
+    latitudeDelta: 0.003,
+    longitudeDelta: 0.003,
   });
 
   const [events, setEvents] = useState([]);
@@ -109,8 +109,27 @@ const Home = () => {
         return;
       }
 
-      let location = await Location.getCurrentPositionAsync({});
-      setCurrentLocation(location.coords);
+      const location = await Location.watchPositionAsync(
+        {
+          accuracy: Location.Accuracy.BestForNavigation,
+          timeInterval: 1000, 
+          distanceInterval: 1, 
+        },
+        (location) => {
+          setCurrentLocation(location.coords);
+          setRegion((prevRegion) => ({
+            ...prevRegion,
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+          }));
+        }
+      );
+
+
+      // let location = await Location.getCurrentPositionAsync({
+      //   accuracy: Location.Accuracy.BestForNavigation
+      // });
+      // setCurrentLocation(location.coords);
 
       // setRegion({
       //   latitude: location.coords.latitude,
@@ -135,16 +154,15 @@ const Home = () => {
     //   }
     // }
 
-    setEvents(eventsDummy)
 
     setRegion({
-      latitude: 48.7460,
-      longitude: 2.66315,
-      latitudeDelta: 0.01,
-      longitudeDelta: 0.01,
+      latitude: 51.535121,
+      longitude: -0.154131,
+      latitudeDelta: 0.003,
+      longitudeDelta: 0.003,
     });
 
-    getLocation();
+    // getLocation();
     // fetchEvents();
   }, []);
 
@@ -179,18 +197,29 @@ const Home = () => {
         ref={mapRef}
         initialRegion={zooRegion}
         showsUserLocation={true}
+        followsUserLocation={true}
         customMapStyle={mapstyle1}
-        onRegionChangeComplete={(region) => setRegion(region)}
+        // onRegionChangeComplete={(region) => setRegion(region)}
+        onRegionChangeComplete={(newRegion) => {
+          // Set the region back to the specified bounds if the user tries to pan outside
+          if (
+            newRegion.latitude < 51.534 || // Lat min bound
+            newRegion.latitude > 51.536 || // Lat max bound
+            newRegion.longitude < -0.156 || // Lon min bound
+            newRegion.longitude > -0.152 // Lon max bound
+          ) {
+            mapRef.current.animateToRegion(region, 200); // Reset to original region
+          }
+        }}
         provider={MapView.PROVIDER_GOOGLE}
-        rotateEnabled={false}
       >
-
+      
         <Overlay  
           image={require("../../../assets/mapoverlays/zoomap3.png")}
           bounds={imageBounds}
           bearing={0}
           style={styles.overlay}
-          opacity={1}
+          opacity={0.8}
         />
 
       {accessibilityVisible && (
@@ -223,10 +252,6 @@ const Home = () => {
 
          
       </MapView>
-
-      {/* <CustomButton handlePress={() => goToZoo()} title="Go to Zoo" /> */}
-      {/* <Text style={styles.text}>Current latitude: {region.latitude}</Text>
-      <Text style={styles.text}>Current longitude: {region.longitude}</Text> */}
 
       <Modal
         animationType="slide"
