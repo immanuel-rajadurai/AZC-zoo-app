@@ -12,12 +12,15 @@ import { fetch } from '@tensorflow/tfjs-react-native';
 import animalPhoto from '../assets/animalImages/tiger.jpg';
 import { bundleResourceIO } from '@tensorflow/tfjs-react-native';
 import { images, icons } from '../constants';
+import * as Sharing from 'expo-sharing';
 
 
 const Challenge = () => {
 
   const [model, setModel] = useState(null);
   const [modelLoaded, setModelLoaded] = useState(true);
+  const [challengeCompleted, setChallengeCompleted] = useState(false);
+  const [challengeCompletedModalVisible, setChallengeCompletedModalVisible] = useState(false);
   const [predictions, setPredictions] = useState(null);
   const [hasPermission, setHasPermission] = useState(null);
   const [image, setImage] = useState(null);
@@ -110,6 +113,21 @@ const Challenge = () => {
         "A group, or pride, can be up to 30 lions, depending on how much food and water is available."
       ],
       image: "https://upload.wikimedia.org/wikipedia/commons/7/73/Lion_waiting_in_Namibia.jpg"
+    }
+  };
+
+  const shareToFacebook = async () => {
+    const shareOptions = {
+      message: 'I just completed the challenge!',
+      url: 'https://www.zoo-boissiere.com/', // Replace with your URL
+    };
+
+    try {
+      await Sharing.shareAsync(shareOptions.url, {
+        dialogTitle: shareOptions.message,
+      });
+    } catch (error) {
+      console.error('Error sharing:', error);
     }
   };
   
@@ -207,8 +225,15 @@ const Challenge = () => {
         // let emptyScannedAnimals = [];
         // setScannedAnimals(emptyScannedAnimals);
         // await AsyncStorage.setItem('scannedAnimals', JSON.stringify(emptyScannedAnimals));
-
         // await AsyncStorage.setItem('targetAnimals', JSON.stringify(['lion', 'african_elephant', 'leopard', 'ostrich', 'tiger']));
+        // await AsyncStorage.setItem('targetAnimals', JSON.stringify([]));
+        // setTargetAnimals([]);
+
+        if (targetAnimals.length === 0) {
+          console.log("Challenge completed");
+          setChallengeCompleted(true);
+          setChallengeCompletedModalVisible(true);
+        }
 
       } catch (error) {
         console.error('Failed to load zoo animals', error);
@@ -226,6 +251,13 @@ const Challenge = () => {
   useEffect(() => {
     console.log("Scanned animals: ", scannedAnimals);
   }, [scannedAnimals]);
+
+  useEffect(() => {
+    if (challengeCompleted) {
+      console.log("Challenge completed (UseEffect)");
+      setChallengeCompleted(true);
+    }
+  }, [targetAnimals]);
 
   useEffect(() => {
 
@@ -390,6 +422,7 @@ const Challenge = () => {
     //   quality: 1,
     // });
 
+    //Launch the image library to picka photo
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: false,
@@ -400,18 +433,26 @@ const Challenge = () => {
     console.log("image picker closed")
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
 
       setClassifyingModalVisible(true);
 
+
+      setImage(result.assets[0].uri);
+
+      
+
       let predictedAnimalResult = await classifyImage(result.assets[0].uri);
+
+      setClassifyingModalVisible(false);
+
+      //code for camera photo taker to extract image
       // const asset = Asset.fromModule(animalPhoto);
       // await asset.downloadAsync();
       // const imageUri = asset.localUri || asset.uri;
       // let predictedAnimalResult = await classifyImage(imageUri);
       let predictedAnimal = predictedAnimalResult.toLowerCase()
 
-      setClassifyingModalVisible(false);
+      
       
       //check whether the animal is correct or not
       if (Object.values(targetAnimals).includes(predictedAnimal)) {
@@ -425,6 +466,7 @@ const Challenge = () => {
             setScannedAnimals(scannedAnimals);
   
             let updatedTargetAnimals = targetAnimals.filter(animal => animal !== predictedAnimal);
+
             setTargetAnimals(updatedTargetAnimals);
             await AsyncStorage.setItem('targetAnimals', JSON.stringify(updatedTargetAnimals));
           } 
@@ -441,7 +483,15 @@ const Challenge = () => {
           setIncorrectAnimalModalVisible(true);
       }
 
-      console.log("file location: ", result.assets[0].uri);
+      if (targetAnimals.length === 0) {
+        console.log("Challenge completed");
+        setChallengeCompleted(true);
+
+        setChallengeCompletedModalVisible(true);
+      }
+
+
+      // console.log("file location: ", result.assets[0].uri);
     }
 
     // classifyImageTest();
@@ -477,6 +527,10 @@ const Challenge = () => {
   const closeClassifyingModal = () => {
     setClassifyingModalVisible(false);
   };
+
+  const closeChallengeCompletedModal = () => {
+    setChallengeCompletedModalVisible(false);
+  }
 
   const showIncorrectAnimalModal = () => {
     setIncorrectAnimalModalVisible(true);
@@ -523,6 +577,45 @@ const Challenge = () => {
     <Modal
       animationType="slide"
       transparent={true}
+      visible={challengeCompletedModalVisible}
+      onRequestClose={closeChallengeCompletedModal}
+    >
+      {/* <SafeAreaView style={modalStyle.modalContainer}>
+        <View style={modalStyle.modalContent}>
+          <Text style={styles.title}>Challenge Completed!</Text>
+          
+        </View>
+        <TouchableOpacity onPress={closeChallengeCompletedModal} style={modalStyle.closeButton}>
+            <Text style={modalStyle.closeButtonText}>Close</Text>
+           </TouchableOpacity>
+      </SafeAreaView> */}
+      <SafeAreaView style={modalStyle.modalContainer}>
+      <View style={modalStyle.modalContent}>
+      <Text style={styles.title}>Challenge Completed!</Text>
+        <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
+          <Text></Text>
+          <Text style={modalStyle.rewardText}>Congratulations! You have completed the challenge</Text>
+          <Text></Text>
+          <Text style={modalStyle.rewardText}>Come collect your prize at the kiosk inside the gift shop</Text>
+          <Text></Text>
+          <Text style={modalStyle.rewardText}>Proud of this acheivement? Share this with your friends!</Text>
+          <TouchableOpacity onPress={shareToFacebook} style={modalStyle.shareButton}>
+              <Text style={modalStyle.shareButtonText}>Share on Facebook</Text>
+            </TouchableOpacity>
+
+        </ScrollView>
+        <TouchableOpacity onPress={closeModal} style={modalStyle.closeButton}>
+          <Text style={modalStyle.closeButtonText}>Close</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+
+
+    </Modal>
+
+    <Modal
+      animationType="slide"
+      transparent={true}
       visible={incorrectAnimalModalVisible}
       onRequestClose={closeIncorrectAnimalModal}
     >
@@ -530,7 +623,9 @@ const Challenge = () => {
         <View style={modalStyle.modalContent}>
           <Text style={styles.title}>Animal not on list</Text>
           <Text style={styles.subtitle}>You have either not photographed an animal on the list or your picture isn't clear enough</Text>
-          <Button title="Close" onPress={closeIncorrectAnimalModal} />
+          <TouchableOpacity onPress={closeIncorrectAnimalModal} style={modalStyle.closeButton}>
+            <Text style={modalStyle.closeButtonText}>Close</Text>
+           </TouchableOpacity>
         </View>
       </SafeAreaView>
     </Modal>
@@ -550,7 +645,7 @@ const Challenge = () => {
                 {isInfoModal ? 'Animal' : 'Well Done! Animal Unlocked'}
               </Text>
               <Image source={{ uri: selectedAnimal.image }} style={modalStyle.image} />
-              <Text style={modalStyle.animalName}>{selectedAnimal.name}</Text>
+              <Text style={<Text style={styles.title}>Challenge Completed!</Text>}>{selectedAnimal.name}</Text>
               <Text style={modalStyle.species}>({selectedAnimal.species})</Text>
               <Text>
                 <Text style={modalStyle.sectionTitle}>Diet: </Text>
@@ -823,5 +918,25 @@ const modalStyle = StyleSheet.create({
     marginBottom: 20,
     fontFamily: 'serif',
     color: 'white',
+  },
+  rewardText: {
+    fontSize: 16,
+    marginBottom: 20,
+    fontFamily: 'serif',
+    color: 'white',
+    alignContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+  },
+  shareButton: {
+    backgroundColor: '#3b5998', // Facebook blue color
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  shareButtonText: {
+    color: '#fff',
+    fontSize: 16,
   },
 });
