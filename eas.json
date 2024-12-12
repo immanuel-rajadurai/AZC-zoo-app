@@ -38,11 +38,12 @@
     },
     "production": {
       "android": {
-        "image": "ubuntu-22.04-android-ndk-r25b",
+        "image": "latest",
         "buildType": "app-bundle"
       },
       "ios": {
-        "image": "latest"
+        "image": "latest",
+        "distribution": "store"
       },
       "env": {
         "EAS_NO_DEFAULT_NPM_INSTALL": "1"

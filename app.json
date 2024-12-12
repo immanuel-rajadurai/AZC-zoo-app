@@ -14,7 +14,11 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "app.aquazoo.zooapp"
+      "bundleIdentifier": "app.aquazoo.zooapp",
+      "buildNumber": "2",
+      "config": {
+        "googleMapsApiKey": "AIzaSyBN2fxQjmuQ7fdTE4szAZVrRwUtTIQ_ME4"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -24,7 +28,7 @@
       "package": "com.immraj.app_v1",
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyCM0TGLhNYQLJeNAEbwz238BgNsGZK9QOA"
+          "apiKey": "AIzaSyDsREq71IL0oAyTucaHmf46PSlTQumCA5Y"
         }
       }
     },
