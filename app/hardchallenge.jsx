@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { StyleSheet, Text, View, Button, Image, ActivityIndicator, TouchableOpacity, ScrollView, SafeAreaView, Modal } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, ActivityIndicator, TouchableOpacity, ScrollView, SafeAreaView, Modal, ImageBackground, Linking } from 'react-native';
 import * as tf from '@tensorflow/tfjs';
 import * as jpeg from 'jpeg-js';
 import * as FileSystem from 'expo-file-system';
@@ -18,16 +18,20 @@ import { images, icons } from '../constants';
 const Challenge = () => {
 
   const [model, setModel] = useState(null);
-  const [modelLoaded, setModelLoaded] = useState(true);
-  const [predictions, setPredictions] = useState(null);
-  const [hasPermission, setHasPermission] = useState(null);
-  const [image, setImage] = useState(null);
-  const [targetAnimals, setTargetAnimals] = useState([]);
-  const [scannedAnimals, setScannedAnimals] = useState([]);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedAnimal, setSelectedAnimal] = useState(null);
-  const [predictedAnimal, setPredictedAnimal] = useState(null);
-  const [isInfoModal, setIsInfoModal] = useState(null);
+    const [modelLoaded, setModelLoaded] = useState(true);
+    const [challengeCompleted, setChallengeCompleted] = useState(false);
+    const [challengeCompletedModalVisible, setChallengeCompletedModalVisible] = useState(false);
+    const [predictions, setPredictions] = useState(null);
+    const [hasPermission, setHasPermission] = useState(null);
+    const [image, setImage] = useState(null);
+    const [targetAnimals, setTargetAnimals] = useState([]);
+    const [scannedAnimals, setScannedAnimals] = useState([]);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selectedAnimal, setSelectedAnimal] = useState(null);
+    const [isInfoModal, setIsInfoModal] = useState(null);
+    const [predictedAnimal, setPredictedAnimal] = useState(null);
+    const [classifyingModalVisible, setClassifyingModalVisible] = useState(false);
+    const [incorrectAnimalModalVisible, setIncorrectAnimalModalVisible] = useState(false);
 
   const animalInfo = {
     leopard: {
@@ -111,6 +115,14 @@ const Challenge = () => {
       image: "https://upload.wikimedia.org/wikipedia/commons/7/73/Lion_waiting_in_Namibia.jpg"
     }
   };
+
+  const shareToFacebook = () => {
+      const facebookShareUrl =
+        'https://www.facebook.com/share_channel/#'; // Replace with your link
+      Linking.openURL(facebookShareUrl).catch((err) =>
+        console.error('Error opening URL:', err)
+      );
+    };
   
   const ScannedAnimalsList = ({ targetAnimals, scannedAnimals }) => {
 
@@ -180,10 +192,8 @@ const Challenge = () => {
           const initialTargetAnimals = ['lion', 'african_elephant', 'leopard', 'ostrich', 'tiger'];
           setTargetAnimals(initialTargetAnimals);
           await AsyncStorage.setItem('targetAnimals', JSON.stringify(initialTargetAnimals));
-
-          // await AsyncStorage.setItem('targetAnimals', initialTargetAnimals);
         }
-
+ 
       } catch (error) {
         console.error('Failed to load zoo animals', error);
       }
@@ -198,12 +208,20 @@ const Challenge = () => {
           setScannedAnimals(emptyScannedAnimals);
           await AsyncStorage.setItem('scannedAnimals', JSON.stringify(emptyScannedAnimals));
         }
-
+        
+        //Experimental code to reset scanned animals
         // let emptyScannedAnimals = [];
         // setScannedAnimals(emptyScannedAnimals);
         // await AsyncStorage.setItem('scannedAnimals', JSON.stringify(emptyScannedAnimals));
-
         // await AsyncStorage.setItem('targetAnimals', JSON.stringify(['lion', 'african_elephant', 'leopard', 'ostrich', 'tiger']));
+        // await AsyncStorage.setItem('targetAnimals', JSON.stringify([]));
+        // setTargetAnimals([]);
+
+        if (targetAnimals.length === 0) {
+          console.log("Challenge completed");
+          setChallengeCompleted(true);
+          setChallengeCompletedModalVisible(true);
+        }
 
       } catch (error) {
         console.error('Failed to load zoo animals', error);
@@ -261,35 +279,6 @@ const Challenge = () => {
 
   async function classifyImageTest() {
     
-    // const predictedAnimal = "tiger";
-
-    // setPredictedAnimal(predictedAnimal);
-
-    // if (Object.values(targetAnimals).includes(predictedAnimal)) {
-
-    //   showModal(predictedAnimal); 
-
-    //   try {
-
-    //     if (!scannedAnimals.includes(predictedAnimal)) {
-    //       scannedAnimals.push(predictedAnimal);
-    //       setScannedAnimals(scannedAnimals);
-
-    //       let updatedTargetAnimals = targetAnimals.filter(animal => animal !== predictedAnimal);
-    //       setTargetAnimals(updatedTargetAnimals);
-    //       await AsyncStorage.setItem('targetAnimals', JSON.stringify(updatedTargetAnimals));
-    //     }
-
-    //     await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
-
-    //   } catch (error) {
-    //     console.error('Failed to load scanned animals', error);
-    //   }
-
-    // } else {
-    //   console.log(predictedAnimal + " is not in targetAnimals: " + targetAnimals)
-    // }
-    
     if (model) {
 
       console.log("loading image")
@@ -317,25 +306,9 @@ const Challenge = () => {
 
       console.log("Predicted Animal: " + predictedAnimal)
 
-      //add scanned animal to scanned animals list
-
-      // try {
-      //   let storedScannedAnimals = await AsyncStorage.getItem('scannedAnimals');
-      //   storedScannedAnimals = storedScannedAnimals ? JSON.parse(storedScannedAnimals) : [];
-      //   storedScannedAnimals.push(predictedAnimal);
-      //   await AsyncStorage.setItem('scannedAnimals', JSON.stringify(storedScannedAnimals));
-      
-      // } catch (error) {
-      //   console.error("failed to save scanned animals", error);
-      // }
-
-      // setPredictedAnimal(predictedAnimal);
-
-      // console.log("showing popup")
-
       if (Object.values(targetAnimals).includes(predictedAnimal)) {
 
-        showModal(predictedAnimal); 
+        showModal({predictedAnimal:predictedAnimal}); 
   
         try {
   
@@ -365,6 +338,8 @@ const Challenge = () => {
   async function classifyImage(imageUri) {
     if (model) {
       try {
+
+        console.log("decoding image...");
         const base64String = await FileSystem.readAsStringAsync(imageUri, {
           encoding: FileSystem.EncodingType.Base64,
         });
@@ -377,6 +352,8 @@ const Challenge = () => {
         });
         
         console.log("classifying image...")
+
+        
         const prediction = await model.predict(imageTensor).data();
         const highestPredictionIndex = prediction.indexOf(Math.max(...prediction));
         const predictedClassEntry = labels[highestPredictionIndex];
@@ -384,7 +361,6 @@ const Challenge = () => {
 
         console.log('Predicted Class:', predictedClass);
         console.log("highest prediction " + Math.max(...prediction))
-        console.log("Predictions: " + prediction)
 
         console.log("type of predictions: " + typeof prediction)
         
@@ -399,9 +375,13 @@ const Challenge = () => {
         console.log("third highest prediction: " + thirdHighestPrediction + " class: " + labels[prediction.indexOf(thirdHighestPrediction)][1]);
 
         setPredictions(predictedClass);
+        setPredictedAnimal(predictedClass);
+
+        return predictedClass;
 
       } catch (error) {
         console.error('Error classifying image:', error);
+        return null;
       }
     }
   }
@@ -417,14 +397,15 @@ const Challenge = () => {
   };
 
   const takePicture = async () => {
-    // Request camera permissions
-    // const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
-    // if (permissionResult.granted === false) {
-    //   alert("You've refused to allow this app to access your camera!");
-    //   return;
-    // }
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+    if (permissionResult.granted === false) {
+      alert("You've refused to allow this app to access your camera!");
+      return;
+    }
 
-    // // Launch the camera to take a picture
+    console.log("image picker opened");
+
+    // Launch the camera to take a picture
     // const result = await ImagePicker.launchCameraAsync({
     //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
     //   allowsEditing: false,
@@ -432,13 +413,79 @@ const Challenge = () => {
     //   quality: 1,
     // });
 
-    // if (!result.canceled) {
-      // setImage(result.assets[0].uri);
-      // classifyImage(result.assets[0].uri);
+    //Launch the image library to picka photo
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: false,
+      aspect: [4, 3],
+      quality: 1,
+    });
 
-      classifyImageTest();
-      // console.log(result.assets[0].uri);
-    // }
+    console.log("image picker closed")
+
+    if (!result.canceled) {
+
+      setClassifyingModalVisible(true);
+
+
+      setImage(result.assets[0].uri);
+
+      
+
+      let predictedAnimalResult = await classifyImage(result.assets[0].uri);
+
+      setClassifyingModalVisible(false);
+
+      //code for camera photo taker to extract image
+      // const asset = Asset.fromModule(animalPhoto);
+      // await asset.downloadAsync();
+      // const imageUri = asset.localUri || asset.uri;
+      // let predictedAnimalResult = await classifyImage(imageUri);
+      let predictedAnimal = predictedAnimalResult.toLowerCase()
+
+      
+      
+      //check whether the animal is correct or not
+      if (Object.values(targetAnimals).includes(predictedAnimal)) {
+
+        showModal({predictedAnimal:predictedAnimal}); 
+  
+        try {
+  
+          if (!scannedAnimals.includes(predictedAnimal)) {
+            scannedAnimals.push(predictedAnimal);
+            setScannedAnimals(scannedAnimals);
+  
+            let updatedTargetAnimals = targetAnimals.filter(animal => animal !== predictedAnimal);
+
+            setTargetAnimals(updatedTargetAnimals);
+            await AsyncStorage.setItem('targetAnimals', JSON.stringify(updatedTargetAnimals));
+          } 
+  
+          await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
+  
+        } catch (error) {
+          console.error('Failed to load scanned animals', error);
+        }
+  
+      } else {
+          console.log("IN takePicture: " + predictedAnimal + " is not in targetAnimals: " + targetAnimals)
+
+          setIncorrectAnimalModalVisible(true);
+      }
+
+      if (targetAnimals.length === 0) {
+        console.log("Challenge completed");
+        setChallengeCompleted(true);
+
+        setChallengeCompletedModalVisible(true);
+      }
+
+
+      // console.log("file location: ", result.assets[0].uri);
+    }
+
+    // classifyImageTest();
   };
 
   const showModal = ({predictedAnimal="tiger", info=false} = {} ) => {
@@ -464,93 +511,167 @@ const Challenge = () => {
     setModalVisible(false);
   };
 
+  const showClassifyingModal = () => {
+    setClassifyingModalVisible(true);
+  };
+  
+  const closeClassifyingModal = () => {
+    setClassifyingModalVisible(false);
+  };
+
+  const closeChallengeCompletedModal = () => {
+    setChallengeCompletedModalVisible(false);
+  }
+
+  const showIncorrectAnimalModal = () => {
+    setIncorrectAnimalModalVisible(true);
+  };
+
+  const closeIncorrectAnimalModal = () => {
+    setIncorrectAnimalModalVisible(false);
+  }
+
+
   return (
+
     <View style={styles.container}>
-    <View style={styles.titleContainer}>
-        <Text style={styles.title}>Mystery Animal Scavenger Hunt</Text>
-    </View>
+    <ImageBackground source={images.easyAnimalChallengeBackground} style={styles.backgroundImage}>
     <ScannedAnimalsList targetAnimals={targetAnimals} scannedAnimals={scannedAnimals} />
 
+    <View style={styles.cameraBar}>
     {modelLoaded ? (
-      <>
-        <View style={styles.cameraBar}>
+      // <>
+
           <TouchableOpacity style={styles.cameraButton} onPress={takePicture}>
-            <Icon name="camera-alt" size={30} color="#fff" />
+            <Image source={icons.camera} style={{ width: 60, height: 60 }}/>
           </TouchableOpacity>
-        </View>
-      </>
+          
+      // </>
     ) : (
       <Text>Loading AI</Text>,
-      <ActivityIndicator size="large" color="#0000ff" />
+      <ActivityIndicator size="large" color="green" />
     )}
+    </View>
 
-    {/* <Button title="Show popup" onPress={showModal} /> */}
-
-    {image && <Image source={{ uri: image }} style={styles.image} />}
-    
     <Modal
       animationType="slide"
       transparent={true}
-      visible={modalVisible}
-      onRequestClose={closeModal}
+      visible={classifyingModalVisible}
+      onRequestClose={closeClassifyingModal}
     >
-    <SafeAreaView style={modalStyle.modalContainer}>
+      <SafeAreaView style={modalStyle.modalContainer}>
+        <View style={modalStyle.modalContent}>
+          <Text style={styles.title}>Classifying image...</Text>
+        </View>
+      </SafeAreaView>
+    </Modal>
+
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={challengeCompletedModalVisible}
+      onRequestClose={closeChallengeCompletedModal}
+    >
+      <SafeAreaView style={modalStyle.modalContainer}>
       <View style={modalStyle.modalContent}>
+      <Text style={styles.title}>Challenge Completed!</Text>
         <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
-          {selectedAnimal && (
-            <>
-              <Text style={styles.title}>
-                {isInfoModal ? 'Animal' : 'Well Done! Animal Unlocked'}
-              </Text>
-              <Image source={{ uri: selectedAnimal.image }} style={modalStyle.image} />
-              <Text style={modalStyle.animalName}>{selectedAnimal.name}</Text>
-              <Text style={modalStyle.species}>({selectedAnimal.species})</Text>
-              <Text>
-                <Text style={modalStyle.sectionTitle}>Diet: </Text>
-                <Text style={modalStyle.sectionText}>{selectedAnimal.diet}</Text>
-              </Text>
-              <Text>
-                <Text style={modalStyle.sectionTitle}>Length: </Text>
-                <Text style={modalStyle.sectionText}>{selectedAnimal.length}</Text>
-              </Text>
-              <Text>
-                <Text style={modalStyle.sectionTitle}>Height: </Text>
-                <Text style={modalStyle.sectionText}>{selectedAnimal.height}</Text>
-              </Text>
-              <Text>
-                <Text style={modalStyle.sectionTitle}>Weight:{"\n"}</Text>
-                <Text style={modalStyle.sectionText}>
-                  {"\u2022"} Male: {selectedAnimal.weightM}
-                </Text>
-                {"\n"}
-                <Text style={modalStyle.sectionText}>
-                  {"\u2022"} Female: {selectedAnimal.weightF}
-                </Text>
-              </Text>
-              <Text>
-                <Text style={modalStyle.sectionTitle}>Habitat: </Text>
-                <Text style={modalStyle.sectionText}>{selectedAnimal.habitat}</Text>
-              </Text>
-              <Text>
-                <Text style={modalStyle.sectionTitle}>Conservation Status: </Text>
-                <Text style={modalStyle.sectionText}>{selectedAnimal.conservationStatus}</Text>
-              </Text>
-              <Text>
-                <Text style={modalStyle.sectionTitle}>Fun Facts: </Text>
-                <Text style={modalStyle.sectionText}>{selectedAnimal.funFacts}</Text>
-              </Text>
-            </>
-          )}
+          <Text></Text>
+          <Text style={modalStyle.rewardText}>Congratulations! You have completed the challenge</Text>
+          <Text></Text>
+          <Text style={modalStyle.rewardText}>Come collect your prize at the kiosk inside the gift shop</Text>
+          <Text></Text>
+          <Text style={modalStyle.rewardText}>Proud of this acheivement? Share this with your friends!</Text>
+          <TouchableOpacity onPress={shareToFacebook} style={modalStyle.shareButton}>
+              <Text style={modalStyle.shareButtonText}>Share on Facebook</Text>
+            </TouchableOpacity>
+
         </ScrollView>
-        <TouchableOpacity onPress={closeModal} style={modalStyle.closeButton}>
+        <TouchableOpacity onPress={closeChallengeCompletedModal} style={modalStyle.closeButton}>
           <Text style={modalStyle.closeButtonText}>Close</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
-  </Modal>
+    </Modal>
 
-
-
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={incorrectAnimalModalVisible}
+      onRequestClose={closeIncorrectAnimalModal}
+    >
+      <SafeAreaView style={modalStyle.modalContainer}>
+        <View style={modalStyle.modalContent}>
+          <Text style={styles.title}>Animal not on list</Text>
+          <Text style={styles.subtitle}>You have either not photographed an animal on the list or your picture isn't clear enough</Text>
+          <TouchableOpacity onPress={closeIncorrectAnimalModal} style={modalStyle.closeButton}>
+            <Text style={modalStyle.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </Modal>
+    
+    <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={closeModal}
+        >
+        <SafeAreaView style={modalStyle.modalContainer}>
+          <View style={modalStyle.modalContent}>
+            <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
+              {selectedAnimal && (
+                <>
+                  <Text style={styles.title}>
+                    {isInfoModal ? 'Animal' : 'Well Done! Animal Unlocked'}
+                  </Text>
+                  <Image source={{ uri: selectedAnimal.image }} style={modalStyle.image} />
+                  <Text style={<Text style={styles.title}>Challenge Completed!</Text>}>{selectedAnimal.name}</Text>
+                  <Text style={modalStyle.species}>({selectedAnimal.species})</Text>
+                  <Text>
+                    <Text style={modalStyle.sectionTitle}>Diet: </Text>
+                    <Text style={modalStyle.sectionText}>{selectedAnimal.diet}</Text>
+                  </Text>
+                  <Text>
+                    <Text style={modalStyle.sectionTitle}>Length: </Text>
+                    <Text style={modalStyle.sectionText}>{selectedAnimal.length}</Text>
+                  </Text>
+                  <Text>
+                    <Text style={modalStyle.sectionTitle}>Height: </Text>
+                    <Text style={modalStyle.sectionText}>{selectedAnimal.height}</Text>
+                  </Text>
+                  <Text>
+                    <Text style={modalStyle.sectionTitle}>Weight:{"\n"}</Text>
+                    <Text style={modalStyle.sectionText}>
+                      {"\u2022"} Male: {selectedAnimal.weightM}
+                    </Text>
+                    {"\n"}
+                    <Text style={modalStyle.sectionText}>
+                      {"\u2022"} Female: {selectedAnimal.weightF}
+                    </Text>
+                  </Text>
+                  <Text>
+                    <Text style={modalStyle.sectionTitle}>Habitat: </Text>
+                    <Text style={modalStyle.sectionText}>{selectedAnimal.habitat}</Text>
+                  </Text>
+                  <Text>
+                    <Text style={modalStyle.sectionTitle}>Conservation Status: </Text>
+                    <Text style={modalStyle.sectionText}>{selectedAnimal.conservationStatus}</Text>
+                  </Text>
+                  <Text>
+                    <Text style={modalStyle.sectionTitle}>Fun Facts: </Text>
+                    <Text style={modalStyle.sectionText}>{selectedAnimal.funFacts}</Text>
+                  </Text>
+                </>
+              )}
+            </ScrollView>
+            <TouchableOpacity onPress={closeModal} style={modalStyle.closeButton}>
+              <Text style={modalStyle.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      </Modal>
+  </ImageBackground>
   </View>
   )
 }

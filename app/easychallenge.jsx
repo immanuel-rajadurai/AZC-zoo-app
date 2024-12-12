@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { StyleSheet, Text, View, Button, Image, ActivityIndicator, TouchableOpacity, ScrollView, SafeAreaView, Modal, ImageBackground } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, ActivityIndicator, TouchableOpacity, ScrollView, SafeAreaView, Modal, ImageBackground, Linking } from 'react-native';
 import * as tf from '@tensorflow/tfjs';
 import * as jpeg from 'jpeg-js';
 import * as FileSystem from 'expo-file-system';
@@ -12,7 +12,6 @@ import { fetch } from '@tensorflow/tfjs-react-native';
 import animalPhoto from '../assets/animalImages/tiger.jpg';
 import { bundleResourceIO } from '@tensorflow/tfjs-react-native';
 import { images, icons } from '../constants';
-import * as Sharing from 'expo-sharing';
 
 
 const Challenge = () => {
@@ -116,19 +115,12 @@ const Challenge = () => {
     }
   };
 
-  const shareToFacebook = async () => {
-    const shareOptions = {
-      message: 'I just completed the challenge!',
-      url: 'https://www.zoo-boissiere.com/', // Replace with your URL
-    };
-
-    try {
-      await Sharing.shareAsync(shareOptions.url, {
-        dialogTitle: shareOptions.message,
-      });
-    } catch (error) {
-      console.error('Error sharing:', error);
-    }
+  const shareToFacebook = () => {
+    const facebookShareUrl =
+      'https://www.facebook.com/share_channel/#'; // Replace with your link
+    Linking.openURL(facebookShareUrl).catch((err) =>
+      console.error('Error opening URL:', err)
+    );
   };
   
   const ScannedAnimalsList = ({ targetAnimals, scannedAnimals }) => {
@@ -196,14 +188,29 @@ const Challenge = () => {
 
     const loadTargetAnimals = async () => {
       try {
-        const storedAnimals = await AsyncStorage.getItem('targetAnimals');
+        const storedTargetAnimals = await AsyncStorage.getItem('targetAnimals');
+        console.log("1) Stored target animals: ", storedTargetAnimals);
 
-        if (storedAnimals) {
-          setTargetAnimals(JSON.parse(storedAnimals));
+        if (storedTargetAnimals.length > 0) {
+          
+           setTargetAnimals(JSON.parse(storedTargetAnimals));
+
+          console.log("2) Target animals just set: ", targetAnimals);
         } else {
-          const initialTargetAnimals = ['lion', 'african_elephant', 'leopard', 'ostrich', 'tiger'];
-          setTargetAnimals(initialTargetAnimals);
-          await AsyncStorage.setItem('targetAnimals', JSON.stringify(initialTargetAnimals));
+          // const initialTargetAnimals = ['lion', 'african_elephant', 'leopard', 'ostrich', 'tiger'];
+          // setTargetAnimals(initialTargetAnimals);
+          // await AsyncStorage.setItem('targetAnimals', JSON.stringify(initialTargetAnimals));
+
+          if (storedTargetAnimals.length === 0) {
+          
+            console.log("Challenge completed from initial useEffect");
+            console.log("The target animals at this stage are: ", targetAnimals);
+            setChallengeCompleted(true);
+            setChallengeCompletedModalVisible(true);
+          } else {
+            setChallengeCompleted(false);
+            setChallengeCompletedModalVisible(false);
+          }
         }
  
       } catch (error) {
@@ -225,15 +232,14 @@ const Challenge = () => {
         // let emptyScannedAnimals = [];
         // setScannedAnimals(emptyScannedAnimals);
         // await AsyncStorage.setItem('scannedAnimals', JSON.stringify(emptyScannedAnimals));
+
         // await AsyncStorage.setItem('targetAnimals', JSON.stringify(['lion', 'african_elephant', 'leopard', 'ostrich', 'tiger']));
+        // setTargetAnimals(['lion', 'african_elephant', 'leopard', 'ostrich', 'tiger'])
+
         // await AsyncStorage.setItem('targetAnimals', JSON.stringify([]));
         // setTargetAnimals([]);
 
-        if (targetAnimals.length === 0) {
-          console.log("Challenge completed");
-          setChallengeCompleted(true);
-          setChallengeCompletedModalVisible(true);
-        }
+        
 
       } catch (error) {
         console.error('Failed to load zoo animals', error);
@@ -252,12 +258,6 @@ const Challenge = () => {
     console.log("Scanned animals: ", scannedAnimals);
   }, [scannedAnimals]);
 
-  useEffect(() => {
-    if (challengeCompleted) {
-      console.log("Challenge completed (UseEffect)");
-      setChallengeCompleted(true);
-    }
-  }, [targetAnimals]);
 
   useEffect(() => {
 
@@ -488,6 +488,9 @@ const Challenge = () => {
         setChallengeCompleted(true);
 
         setChallengeCompletedModalVisible(true);
+      } else {
+        setChallengeCompleted(false);
+        setChallengeCompletedModalVisible(false);
       }
 
 
@@ -580,15 +583,6 @@ const Challenge = () => {
       visible={challengeCompletedModalVisible}
       onRequestClose={closeChallengeCompletedModal}
     >
-      {/* <SafeAreaView style={modalStyle.modalContainer}>
-        <View style={modalStyle.modalContent}>
-          <Text style={styles.title}>Challenge Completed!</Text>
-          
-        </View>
-        <TouchableOpacity onPress={closeChallengeCompletedModal} style={modalStyle.closeButton}>
-            <Text style={modalStyle.closeButtonText}>Close</Text>
-           </TouchableOpacity>
-      </SafeAreaView> */}
       <SafeAreaView style={modalStyle.modalContainer}>
       <View style={modalStyle.modalContent}>
       <Text style={styles.title}>Challenge Completed!</Text>
@@ -604,13 +598,11 @@ const Challenge = () => {
             </TouchableOpacity>
 
         </ScrollView>
-        <TouchableOpacity onPress={closeModal} style={modalStyle.closeButton}>
+        <TouchableOpacity onPress={closeChallengeCompletedModal} style={modalStyle.closeButton}>
           <Text style={modalStyle.closeButtonText}>Close</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
-
-
     </Modal>
 
     <Modal
