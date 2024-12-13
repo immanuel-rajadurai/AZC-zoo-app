@@ -162,7 +162,7 @@ const Challenge = () => {
                 
                 const info = animalInfo[animal.toLowerCase()];
 
-                console.log("animal info: " + info);
+                // console.log("animal info: " + info);
 
                 return (
                   <TouchableOpacity key={index} onPress={() => showModal({predictedAnimal:animal, info:true})}>
@@ -185,51 +185,66 @@ const Challenge = () => {
 
   useEffect(() => {
 
-    const loadTargetAnimals = async () => {
+    const initialliseChallenge = async () => {
 
-      const challengeCompletedFlag = await AsyncStorage.getItem('challengeCompletedFlag')
+      try {
 
-      console.log("Chalenge completed flag: ", challengeCompletedFlag);
+        const challengeCompletedFlag = await AsyncStorage.getItem('challengeCompletedFlag')
 
-      if (challengeCompletedFlag && (challengeCompletedFlag == 'true')) {
-        console.log("challenge completed")
+        console.log("Challenge completed flag: ", challengeCompletedFlag);
 
-        if (challengeCompletedFlag == "true") {
-          console.log("Challenge completed from initial useEffect");
-          console.log("The target animals at this stage are: ", targetAnimals);
-          setChallengeCompleted(true);
-          setChallengeCompletedModalVisible(true);
-        }
+        if (challengeCompletedFlag && (challengeCompletedFlag == 'true')) {
+          console.log("challenge completed")
 
-      } else {
+          if (challengeCompletedFlag == "true") {
+            console.log("Challenge completed from initial useEffect");
+            console.log("The target animals at this stage are: ", targetAnimals);
+            console.log("The scanned animals at this stage are: ", scannedAnimals);
 
-        //challenge is still in progress
-        console.log("Challenge in progress")
+            let storedScannedAnimals2 = await AsyncStorage.getItem('scannedAnimals');
 
-        AsyncStorage.setItem('challengeCompletedFlag', 'false');
-
-        const initialTargetAnimals = ['lion', 'african_elephant', 'leopard', 'ostrich', 'tiger'];
-
-        try {
-          const storedTargetAnimals = await AsyncStorage.getItem('targetAnimals');
-          console.log("stored target animals: " + storedTargetAnimals);
-
-          if (storedTargetAnimals) {
-            setTargetAnimals(JSON.parse(storedTargetAnimals));
-          } else {
-            setTargetAnimals(initialTargetAnimals);
-            await AsyncStorage.setItem('targetAnimals', JSON.stringify(initialTargetAnimals));
+            console.log("The stored scanned animals at this stage are: ", storedScannedAnimals2);
+            // setChallengeCompleted(true);
+            setChallengeCompletedModalVisible(true);
           }
-        } catch (error) {
-          console.log("Error occured during targetAnimal retrieval", error);
+
+        } else {
+
+          //challenge is still in progress
+          console.log("Challenge in progress")
+
+          AsyncStorage.setItem('challengeCompletedFlag', 'false');
+
+          const initialTargetAnimals = ['lion', 'african_elephant', 'leopard', 'ostrich', 'tiger'];
+
+          try {
+            const storedTargetAnimals = await AsyncStorage.getItem('targetAnimals');
+            console.log("stored target animals: " + storedTargetAnimals);
+
+            if (storedTargetAnimals) {
+              console.log("setting target animals to initial configuration");
+              setTargetAnimals(JSON.parse(storedTargetAnimals));
+            } else {
+              setTargetAnimals(initialTargetAnimals);
+              await AsyncStorage.setItem('targetAnimals', JSON.stringify(initialTargetAnimals));
+            }
+          } catch (error) {
+            console.log("Error occured during targetAnimal retrieval", error);
+          }
         }
+
+
+      } catch (error) {
+        console.error('Failed to load zoo animals', error);
+      } finally {
 
         try {
           let storedScannedAnimals = await AsyncStorage.getItem('scannedAnimals');
-    
+          
           if (storedScannedAnimals) {
             setScannedAnimals(JSON.parse(storedScannedAnimals));
           } else {
+            console.log("Found no storedScannedAnimals therefore initialising new empty storedScannedAnimals");
             let emptyScannedAnimals = [];
             setScannedAnimals(emptyScannedAnimals);
             await AsyncStorage.setItem('scannedAnimals', JSON.stringify(emptyScannedAnimals));
@@ -238,25 +253,46 @@ const Challenge = () => {
         } catch (error) {
           console.error('Failed to load zoo animals', error);
         }
-        
+
+
+        try {
+          let storedScannedAnimals = await AsyncStorage.getItem('scannedAnimals');
+          
+          if (storedScannedAnimals) {
+            setScannedAnimals(JSON.parse(storedScannedAnimals));
+          } else {
+            console.log("Found no storedScannedAnimals therefore initialising new empty storedScannedAnimals");
+            let emptyScannedAnimals = [];
+            setScannedAnimals(emptyScannedAnimals);
+            await AsyncStorage.setItem('scannedAnimals', JSON.stringify(emptyScannedAnimals));
+          }
+          
+        } catch (error) {
+          console.log('Failed to initialiseChallenge', error);
+        }
+
+
+        // await AsyncStorage.setItem('targetAnimals', JSON.stringify(['tiger']));
+        // setTargetAnimals(['tiger']) 
+
+        // // let scannedAnimals = ['lion', 'african_elephant', 'leopard', 'ostrich'];
+        // let scannedAnimals = [];
+        // setScannedAnimals(scannedAnimals);
+        // await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
+
+        // await AsyncStorage.setItem('challengeCompletedFlag', 'false');
+        // setChallengeCompleted(false);
+        // setChallengeCompletedModalVisible(false); 
+
+        // await AsyncStorage.removeItem('targetAnimals') 
+        // await AsyncStorage.removeItem('scannedAnimals') 
+        // setScannedAnimals([])
+        // setTargetAnimals([])
       }
-
-              
-      // await AsyncStorage.setItem('targetAnimals', JSON.stringify(['tiger']));
-      // setTargetAnimals(['tiger'])
-
-      // let emptyScannedAnimals = [];
-      // setScannedAnimals(emptyScannedAnimals);
-      // await AsyncStorage.setItem('scannedAnimals', JSON.stringify(emptyScannedAnimals));
-
-      // await AsyncStorage.setItem('challengeCompletedFlag', 'false');
-      // setChallengeCompleted(false);
-      // setChallengeCompletedModalVisible(false);
-
 
     };
     
-    loadTargetAnimals();
+    initialliseChallenge();
   }, []);  
 
 
@@ -306,64 +342,6 @@ const Challenge = () => {
     return tensor;
   }
 
-  async function classifyImageTest() {
-    
-    if (model) {
-
-      console.log("loading image")
-      const asset = Asset.fromModule(animalPhoto);
-      await asset.downloadAsync();
-      const imageUri = asset.localUri || asset.uri;
-
-      const base64String = await FileSystem.readAsStringAsync(imageUri, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
-
-      const imageBuffer = Uint8Array.from(atob(base64String), c => c.charCodeAt(0));
-
-      const imageTensor = tf.tidy(() => {
-        const decodedImage = decodeImage(imageBuffer);
-        return decodedImage.resizeNearestNeighbor([224, 224]).toFloat().expandDims();
-      });
-
-      console.log("image loaded. classifying image")
-
-      const prediction = await model.predict(imageTensor).data();
-      const highestPredictionIndex = prediction.indexOf(Math.max(...prediction));
-      const predictedClassEntry = labels[highestPredictionIndex];
-      const predictedAnimal = predictedClassEntry ? predictedClassEntry[1] : 'Unknown'; // class name
-
-      console.log("Predicted Animal: " + predictedAnimal)
-
-      if (Object.values(targetAnimals).includes(predictedAnimal)) {
-
-        showModal({predictedAnimal:predictedAnimal}); 
-  
-        try {
-  
-          if (!scannedAnimals.includes(predictedAnimal)) {
-            scannedAnimals.push(predictedAnimal);
-            setScannedAnimals(scannedAnimals);
-  
-            let updatedTargetAnimals = targetAnimals.filter(animal => animal !== predictedAnimal);
-            setTargetAnimals(updatedTargetAnimals);
-            await AsyncStorage.setItem('targetAnimals', JSON.stringify(updatedTargetAnimals));
-          }
-  
-          await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
-  
-        } catch (error) {
-          console.error('Failed to load scanned animals', error);
-        }
-  
-      } else {
-        console.log(predictedAnimal + " is not in targetAnimals: " + targetAnimals)
-      }
-
-    }
-
-  }
-
   async function classifyImage(imageUri) {
     if (model) {
       try {
@@ -382,7 +360,6 @@ const Challenge = () => {
         
         console.log("classifying image...")
 
-        
         const prediction = await model.predict(imageTensor).data();
         const highestPredictionIndex = prediction.indexOf(Math.max(...prediction));
         const predictedClassEntry = labels[highestPredictionIndex];
@@ -431,6 +408,8 @@ const Challenge = () => {
     //   aspect: [4, 3],
     //   quality: 1,
     // });
+    
+  
 
     //Launch the image library to picka photo
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -440,16 +419,21 @@ const Challenge = () => {
       quality: 1,
     });
 
-    console.log("image picker closed")
+    // if (result.canceled) {
+    //   console.log("image picker closed prematurely")
+    //   setClassifyingModalVisible(false);
+    // } 
+    // console.log("image picker closed")
+
+    setClassifyingModalVisible(true);
+
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     if (!result.canceled) {
 
-      setClassifyingModalVisible(true);
-
+      // setClassifyingModalVisible(true);
 
       setImage(result.assets[0].uri);
-
-      
 
       let predictedAnimalResult = await classifyImage(result.assets[0].uri);
 
@@ -471,10 +455,11 @@ const Challenge = () => {
   
           if (!scannedAnimals.includes(predictedAnimal)) {
             scannedAnimals.push(predictedAnimal);
-            setScannedAnimals(scannedAnimals);
+            
   
             let updatedTargetAnimals = targetAnimals.filter(animal => animal !== predictedAnimal);
-
+            
+            setScannedAnimals(scannedAnimals);
             setTargetAnimals(updatedTargetAnimals);
 
             if (updatedTargetAnimals.length === 0) {
@@ -482,6 +467,9 @@ const Challenge = () => {
               setChallengeCompleted(true);
               setChallengeCompletedModalVisible(true);
               AsyncStorage.setItem('challengeCompletedFlag', 'true');
+
+              console.log("populating scannedAnimals with: " + scannedAnimals);
+              await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
             } else {
               setChallengeCompleted(false);
               setChallengeCompletedModalVisible(false);
@@ -490,7 +478,8 @@ const Challenge = () => {
 
             await AsyncStorage.setItem('targetAnimals', JSON.stringify(updatedTargetAnimals));
           } 
-  
+          
+          console.log("populating scannedAnimals with: " + scannedAnimals);
           await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
   
         } catch (error) {
@@ -499,13 +488,8 @@ const Challenge = () => {
   
       } else {
           console.log("IN takePicture: " + predictedAnimal + " is not in targetAnimals: " + targetAnimals)
-
           setIncorrectAnimalModalVisible(true);
       }
-
-
-      
-
 
       // console.log("file location: ", result.assets[0].uri);
     }
