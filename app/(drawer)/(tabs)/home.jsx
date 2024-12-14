@@ -13,10 +13,10 @@ import ToggleShowInformationButton from '../../../components/ToggleShowInformati
 import accessibilityIcon from "../../../assets/icons/accessibility.png";
 import { icons } from '../../../constants';
 
-// import { generateClient } from 'aws-amplify/api';
-// import { listEvents } from '../../src/graphql/queries';
+import { generateClient } from 'aws-amplify/api';
+import { listEvents } from '../../../src/graphql/queries';
 
-// const client = generateClient();
+const client = generateClient();
 
 const Home = () => {
   
@@ -120,20 +120,20 @@ const Home = () => {
       // });
     };
 
-    // const fetchEvents = async () => { 
+    const fetchEvents = async () => { 
 
-    //   try {
-    //     const eventsResult = await client.graphql(
-    //       {query: listEvents}
-    //     );
+      try {
+        const eventsResult = await client.graphql(
+          {query: listEvents}
+        );
 
-    //     console.log(eventsResult);
+        console.log(eventsResult);
 
-    //     setEvents(eventsResult.data.listEvents.items)
-    //   } catch (error) {
-    //     console.log('error on fetching events', error)
-    //   }
-    // }
+        setEvents(eventsResult.data.listEvents.items)
+      } catch (error) {
+        console.log('error on fetching events', error)
+      }
+    }
 
 
     setRegion({
@@ -143,8 +143,8 @@ const Home = () => {
       longitudeDelta: 0.003,
     });
 
-    // getLocation();
-    // fetchEvents();
+    getLocation();
+    fetchEvents();
   }, []);
 
   const goToZoo = () => {
