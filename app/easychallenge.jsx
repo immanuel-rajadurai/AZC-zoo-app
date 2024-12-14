@@ -27,6 +27,7 @@ const Challenge = () => {
   const [scannedAnimals, setScannedAnimals] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
+  const [incorrectClassifiedObject, setIncorrectClassifiedObject] = useState(null);
   const [isInfoModal, setIsInfoModal] = useState(null);
   const [predictedAnimal, setPredictedAnimal] = useState(null);
   const [classifyingModalVisible, setClassifyingModalVisible] = useState(false);
@@ -500,6 +501,7 @@ const Challenge = () => {
   
       } else {
           console.log("IN takePicture: " + predictedAnimal + " is not in targetAnimals: " + targetAnimals)
+          setIncorrectClassifiedObject(predictedAnimal)
           setIncorrectAnimalModalVisible(true);
       }
 
@@ -632,14 +634,18 @@ const Challenge = () => {
       <SafeAreaView style={modalStyle.modalContainer}>
         <View style={modalStyle.modalContent}>
           <Text style={styles.title}>Animal not classified</Text>
-          <Text style={styles.subtitle}>You have either not photographed an animal on the list or your picture isn't clear enough</Text>
+          <Text style={modalStyle.species}>You have either not photographed an animal on the list or your picture isn't clear enough</Text>
+          <Text></Text>
+          <Text></Text>
+          <Text style={modalStyle.species}>Image detected: </Text>
+          <Text style={modalStyle.species}>{incorrectClassifiedObject}</Text> 
           <Text></Text>
           <Text></Text>
           <Text></Text>
           <Text></Text>
           <TouchableOpacity onPress={closeIncorrectAnimalModal} style={modalStyle.closeButton}>
             <Text style={modalStyle.closeButtonText}>Close</Text>
-           </TouchableOpacity>
+            </TouchableOpacity>
         </View>
       </SafeAreaView>
     </Modal>

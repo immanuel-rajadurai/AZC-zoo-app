@@ -18,20 +18,21 @@ import { images, icons } from '../constants';
 const Challenge = () => {
 
   const [model, setModel] = useState(null);
-    const [modelLoaded, setModelLoaded] = useState(true);
-    const [challengeCompleted, setChallengeCompleted] = useState(false);
-    const [challengeCompletedModalVisible, setChallengeCompletedModalVisible] = useState(false);
-    const [predictions, setPredictions] = useState(null);
-    const [hasPermission, setHasPermission] = useState(null);
-    const [image, setImage] = useState(null);
-    const [targetAnimals, setTargetAnimals] = useState([]);
-    const [scannedAnimals, setScannedAnimals] = useState([]);
-    const [modalVisible, setModalVisible] = useState(false);
-    const [selectedAnimal, setSelectedAnimal] = useState(null);
-    const [isInfoModal, setIsInfoModal] = useState(null);
-    const [predictedAnimal, setPredictedAnimal] = useState(null);
-    const [classifyingModalVisible, setClassifyingModalVisible] = useState(false);
-    const [incorrectAnimalModalVisible, setIncorrectAnimalModalVisible] = useState(false);
+  const [modelLoaded, setModelLoaded] = useState(true);
+  const [hardChallengeCompleted, setHardChallengeCompleted] = useState(false);
+  const [hardChallengeCompletedModalVisible, setHardChallengeCompletedModalVisible] = useState(false);
+  const [predictions, setPredictions] = useState(null);
+  const [hasPermission, setHasPermission] = useState(null);
+  const [image, setImage] = useState(null);
+  const [hardTargetAnimals, setHardTargetAnimals] = useState([]);
+  const [hardScannedAnimals, setHardScannedAnimals] = useState([]);
+  const [hardModalVisible, setHardModalVisible] = useState(false);
+  const [selectedAnimal, setSelectedAnimal] = useState(null);
+  const [incorrectClassifiedObject, setIncorrectClassifiedObject] = useState(null);
+  const [isInfoModal, setIsInfoModal] = useState(null);
+  const [predictedAnimal, setPredictedAnimal] = useState(null);
+  const [classifyingModalVisible, setClassifyingModalVisible] = useState(false);
+  const [incorrectAnimalModalVisible, setIncorrectAnimalModalVisible] = useState(false);
 
   const animalInfo = {
     hippopotamus: {
@@ -156,14 +157,12 @@ const Challenge = () => {
               {targetAnimals.map((animal, index) => {
                 const info = animalInfo[animal.toLowerCase()];
                 return (
-                  <TouchableOpacity key={index} onPress={() => showModal({ predictedAnimal: animal, info: true })}>
-                    <View style={styles.mysteryAnimalCard}>
+                    <View key={index} style={styles.mysteryAnimalCard}>
                       <View style={styles.imageContainer}>
                       <Image source={questionmark} style={styles.animalImage} />
                       </View>
                       <Text style={styles.animalName}>Mystery Animal</Text>
                     </View>
-                  </TouchableOpacity>
                 );
               })}
             </ScrollView>
@@ -202,7 +201,7 @@ const Challenge = () => {
 
       try {
 
-        const challengeCompletedFlag = await AsyncStorage.getItem('challengeCompletedFlag')
+        const challengeCompletedFlag = await AsyncStorage.getItem('hardChallengeCompletedFlag')
 
         console.log("Challenge completed flag: ", challengeCompletedFlag);
 
@@ -211,14 +210,14 @@ const Challenge = () => {
 
           if (challengeCompletedFlag == "true") {
             console.log("Challenge completed from initial useEffect");
-            console.log("The target animals at this stage are: ", targetAnimals);
-            console.log("The scanned animals at this stage are: ", scannedAnimals);
+            console.log("The target animals at this stage are: ", hardTargetAnimals);
+            console.log("The scanned animals at this stage are: ", hardScannedAnimals);
 
-            let storedScannedAnimals2 = await AsyncStorage.getItem('scannedAnimals');
+            let storedScannedAnimals2 = await AsyncStorage.getItem('hardScannedAnimals');
 
             console.log("The stored scanned animals at this stage are: ", storedScannedAnimals2);
             // setChallengeCompleted(true);
-            setChallengeCompletedModalVisible(true);
+            setHardChallengeCompletedModalVisible(true);
           }
 
         } else {
@@ -226,20 +225,20 @@ const Challenge = () => {
           //challenge is still in progress
           console.log("Challenge in progress")
 
-          AsyncStorage.setItem('challengeCompletedFlag', 'false');
+          AsyncStorage.setItem('hardChallengeCompletedFlag', 'false');
 
           const initialTargetAnimals = ['lion', 'african_elephant', 'hippopotamus', 'ostrich', 'tiger'];
 
           try {
-            const storedTargetAnimals = await AsyncStorage.getItem('targetAnimals');
+            const storedTargetAnimals = await AsyncStorage.getItem('hardTargetAnimals');
             console.log("stored target animals: " + storedTargetAnimals);
 
             if (storedTargetAnimals) {
               console.log("setting target animals to initial configuration");
-              setTargetAnimals(JSON.parse(storedTargetAnimals));
+              setHardTargetAnimals(JSON.parse(storedTargetAnimals));
             } else {
-              setTargetAnimals(initialTargetAnimals);
-              await AsyncStorage.setItem('targetAnimals', JSON.stringify(initialTargetAnimals));
+              setHardTargetAnimals(initialTargetAnimals);
+              await AsyncStorage.setItem('hardTargetAnimals', JSON.stringify(initialTargetAnimals));
             }
           } catch (error) {
             console.log("Error occured during targetAnimal retrieval", error);
@@ -252,15 +251,15 @@ const Challenge = () => {
       } finally {
 
         try {
-          let storedScannedAnimals = await AsyncStorage.getItem('scannedAnimals');
+          let storedScannedAnimals = await AsyncStorage.getItem('hardScannedAnimals');
           
           if (storedScannedAnimals) {
-            setScannedAnimals(JSON.parse(storedScannedAnimals));
+            setHardScannedAnimals(JSON.parse(storedScannedAnimals));
           } else {
             console.log("Found no storedScannedAnimals therefore initialising new empty storedScannedAnimals");
             let emptyScannedAnimals = [];
-            setScannedAnimals(emptyScannedAnimals);
-            await AsyncStorage.setItem('scannedAnimals', JSON.stringify(emptyScannedAnimals));
+            setHardScannedAnimals(emptyScannedAnimals);
+            await AsyncStorage.setItem('hardScannedAnimals', JSON.stringify(emptyScannedAnimals));
           }
           
         } catch (error) {
@@ -269,15 +268,15 @@ const Challenge = () => {
 
 
         try {
-          let storedScannedAnimals = await AsyncStorage.getItem('scannedAnimals');
+          let storedScannedAnimals = await AsyncStorage.getItem('hardScannedAnimals');
           
           if (storedScannedAnimals) {
-            setScannedAnimals(JSON.parse(storedScannedAnimals));
+            setHardScannedAnimals(JSON.parse(storedScannedAnimals));
           } else {
             console.log("Found no storedScannedAnimals therefore initialising new empty storedScannedAnimals");
             let emptyScannedAnimals = [];
-            setScannedAnimals(emptyScannedAnimals);
-            await AsyncStorage.setItem('scannedAnimals', JSON.stringify(emptyScannedAnimals));
+            setHardScannedAnimals(emptyScannedAnimals);
+            await AsyncStorage.setItem('hardScannedAnimals', JSON.stringify(emptyScannedAnimals));
           }
           
         } catch (error) {
@@ -285,22 +284,22 @@ const Challenge = () => {
         }
 
 
-        // await AsyncStorage.setItem('targetAnimals', JSON.stringify(['tiger']));
-        // setTargetAnimals(['tiger']) 
+        // await AsyncStorage.setItem('hardTargetAnimals', JSON.stringify(['tiger']));
+        // setHardTargetAnimals(['tiger']) 
 
         // // let scannedAnimals = ['lion', 'african_elephant', 'leopard', 'ostrich'];
         // let scannedAnimals = [];
-        // setScannedAnimals(scannedAnimals);
-        // await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
+        // setHardScannedAnimals(scannedAnimals);
+        // await AsyncStorage.setItem('hardScannedAnimals', JSON.stringify(scannedAnimals));
 
-        // await AsyncStorage.setItem('challengeCompletedFlag', 'false');
-        // setChallengeCompleted(false);
-        // setChallengeCompletedModalVisible(false); 
+        // await AsyncStorage.setItem('hardChallengeCompletedFlag', 'false');
+        // setHardChallengeCompleted(false);
+        // setHardChallengeCompletedModalVisible(false); 
 
-        // await AsyncStorage.removeItem('targetAnimals') 
-        // await AsyncStorage.removeItem('scannedAnimals') 
-        // setScannedAnimals([])
-        // setTargetAnimals([])
+        // await AsyncStorage.removeItem('hardTargetAnimals') 
+        // await AsyncStorage.removeItem('hardScannedAnimals') 
+        // setHardScannedAnimals([])
+        // setHardTargetAnimals([])
       }
 
     };
@@ -309,12 +308,12 @@ const Challenge = () => {
   }, []);  
 
   useEffect(() => {
-    console.log("Target animals: ", targetAnimals);
-  }, [targetAnimals]);
+    console.log("Target animals: ", hardTargetAnimals);
+  }, [hardTargetAnimals]);
 
   useEffect(() => {
-    console.log("Scanned animals: ", scannedAnimals);
-  }, [scannedAnimals]);
+    console.log("Scanned animals: ", hardScannedAnimals);
+  }, [hardScannedAnimals]);
 
   useEffect(() => {
 
@@ -458,47 +457,48 @@ const Challenge = () => {
       let predictedAnimal = predictedAnimalResult.toLowerCase()
 
       //check whether the animal is correct or not
-      if (Object.values(targetAnimals).includes(predictedAnimal)) {
+      if (Object.values(hardTargetAnimals).includes(predictedAnimal)) {
 
         showModal({predictedAnimal:predictedAnimal}); 
   
         try {
   
-          if (!scannedAnimals.includes(predictedAnimal)) {
-            scannedAnimals.push(predictedAnimal);
+          if (!hardScannedAnimals.includes(predictedAnimal)) {
+            hardScannedAnimals.push(predictedAnimal);
             
   
-            let updatedTargetAnimals = targetAnimals.filter(animal => animal !== predictedAnimal);
+            let updatedTargetAnimals = hardTargetAnimals.filter(animal => animal !== predictedAnimal);
             
-            setScannedAnimals(scannedAnimals);
-            setTargetAnimals(updatedTargetAnimals);
+            setHardScannedAnimals(hardScannedAnimals);
+            setHardTargetAnimals(updatedTargetAnimals);
 
             if (updatedTargetAnimals.length === 0) {
               console.log("Challenge completed");
-              setChallengeCompleted(true);
-              setChallengeCompletedModalVisible(true);
-              AsyncStorage.setItem('challengeCompletedFlag', 'true');
+              setHardChallengeCompleted(true);
+              setHardChallengeCompletedModalVisible(true);
+              AsyncStorage.setItem('hardChallengeCompletedFlag', 'true');
 
-              console.log("populating scannedAnimals with: " + scannedAnimals);
-              await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
+              console.log("populating scannedAnimals with: " + hardScannedAnimals);
+              await AsyncStorage.setItem('hardScannedAnimals', JSON.stringify(hardScannedAnimals));
             } else {
-              setChallengeCompleted(false);
-              setChallengeCompletedModalVisible(false);
+              setHardChallengeCompleted(false);
+              setHardChallengeCompletedModalVisible(false);
             }
 
 
-            await AsyncStorage.setItem('targetAnimals', JSON.stringify(updatedTargetAnimals));
+            await AsyncStorage.setItem('hardTargetAnimals', JSON.stringify(updatedTargetAnimals));
           } 
           
-          console.log("populating scannedAnimals with: " + scannedAnimals);
-          await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
+          console.log("populating scannedAnimals with: " + hardScannedAnimals);
+          await AsyncStorage.setItem('hardScannedAnimals', JSON.stringify(hardScannedAnimals));
   
         } catch (error) {
           console.error('Failed to load scanned animals', error);
         }
   
       } else {
-          console.log("IN takePicture: " + predictedAnimal + " is not in targetAnimals: " + targetAnimals)
+          console.log("IN takePicture: " + predictedAnimal + " is not in targetAnimals: " + hardTargetAnimals)
+          setIncorrectClassifiedObject(predictedAnimal)
           setIncorrectAnimalModalVisible(true);
       }
 
@@ -524,11 +524,11 @@ const Challenge = () => {
       image: animalInfo[predictedAnimal].image
     });
     setIsInfoModal(info);
-    setModalVisible(true);
+    setHardModalVisible(true);
   };
 
   const closeModal = () => {
-    setModalVisible(false);
+    setHardModalVisible(false);
   };
 
   const showClassifyingModal = () => {
@@ -540,7 +540,7 @@ const Challenge = () => {
   };
 
   const closeChallengeCompletedModal = () => {
-    setChallengeCompletedModalVisible(false);
+    setHardChallengeCompletedModalVisible(false);
   }
 
   const showIncorrectAnimalModal = () => {
@@ -554,8 +554,8 @@ const Challenge = () => {
   return (
 
     <View style={styles.container}>
-    <ImageBackground source={images.easyAnimalChallengeBackground} style={styles.backgroundImage}>
-    <ScannedAnimalsList targetAnimals={targetAnimals} scannedAnimals={scannedAnimals} />
+    <ImageBackground source={images.hardAnimalChallengeBackground} style={styles.backgroundImage}>
+    <ScannedAnimalsList targetAnimals={hardTargetAnimals} scannedAnimals={hardScannedAnimals} />
 
     <View style={styles.cameraBar}>
     {modelLoaded ? (
@@ -588,15 +588,15 @@ const Challenge = () => {
     <Modal
       animationType="slide"
       transparent={true}
-      visible={challengeCompletedModalVisible}
+      visible={hardChallengeCompletedModalVisible}
       onRequestClose={closeChallengeCompletedModal}
     >
       <SafeAreaView style={modalStyle.modalContainer}>
       <View style={modalStyle.modalContent}>
-      <Text style={styles.title}>Challenge Completed!</Text>
+      <Text style={styles.title}>Mystert Challenge Completed!</Text>
         <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
           <Text></Text>
-          <Text style={modalStyle.rewardText}>Congratulations! You have completed the challenge</Text>
+          <Text style={modalStyle.rewardText}>Congratulations! You have completed the mystery challenge!</Text>
           <Text></Text>
           <Text style={modalStyle.rewardText}>Come collect your prize at the kiosk inside the gift shop</Text>
           <Text></Text>
@@ -631,7 +631,11 @@ const Challenge = () => {
       <SafeAreaView style={modalStyle.modalContainer}>
         <View style={modalStyle.modalContent}>
           <Text style={styles.title}>Animal not classified</Text>
-          <Text style={styles.subtitle}>You have either not photographed an animal on the list or your picture isn't clear enough</Text>
+          <Text style={modalStyle.species}>You have either not photographed an animal on the list or your picture isn't clear enough</Text>
+          <Text></Text>
+          <Text></Text>
+          <Text style={modalStyle.species}>Image detected: </Text>
+          <Text style={modalStyle.species}>{incorrectClassifiedObject}</Text> 
           <Text></Text>
           <Text></Text>
           <Text></Text>
@@ -646,7 +650,7 @@ const Challenge = () => {
     <Modal
       animationType="slide"
       transparent={true}
-      visible={modalVisible}
+      visible={hardModalVisible}
       onRequestClose={closeModal}
     >
     <SafeAreaView style={modalStyle.modalContainer}>
