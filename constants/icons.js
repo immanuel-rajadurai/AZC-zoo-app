@@ -38,6 +38,9 @@ import pulldownbutton from "../assets/icons/pulldownbutton.png";
 import showsicon from "../assets/icons/showsicon.png";
 import upcareticon from "../assets/icons/upcareticon.png";
 import listicon from "../assets/icons/listicon.png";
+import facebookIcon from "../assets/icons/facebook_icon.png";
+import instagramIcon from "../assets/icons/instagramlogo.png";
+import twitterIcon from "../assets/icons/twitterlogo.png";
 
 
 
@@ -81,5 +84,8 @@ export default {
   pulldownbutton,
   showsicon,
   upcareticon,
-  listicon
+  listicon,
+  facebookIcon,
+  instagramIcon,
+  twitterIcon
 };
