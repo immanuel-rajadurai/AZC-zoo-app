@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { StyleSheet, Text, View, Button, Image, ActivityIndicator, TouchableOpacity, ScrollView, SafeAreaView, Modal, ImageBackground, Linking } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, ActivityIndicator, TouchableOpacity, ScrollView, SafeAreaView, Modal, ImageBackground, Linking, Alert } from 'react-native';
 import * as tf from '@tensorflow/tfjs';
 import * as jpeg from 'jpeg-js';
 import * as FileSystem from 'expo-file-system';
@@ -33,21 +33,21 @@ const Challenge = () => {
   const [incorrectAnimalModalVisible, setIncorrectAnimalModalVisible] = useState(false);
 
   const animalInfo = {
-    leopard: {
-      name: "Leopard",
-      species: "Panthera Leopardis",
-      diet: "Carnivore",
-      length: "1.6 - 2.6 meters",
-      height: "60 - 70 cm",
-      weightM: "31 - 65 kg",
-      weightF: "17 - 58 kg",
-      habitat: "Savannas, grasslands, and forests",
+    hippopotamus: {
+      name: "Hippopotamus",
+      species: "Hippopotamus amphibius",
+      diet: "Herbivore",
+      length: "3.3 - 5 meters",
+      height: "1.3 - 1.6 meters",
+      weightM: "1,500 - 1,800 kg",
+      weightF: "1,300 - 1,500 kg",
+      habitat: "Rivers, lakes, and swamps in sub-Saharan Africa",
       conservationStatus: "Vulnerable",
       funFacts: [
-        "Leopards are the only cats that live in groups.",
-        "A group, or pride, can be up to 30 lions, depending on how much food and water is available."
+        "Hippos spend up to 16 hours a day submerged in rivers and lakes to keep their massive bodies cool.",
+        "Despite being herbivores, hippos are highly aggressive and are considered one of the most dangerous animals in Africa."
       ],
-      image: "https://cdn.britannica.com/30/136130-050-3370E37A/Leopard.jpg"
+      image: "https://t4.ftcdn.net/jpg/02/17/87/23/360_F_217872301_aFTJRtKZLTi66D6PT33FXoj9P43rhR18.jpg"
     },
     tiger: {
       name: "Tiger",
@@ -116,12 +116,31 @@ const Challenge = () => {
   };
 
   const shareToFacebook = () => {
-    const facebookShareUrl =
-      'https://www.facebook.com/share_channel/#'; // Replace with your link
+    const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+      'https://www.londonzoo.org/'
+    )}`;
     Linking.openURL(facebookShareUrl).catch((err) =>
       console.error('Error opening URL:', err)
     );
   };
+
+  const openInstagram = () => {
+    const instagramUrl = 'https://www.instagram.com/'; // Replace with your Instagram URL
+    Linking.openURL(instagramUrl).catch((err) =>
+      console.error('Error opening Instagram link:', err)
+    );
+  };
+
+  const shareToTwitter = () => {
+    const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+      'I just completed an Animal challenge at London Zoo! Check out my acheivement!'
+    )}&url=${encodeURIComponent('https://www.londonzoo.org/')}`;
+    
+    Linking.openURL(twitterShareUrl).catch((err) =>
+      console.error('Error opening URL:', err)
+    );
+  };
+  
   
   const ScannedAnimalsList = ({ targetAnimals, scannedAnimals }) => {
 
@@ -137,7 +156,6 @@ const Challenge = () => {
               {targetAnimals.map((animal, index) => {
                 const info = animalInfo[animal.toLowerCase()];
                 return (
-                  // <>
                   <TouchableOpacity key={index} onPress={() => showModal({ predictedAnimal: animal, info: true })}>
                     <View style={styles.animalCard}>
                       <View style={styles.imageContainer}>
@@ -146,7 +164,6 @@ const Challenge = () => {
                       <Text style={styles.animalName}>{info.name}</Text>
                     </View>
                   </TouchableOpacity>
-                  // </>
                 );
               })}
             </ScrollView>
@@ -158,12 +175,7 @@ const Challenge = () => {
           </View>
           <ScrollView style={styles.scrollView} persistentScrollbar={true}>
               {scannedAnimals.map((animal, index) => {
-                console.log("animal: " + animal);
-                
                 const info = animalInfo[animal.toLowerCase()];
-
-                // console.log("animal info: " + info);
-
                 return (
                   <TouchableOpacity key={index} onPress={() => showModal({predictedAnimal:animal, info:true})}>
                     <View style={styles.animalCard}>
@@ -185,7 +197,7 @@ const Challenge = () => {
 
   useEffect(() => {
 
-    const initialliseChallenge = async () => {
+    const initialiseChallenge = async () => {
 
       try {
 
@@ -215,7 +227,7 @@ const Challenge = () => {
 
           AsyncStorage.setItem('challengeCompletedFlag', 'false');
 
-          const initialTargetAnimals = ['lion', 'african_elephant', 'leopard', 'ostrich', 'tiger'];
+          const initialTargetAnimals = ['lion', 'african_elephant', 'hippopotamus', 'ostrich', 'tiger'];
 
           try {
             const storedTargetAnimals = await AsyncStorage.getItem('targetAnimals');
@@ -292,7 +304,7 @@ const Challenge = () => {
 
     };
     
-    initialliseChallenge();
+    initialiseChallenge();
   }, []);  
 
 
@@ -590,9 +602,18 @@ const Challenge = () => {
           <Text style={modalStyle.rewardText}>Come collect your prize at the kiosk inside the gift shop</Text>
           <Text></Text>
           <Text style={modalStyle.rewardText}>Proud of this acheivement? Share this with your friends!</Text>
-          <TouchableOpacity onPress={shareToFacebook} style={modalStyle.shareButton}>
-              <Text style={modalStyle.shareButtonText}>Share on Facebook</Text>
+
+          <View style={modalStyle.shareButtonContainer}>
+          <TouchableOpacity onPress={shareToTwitter} style={modalStyle.shareButton}>
+              <Image source={icons.twitterIcon} style={{ width: 60, height: 60 }} />
             </TouchableOpacity>
+            <TouchableOpacity onPress={shareToFacebook} style={modalStyle.shareButton}>
+              <Image source={icons.facebookIcon} style={{ width: 60, height: 60 }} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={openInstagram} style={modalStyle.shareButton}>
+              <Image source={icons.instagramIcon} style={{ width: 60, height: 60 }} />
+            </TouchableOpacity>
+          </View>
 
         </ScrollView>
         <TouchableOpacity onPress={closeChallengeCompletedModal} style={modalStyle.closeButton}>
@@ -610,8 +631,12 @@ const Challenge = () => {
     >
       <SafeAreaView style={modalStyle.modalContainer}>
         <View style={modalStyle.modalContent}>
-          <Text style={styles.title}>Animal not on list</Text>
+          <Text style={styles.title}>Animal not classified</Text>
           <Text style={styles.subtitle}>You have either not photographed an animal on the list or your picture isn't clear enough</Text>
+          <Text></Text>
+          <Text></Text>
+          <Text></Text>
+          <Text></Text>
           <TouchableOpacity onPress={closeIncorrectAnimalModal} style={modalStyle.closeButton}>
             <Text style={modalStyle.closeButtonText}>Close</Text>
            </TouchableOpacity>
@@ -634,8 +659,7 @@ const Challenge = () => {
                 {isInfoModal ? 'Animal' : 'Well Done! Animal Unlocked'}
               </Text>
               <Image source={{ uri: selectedAnimal.image }} style={modalStyle.image} />
-              <Text style={<Text style={styles.title}>Challenge Completed!</Text>}>{selectedAnimal.name}</Text>
-              <Text style={modalStyle.species}>({selectedAnimal.species})</Text>
+              <Text style={modalStyle.species}>({selectedAnimal.species})</Text> 
               <Text>
                 <Text style={modalStyle.sectionTitle}>Diet: </Text>
                 <Text style={modalStyle.sectionText}>{selectedAnimal.diet}</Text>
@@ -918,11 +942,17 @@ const modalStyle = StyleSheet.create({
     textAlign: 'center',
   },
   shareButton: {
-    backgroundColor: '#3b5998', // Facebook blue color
+    // backgroundColor: '#3b5998', // Facebook blue color
     padding: 10,
     borderRadius: 5,
     marginTop: 20,
-    alignItems: 'center',
+    // alignItems: 'center',
+  },
+  shareButtonContainer: {
+    flexDirection: 'row', // Align children in a row
+    justifyContent: 'space-evenly', // Space buttons evenly
+    alignItems: 'center', // Center buttons vertically
+    marginVertical: 10, // Add vertical margin
   },
   shareButtonText: {
     color: '#fff',

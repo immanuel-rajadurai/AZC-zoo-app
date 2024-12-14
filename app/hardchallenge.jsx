@@ -7,7 +7,7 @@ import labels from '../assets/labels.json';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import mysteryAnimalImage from '../assets/animalImages/mystery_animal.jpg';
+import questionmark from '../assets/icons/questionmark.png';
 import { Asset } from 'expo-asset';
 import { fetch } from '@tensorflow/tfjs-react-native';
 import animalPhoto from '../assets/animalImages/ostrich.jpg';
@@ -34,21 +34,21 @@ const Challenge = () => {
     const [incorrectAnimalModalVisible, setIncorrectAnimalModalVisible] = useState(false);
 
   const animalInfo = {
-    leopard: {
-      name: "Leopard",
-      species: "Panthera Leopardis",
-      diet: "Carnivore",
-      length: "1.6 - 2.6 meters",
-      height: "60 - 70 cm",
-      weightM: "31 - 65 kg",
-      weightF: "17 - 58 kg",
-      habitat: "Savannas, grasslands, and forests",
+    hippopotamus: {
+      name: "Hippopotamus",
+      species: "Hippopotamus amphibius",
+      diet: "Herbivore",
+      length: "3.3 - 5 meters",
+      height: "1.3 - 1.6 meters",
+      weightM: "1,500 - 1,800 kg",
+      weightF: "1,300 - 1,500 kg",
+      habitat: "Rivers, lakes, and swamps in sub-Saharan Africa",
       conservationStatus: "Vulnerable",
       funFacts: [
-        "Leopards are the only cats that live in groups.",
-        "A group, or pride, can be up to 30 lions, depending on how much food and water is available."
+        "Hippos spend up to 16 hours a day submerged in rivers and lakes to keep their massive bodies cool.",
+        "Despite being herbivores, hippos are highly aggressive and are considered one of the most dangerous animals in Africa."
       ],
-      image: "https://cdn.britannica.com/30/136130-050-3370E37A/Leopard.jpg"
+      image: "https://t4.ftcdn.net/jpg/02/17/87/23/360_F_217872301_aFTJRtKZLTi66D6PT33FXoj9P43rhR18.jpg"
     },
     tiger: {
       name: "Tiger",
@@ -117,12 +117,30 @@ const Challenge = () => {
   };
 
   const shareToFacebook = () => {
-      const facebookShareUrl =
-        'https://www.facebook.com/share_channel/#'; // Replace with your link
-      Linking.openURL(facebookShareUrl).catch((err) =>
-        console.error('Error opening URL:', err)
-      );
-    };
+    const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+      'https://www.londonzoo.org/'
+    )}`;
+    Linking.openURL(facebookShareUrl).catch((err) =>
+      console.error('Error opening URL:', err)
+    );
+  };
+
+  const openInstagram = () => {
+    const instagramUrl = 'https://www.instagram.com/'; // Replace with your Instagram URL
+    Linking.openURL(instagramUrl).catch((err) =>
+      console.error('Error opening Instagram link:', err)
+    );
+  };
+
+  const shareToTwitter = () => {
+    const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+      'I just completed an Animal challenge at London Zoo! Check out my acheivement!'
+    )}&url=${encodeURIComponent('https://www.londonzoo.org/')}`;
+    
+    Linking.openURL(twitterShareUrl).catch((err) =>
+      console.error('Error opening URL:', err)
+    );
+  };
   
   const ScannedAnimalsList = ({ targetAnimals, scannedAnimals }) => {
 
@@ -130,106 +148,164 @@ const Challenge = () => {
       <View style={styles.container}>
         <View style={styles.contentContainer}>
           <View>
-
-          
-          <TouchableOpacity style={styles.cameraButton} onPress={() => console.log('Pressed')}>
-                <Image source={icons.camera} style={{ width: 60, height: 60 }} />
-              </TouchableOpacity>
+            <View style={styles.subTitleContainer}>
             <Text style={styles.subtitle}>Animals to snap</Text>
+            </View>
+        
             <ScrollView style={styles.scrollView} persistentScrollbar={true}>  
               {targetAnimals.map((animal, index) => {
                 const info = animalInfo[animal.toLowerCase()];
                 return (
-                  <View key={index} style={styles.mysteryAnimalCard}>
-                    <View style={styles.imageContainer}>
-                      <Image source={mysteryAnimalImage} style={styles.animalImage} />
-                    </View>
-                    <Text style={styles.animalName}>Mystery Animal</Text>
-                  </View>
-                );
-              })}
-            </ScrollView>
-        </View>
-        <View style={styles.verticalLine} />
-        <View>
-          <Text style={styles.subtitle}>Snapped Animals</Text>
-          <ScrollView style={styles.scrollView} persistentScrollbar={true}>
-              {scannedAnimals.map((animal, index) => {
-                console.log("animal: " + animal);
-                
-                const info = animalInfo[animal.toLowerCase()];
-
-                console.log("animal info: " + info);
-
-                return (
                   <TouchableOpacity key={index} onPress={() => showModal({ predictedAnimal: animal, info: true })}>
-                    <View key={index} style={styles.animalCard}>
+                    <View style={styles.mysteryAnimalCard}>
                       <View style={styles.imageContainer}>
-                        <Image source={{ uri: info.image }} style={styles.animalImage} />
-                        <Icon name="check-circle" size={30} color="green" style={styles.tickIcon} />
+                      <Image source={questionmark} style={styles.animalImage} />
                       </View>
-                      <Text style={styles.animalName}>{info.name}</Text>
+                      <Text style={styles.animalName}>Mystery Animal</Text>
                     </View>
                   </TouchableOpacity>
                 );
               })}
             </ScrollView>
+        </View>
+        <View style={styles.verticalLine}/>
+        <View>
+        <View style={styles.subTitleContainer}>
+        <Text style={styles.subtitle}>Snapped Animals</Text>
+        </View>
+        <ScrollView style={styles.scrollView} persistentScrollbar={true}>
+            {scannedAnimals.map((animal, index) => {
+              const info = animalInfo[animal.toLowerCase()];
+              return (
+                <TouchableOpacity key={index} onPress={() => showModal({predictedAnimal:animal, info:true})}>
+                  <View style={styles.animalCard}>
+                    <View style={styles.imageContainer}>
+                      <Image source={{ uri: info.image }} style={styles.animalImage} />
+                      <Icon name="check-circle" size={30} color="green" style={styles.tickIcon} />
+                    </View>
+                    <Text style={styles.animalName}>{info.name}</Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
           </View>
         </View>
       </View>
     );
   };
 
+
   useEffect(() => {
 
-    const loadTargetAnimals = async () => {
-      try {
-        const storedAnimals = await AsyncStorage.getItem('targetAnimals');
-
-        if (storedAnimals) {
-          setTargetAnimals(JSON.parse(storedAnimals));
-        } else {
-          const initialTargetAnimals = ['lion', 'african_elephant', 'leopard', 'ostrich', 'tiger'];
-          setTargetAnimals(initialTargetAnimals);
-          await AsyncStorage.setItem('targetAnimals', JSON.stringify(initialTargetAnimals));
-        }
- 
-      } catch (error) {
-        console.error('Failed to load zoo animals', error);
-      }
+    const initialiseChallenge = async () => {
 
       try {
-        let scannedAnimals = await AsyncStorage.getItem('scannedAnimals');
-  
-        if (scannedAnimals) {
-          setScannedAnimals(JSON.parse(scannedAnimals));
-        } else {
-          let emptyScannedAnimals = [];
-          setScannedAnimals(emptyScannedAnimals);
-          await AsyncStorage.setItem('scannedAnimals', JSON.stringify(emptyScannedAnimals));
-        }
-        
-        //Experimental code to reset scanned animals
-        // let emptyScannedAnimals = [];
-        // setScannedAnimals(emptyScannedAnimals);
-        // await AsyncStorage.setItem('scannedAnimals', JSON.stringify(emptyScannedAnimals));
-        // await AsyncStorage.setItem('targetAnimals', JSON.stringify(['lion', 'african_elephant', 'leopard', 'ostrich', 'tiger']));
-        // await AsyncStorage.setItem('targetAnimals', JSON.stringify([]));
-        // setTargetAnimals([]);
 
-        if (targetAnimals.length === 0) {
-          console.log("Challenge completed");
-          setChallengeCompleted(true);
-          setChallengeCompletedModalVisible(true);
+        const challengeCompletedFlag = await AsyncStorage.getItem('challengeCompletedFlag')
+
+        console.log("Challenge completed flag: ", challengeCompletedFlag);
+
+        if (challengeCompletedFlag && (challengeCompletedFlag == 'true')) {
+          console.log("challenge completed")
+
+          if (challengeCompletedFlag == "true") {
+            console.log("Challenge completed from initial useEffect");
+            console.log("The target animals at this stage are: ", targetAnimals);
+            console.log("The scanned animals at this stage are: ", scannedAnimals);
+
+            let storedScannedAnimals2 = await AsyncStorage.getItem('scannedAnimals');
+
+            console.log("The stored scanned animals at this stage are: ", storedScannedAnimals2);
+            // setChallengeCompleted(true);
+            setChallengeCompletedModalVisible(true);
+          }
+
+        } else {
+
+          //challenge is still in progress
+          console.log("Challenge in progress")
+
+          AsyncStorage.setItem('challengeCompletedFlag', 'false');
+
+          const initialTargetAnimals = ['lion', 'african_elephant', 'hippopotamus', 'ostrich', 'tiger'];
+
+          try {
+            const storedTargetAnimals = await AsyncStorage.getItem('targetAnimals');
+            console.log("stored target animals: " + storedTargetAnimals);
+
+            if (storedTargetAnimals) {
+              console.log("setting target animals to initial configuration");
+              setTargetAnimals(JSON.parse(storedTargetAnimals));
+            } else {
+              setTargetAnimals(initialTargetAnimals);
+              await AsyncStorage.setItem('targetAnimals', JSON.stringify(initialTargetAnimals));
+            }
+          } catch (error) {
+            console.log("Error occured during targetAnimal retrieval", error);
+          }
         }
+
 
       } catch (error) {
         console.error('Failed to load zoo animals', error);
+      } finally {
+
+        try {
+          let storedScannedAnimals = await AsyncStorage.getItem('scannedAnimals');
+          
+          if (storedScannedAnimals) {
+            setScannedAnimals(JSON.parse(storedScannedAnimals));
+          } else {
+            console.log("Found no storedScannedAnimals therefore initialising new empty storedScannedAnimals");
+            let emptyScannedAnimals = [];
+            setScannedAnimals(emptyScannedAnimals);
+            await AsyncStorage.setItem('scannedAnimals', JSON.stringify(emptyScannedAnimals));
+          }
+          
+        } catch (error) {
+          console.error('Failed to load zoo animals', error);
+        }
+
+
+        try {
+          let storedScannedAnimals = await AsyncStorage.getItem('scannedAnimals');
+          
+          if (storedScannedAnimals) {
+            setScannedAnimals(JSON.parse(storedScannedAnimals));
+          } else {
+            console.log("Found no storedScannedAnimals therefore initialising new empty storedScannedAnimals");
+            let emptyScannedAnimals = [];
+            setScannedAnimals(emptyScannedAnimals);
+            await AsyncStorage.setItem('scannedAnimals', JSON.stringify(emptyScannedAnimals));
+          }
+          
+        } catch (error) {
+          console.log('Failed to initialiseChallenge', error);
+        }
+
+
+        // await AsyncStorage.setItem('targetAnimals', JSON.stringify(['tiger']));
+        // setTargetAnimals(['tiger']) 
+
+        // // let scannedAnimals = ['lion', 'african_elephant', 'leopard', 'ostrich'];
+        // let scannedAnimals = [];
+        // setScannedAnimals(scannedAnimals);
+        // await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
+
+        // await AsyncStorage.setItem('challengeCompletedFlag', 'false');
+        // setChallengeCompleted(false);
+        // setChallengeCompletedModalVisible(false); 
+
+        // await AsyncStorage.removeItem('targetAnimals') 
+        // await AsyncStorage.removeItem('scannedAnimals') 
+        // setScannedAnimals([])
+        // setTargetAnimals([])
       }
-  
+
     };
     
-    loadTargetAnimals();
+    initialiseChallenge();
   }, []);  
 
   useEffect(() => {
@@ -277,64 +353,6 @@ const Challenge = () => {
     return tensor;
   }
 
-  async function classifyImageTest() {
-    
-    if (model) {
-
-      console.log("loading image")
-      const asset = Asset.fromModule(animalPhoto);
-      await asset.downloadAsync();
-      const imageUri = asset.localUri || asset.uri;
-
-      const base64String = await FileSystem.readAsStringAsync(imageUri, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
-
-      const imageBuffer = Uint8Array.from(atob(base64String), c => c.charCodeAt(0));
-
-      const imageTensor = tf.tidy(() => {
-        const decodedImage = decodeImage(imageBuffer);
-        return decodedImage.resizeNearestNeighbor([224, 224]).toFloat().expandDims();
-      });
-
-      console.log("image loaded. classifying image")
-
-      const prediction = await model.predict(imageTensor).data();
-      const highestPredictionIndex = prediction.indexOf(Math.max(...prediction));
-      const predictedClassEntry = labels[highestPredictionIndex];
-      const predictedAnimal = predictedClassEntry ? predictedClassEntry[1] : 'Unknown'; // class name
-
-      console.log("Predicted Animal: " + predictedAnimal)
-
-      if (Object.values(targetAnimals).includes(predictedAnimal)) {
-
-        showModal({predictedAnimal:predictedAnimal}); 
-  
-        try {
-  
-          if (!scannedAnimals.includes(predictedAnimal)) {
-            scannedAnimals.push(predictedAnimal);
-            setScannedAnimals(scannedAnimals);
-  
-            let updatedTargetAnimals = targetAnimals.filter(animal => animal !== predictedAnimal);
-            setTargetAnimals(updatedTargetAnimals);
-            await AsyncStorage.setItem('targetAnimals', JSON.stringify(updatedTargetAnimals));
-          }
-  
-          await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
-  
-        } catch (error) {
-          console.error('Failed to load scanned animals', error);
-        }
-  
-      } else {
-        console.log(predictedAnimal + " is not in targetAnimals: " + targetAnimals)
-      }
-
-    }
-
-  }
-
   async function classifyImage(imageUri) {
     if (model) {
       try {
@@ -353,7 +371,6 @@ const Challenge = () => {
         
         console.log("classifying image...")
 
-        
         const prediction = await model.predict(imageTensor).data();
         const highestPredictionIndex = prediction.indexOf(Math.max(...prediction));
         const predictedClassEntry = labels[highestPredictionIndex];
@@ -386,16 +403,6 @@ const Challenge = () => {
     }
   }
 
-  const getAnimalInfo = (animal) => {
-    // Replace this with actual logic to fetch animal information
-    const animalData = {
-      leopard: "Cats are small, carnivorous mammals that are often kept as pets.",
-      tiger: "Dogs are domesticated mammals, not natural wild animals.",
-      // Add more animals as needed
-    };
-    return animalData[animal] || "Information not available.";
-  };
-
   const takePicture = async () => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
     if (permissionResult.granted === false) {
@@ -412,6 +419,8 @@ const Challenge = () => {
     //   aspect: [4, 3],
     //   quality: 1,
     // });
+    
+  
 
     //Launch the image library to picka photo
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -421,16 +430,21 @@ const Challenge = () => {
       quality: 1,
     });
 
-    console.log("image picker closed")
+    // if (result.canceled) {
+    //   console.log("image picker closed prematurely")
+    //   setClassifyingModalVisible(false);
+    // } 
+    // console.log("image picker closed")
+
+    setClassifyingModalVisible(true);
+
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     if (!result.canceled) {
 
-      setClassifyingModalVisible(true);
-
+      // setClassifyingModalVisible(true);
 
       setImage(result.assets[0].uri);
-
-      
 
       let predictedAnimalResult = await classifyImage(result.assets[0].uri);
 
@@ -443,8 +457,6 @@ const Challenge = () => {
       // let predictedAnimalResult = await classifyImage(imageUri);
       let predictedAnimal = predictedAnimalResult.toLowerCase()
 
-      
-      
       //check whether the animal is correct or not
       if (Object.values(targetAnimals).includes(predictedAnimal)) {
 
@@ -454,14 +466,31 @@ const Challenge = () => {
   
           if (!scannedAnimals.includes(predictedAnimal)) {
             scannedAnimals.push(predictedAnimal);
-            setScannedAnimals(scannedAnimals);
+            
   
             let updatedTargetAnimals = targetAnimals.filter(animal => animal !== predictedAnimal);
-
+            
+            setScannedAnimals(scannedAnimals);
             setTargetAnimals(updatedTargetAnimals);
+
+            if (updatedTargetAnimals.length === 0) {
+              console.log("Challenge completed");
+              setChallengeCompleted(true);
+              setChallengeCompletedModalVisible(true);
+              AsyncStorage.setItem('challengeCompletedFlag', 'true');
+
+              console.log("populating scannedAnimals with: " + scannedAnimals);
+              await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
+            } else {
+              setChallengeCompleted(false);
+              setChallengeCompletedModalVisible(false);
+            }
+
+
             await AsyncStorage.setItem('targetAnimals', JSON.stringify(updatedTargetAnimals));
           } 
-  
+          
+          console.log("populating scannedAnimals with: " + scannedAnimals);
           await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
   
         } catch (error) {
@@ -470,17 +499,8 @@ const Challenge = () => {
   
       } else {
           console.log("IN takePicture: " + predictedAnimal + " is not in targetAnimals: " + targetAnimals)
-
           setIncorrectAnimalModalVisible(true);
       }
-
-      if (targetAnimals.length === 0) {
-        console.log("Challenge completed");
-        setChallengeCompleted(true);
-
-        setChallengeCompletedModalVisible(true);
-      }
-
 
       // console.log("file location: ", result.assets[0].uri);
     }
@@ -530,7 +550,6 @@ const Challenge = () => {
   const closeIncorrectAnimalModal = () => {
     setIncorrectAnimalModalVisible(false);
   }
-
 
   return (
 
@@ -582,9 +601,18 @@ const Challenge = () => {
           <Text style={modalStyle.rewardText}>Come collect your prize at the kiosk inside the gift shop</Text>
           <Text></Text>
           <Text style={modalStyle.rewardText}>Proud of this acheivement? Share this with your friends!</Text>
-          <TouchableOpacity onPress={shareToFacebook} style={modalStyle.shareButton}>
-              <Text style={modalStyle.shareButtonText}>Share on Facebook</Text>
+
+          <View style={modalStyle.shareButtonContainer}>
+          <TouchableOpacity onPress={shareToTwitter} style={modalStyle.shareButton}>
+              <Image source={icons.twitterIcon} style={{ width: 60, height: 60 }} />
             </TouchableOpacity>
+            <TouchableOpacity onPress={shareToFacebook} style={modalStyle.shareButton}>
+              <Image source={icons.facebookIcon} style={{ width: 60, height: 60 }} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={openInstagram} style={modalStyle.shareButton}>
+              <Image source={icons.instagramIcon} style={{ width: 60, height: 60 }} />
+            </TouchableOpacity>
+          </View>
 
         </ScrollView>
         <TouchableOpacity onPress={closeChallengeCompletedModal} style={modalStyle.closeButton}>
@@ -602,93 +630,96 @@ const Challenge = () => {
     >
       <SafeAreaView style={modalStyle.modalContainer}>
         <View style={modalStyle.modalContent}>
-          <Text style={styles.title}>Animal not on list</Text>
+          <Text style={styles.title}>Animal not classified</Text>
           <Text style={styles.subtitle}>You have either not photographed an animal on the list or your picture isn't clear enough</Text>
+          <Text></Text>
+          <Text></Text>
+          <Text></Text>
+          <Text></Text>
           <TouchableOpacity onPress={closeIncorrectAnimalModal} style={modalStyle.closeButton}>
             <Text style={modalStyle.closeButtonText}>Close</Text>
-            </TouchableOpacity>
+           </TouchableOpacity>
         </View>
       </SafeAreaView>
     </Modal>
     
     <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={closeModal}
-        >
-        <SafeAreaView style={modalStyle.modalContainer}>
-          <View style={modalStyle.modalContent}>
-            <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
-              {selectedAnimal && (
-                <>
-                  <Text style={styles.title}>
-                    {isInfoModal ? 'Animal' : 'Well Done! Animal Unlocked'}
-                  </Text>
-                  <Image source={{ uri: selectedAnimal.image }} style={modalStyle.image} />
-                  <Text style={<Text style={styles.title}>Challenge Completed!</Text>}>{selectedAnimal.name}</Text>
-                  <Text style={modalStyle.species}>({selectedAnimal.species})</Text>
-                  <Text>
-                    <Text style={modalStyle.sectionTitle}>Diet: </Text>
-                    <Text style={modalStyle.sectionText}>{selectedAnimal.diet}</Text>
-                  </Text>
-                  <Text>
-                    <Text style={modalStyle.sectionTitle}>Length: </Text>
-                    <Text style={modalStyle.sectionText}>{selectedAnimal.length}</Text>
-                  </Text>
-                  <Text>
-                    <Text style={modalStyle.sectionTitle}>Height: </Text>
-                    <Text style={modalStyle.sectionText}>{selectedAnimal.height}</Text>
-                  </Text>
-                  <Text>
-                    <Text style={modalStyle.sectionTitle}>Weight:{"\n"}</Text>
-                    <Text style={modalStyle.sectionText}>
-                      {"\u2022"} Male: {selectedAnimal.weightM}
-                    </Text>
-                    {"\n"}
-                    <Text style={modalStyle.sectionText}>
-                      {"\u2022"} Female: {selectedAnimal.weightF}
-                    </Text>
-                  </Text>
-                  <Text>
-                    <Text style={modalStyle.sectionTitle}>Habitat: </Text>
-                    <Text style={modalStyle.sectionText}>{selectedAnimal.habitat}</Text>
-                  </Text>
-                  <Text>
-                    <Text style={modalStyle.sectionTitle}>Conservation Status: </Text>
-                    <Text style={modalStyle.sectionText}>{selectedAnimal.conservationStatus}</Text>
-                  </Text>
-                  <Text>
-                    <Text style={modalStyle.sectionTitle}>Fun Facts: </Text>
-                    <Text style={modalStyle.sectionText}>{selectedAnimal.funFacts}</Text>
-                  </Text>
-                </>
-              )}
-            </ScrollView>
-            <TouchableOpacity onPress={closeModal} style={modalStyle.closeButton}>
-              <Text style={modalStyle.closeButtonText}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </SafeAreaView>
-      </Modal>
+      animationType="slide"
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={closeModal}
+    >
+    <SafeAreaView style={modalStyle.modalContainer}>
+      <View style={modalStyle.modalContent}>
+        <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
+          {selectedAnimal && (
+            <>
+              <Text style={styles.title}>
+                {isInfoModal ? 'Animal' : 'Well Done! Animal Unlocked'}
+              </Text>
+              <Image source={{ uri: selectedAnimal.image }} style={modalStyle.image} />
+              <Text style={modalStyle.species}>({selectedAnimal.species})</Text> 
+              <Text>
+                <Text style={modalStyle.sectionTitle}>Diet: </Text>
+                <Text style={modalStyle.sectionText}>{selectedAnimal.diet}</Text>
+              </Text>
+              <Text>
+                <Text style={modalStyle.sectionTitle}>Length: </Text>
+                <Text style={modalStyle.sectionText}>{selectedAnimal.length}</Text>
+              </Text>
+              <Text>
+                <Text style={modalStyle.sectionTitle}>Height: </Text>
+                <Text style={modalStyle.sectionText}>{selectedAnimal.height}</Text>
+              </Text>
+              <Text>
+                <Text style={modalStyle.sectionTitle}>Weight:{"\n"}</Text>
+                <Text style={modalStyle.sectionText}>
+                  {"\u2022"} Male: {selectedAnimal.weightM}
+                </Text>
+                {"\n"}
+                <Text style={modalStyle.sectionText}>
+                  {"\u2022"} Female: {selectedAnimal.weightF}
+                </Text>
+              </Text>
+              <Text>
+                <Text style={modalStyle.sectionTitle}>Habitat: </Text>
+                <Text style={modalStyle.sectionText}>{selectedAnimal.habitat}</Text>
+              </Text>
+              <Text>
+                <Text style={modalStyle.sectionTitle}>Conservation Status: </Text>
+                <Text style={modalStyle.sectionText}>{selectedAnimal.conservationStatus}</Text>
+              </Text>
+              <Text>
+                <Text style={modalStyle.sectionTitle}>Fun Facts: </Text>
+                <Text style={modalStyle.sectionText}>{selectedAnimal.funFacts}</Text>
+              </Text>
+            </>
+          )}
+        </ScrollView>
+        <TouchableOpacity onPress={closeModal} style={modalStyle.closeButton}>
+          <Text style={modalStyle.closeButtonText}>Close</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  </Modal>
+
   </ImageBackground>
   </View>
   )
 }
 
 export default Challenge
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
     paddingBottom: 1,
   },
   verticalLine: {
     width: 2,
-    backgroundColor: 'darkgreen',
+    // backgroundColor: 'white',
     marginHorizontal: 10,
   },
   contentContainer: {
@@ -698,27 +729,41 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     backgroundColor: '#d4edda', // Light green background
-    borderRadius: 10, // Curved edges
-    padding: 16, // Padding inside the box
+    borderRadius: 20, // Curved edges
+    padding: 10, // Padding inside the box
     marginBottom: 20, // Space below the box
     alignItems: 'center', // Center the text horizontally
-    marginTop:2
+    marginTop:5,
+    zIndex:10
+  },
+  subTitleContainer: {
+    backgroundColor: '#d4edda', // Light green background
+    borderRadius: 30, // Curved edges
+    padding: 5, // Padding inside the box
+    marginBottom: 0, // Space below the box
+    alignItems: 'center', // Center the text horizontally
+    marginTop:70,
+    alignSelf: 'center',
+    paddingHorizontal: 10
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: 'darkgreen',
+    color: 'white',
     marginBottom: 2,
     marginTop:1,
     textAlign: 'center',
+    fontFamily: 'serif', // Suitable font
   },
   subtitle: {
-    fontSize: 20,
+    fontSize: 17,
     fontWeight: 'bold',
-    color: 'darkgreen',
+    color: 'black',
     marginTop: 10,
     marginBottom: 10,
     textAlign: 'center',
+    paddingRight: 17,
+    fontFamily: 'serif', // Suitable font
   },
   animalsLeft: {
     fontSize: 24, // Increased font size
@@ -732,23 +777,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  camera: {
-    flex: 1,
-    width: '100%',
-  },
   cameraBar: {
-    backgroundColor: '#e8f5e9',
-    padding: 10,
+    // backgroundColor: '#e8f5e9',
+    padding: 120,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100%',
     position: 'absolute',
     bottom: 0,
+    left: 0, // Ensure it starts from the left edge
+    right: 0, 
   },
   cameraButton: {
-    backgroundColor: '#068c08',
+    // backgroundColor: '#068c08', 
     borderRadius: 50,
-    padding: 15,
+    padding: 20,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -763,13 +805,15 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     width: '100%',
-    padding: 20,
-    paddingBottom: 20
+    padding: 10,
+    // paddingBottom: 20,
+    marginBottom: 170,
   },
   animalCard: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 15,
+    backgroundColor: '#5a8c66',
+    borderTopLeftRadius: 120,
+    borderTopRightRadius: 120,
+    padding: 0,
     marginVertical: 10,
     alignItems: 'center',
     shadowColor: '#000',
@@ -777,14 +821,15 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.8,
     shadowRadius: 4,
     elevation: 5,
   },
   mysteryAnimalCard: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 15,
+    backgroundColor: '#5a8c66',
+    borderTopLeftRadius: 120,
+    borderTopRightRadius: 120,
+    padding: 0,
     marginVertical: 10,
     alignItems: 'center',
     shadowColor: '#000',
@@ -792,7 +837,7 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.8,
     shadowRadius: 4,
     elevation: 5,
   },
@@ -800,9 +845,9 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   animalImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: 150,
+    height: 150,
+    borderRadius: 150,
     marginBottom: 10,
   },
   tickIcon: {
@@ -814,10 +859,10 @@ const styles = StyleSheet.create({
   animalName: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: 'white',
+    fontFamily: 'serif',
   },
-});
-
+}); 
 
 const modalStyle = StyleSheet.create({
   modalContainer: {
@@ -828,25 +873,25 @@ const modalStyle = StyleSheet.create({
   },
   modalContent: {
     width: '90%',
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 20,
-    alignItems: 'center',
+    backgroundColor: '#5a8c66',
+    borderRadius: 30,
+    padding: 0,
+    // alignItems: 'center',
     position: 'relative',
-    borderWidth: 2, 
     borderColor: 'green', 
   },
   closeButton: {
     position: 'absolute',
     bottom: 20,
     alignSelf: 'center',
-    backgroundColor: '#068c08',
+    backgroundColor: 'black',
     padding: 10,
     borderRadius: 5,
   },
   closeButtonText: {
     color: 'white',
     fontWeight: 'bold',
+    fontFamily: 'serif',
   },
   modalTitle: {
     fontSize: 24,
@@ -855,16 +900,15 @@ const modalStyle = StyleSheet.create({
     textAlign: 'center',
   },
   image: {
-    width: 150, 
+    width: '100%', 
     height: 150,
-    borderRadius: 10, 
-    borderWidth: 2, 
-    borderColor: 'green',
   },
   animalName: {
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
+    fontFamily: 'serif',
+    color: 'white',
   },
   species: {
     fontSize: 18,
@@ -872,14 +916,46 @@ const modalStyle = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 10,
+    fontFamily: 'serif',
+    color: 'white',
+    marginLeft: 10,
   },
   sectionTitle: {
     fontWeight: 'bold',
     marginBottom: 20,
+    fontFamily: 'serif',
+    color: 'white',
   },
   sectionText: {
     fontSize: 16,
     marginBottom: 20,
+    fontFamily: 'serif',
+    color: 'white',
+  },
+  rewardText: {
+    fontSize: 16,
+    marginBottom: 20,
+    fontFamily: 'serif',
+    color: 'white',
+    alignContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+  },
+  shareButton: {
+    // backgroundColor: '#3b5998', // Facebook blue color
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 20,
+    // alignItems: 'center',
+  },
+  shareButtonContainer: {
+    flexDirection: 'row', // Align children in a row
+    justifyContent: 'space-evenly', // Space buttons evenly
+    alignItems: 'center', // Center buttons vertically
+    marginVertical: 10, // Add vertical margin
+  },
+  shareButtonText: {
+    color: '#fff',
+    fontSize: 16,
   },
 });
-
