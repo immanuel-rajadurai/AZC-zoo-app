@@ -12,7 +12,6 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useEffect } from 'react';
 
 
-
 import { Amplify } from 'aws-amplify';
 import amplifyconfig from '../src/amplifyconfiguration.json';
 Amplify.configure(amplifyconfig);

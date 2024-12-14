@@ -77,7 +77,7 @@ const Home = () => {
   const zooRegion = {
     latitude: 51.535121,
     longitude: -0.154131,
-    latitudeDelta: 0.003,
+    latitudeDelta: 0.003, 
     longitudeDelta: 0.003,
   };
 
@@ -127,7 +127,7 @@ const Home = () => {
           {query: listEvents}
         );
 
-        console.log(eventsResult);
+        console.log(eventsResult.data.listEvents.items);
 
         setEvents(eventsResult.data.listEvents.items)
       } catch (error) {
