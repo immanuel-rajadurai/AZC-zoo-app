@@ -67,3 +67,7 @@ type OccurrenceCounter @model {
   name: String! @primaryKey
   count: Int!
 }
+
+type Mutation {
+  incrementOccurenceCounter(name: String!): OccurrenceCounter @function(name: "incrementOccurenceCounter")
+}
