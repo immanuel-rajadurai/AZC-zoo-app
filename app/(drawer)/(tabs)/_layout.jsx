@@ -26,7 +26,6 @@ const TabIcon = ({ icon, color, name, focused, style, textColor }) => {
 const TabsLayout = () => {
   return (
     <>
-   
       <Tabs
         screenOptions={{
         tabBarShowLabel: false,
@@ -107,18 +106,18 @@ const TabsLayout = () => {
           }}
         />
         <Tabs.Screen
-          name="challenge"
+          name="info"
           options={{
-            title:'Challenge',
+            title:'Info',
             headerShown: false,
             //header: CustomHeader,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.challengegreen}
-                // color={color}
+                icon={icons.infoIcon}
+                color={color}
                 textColor="#619837"
-                name="Challenge"
-                style={{ width: 45, height: 40}}
+                name="Info"
+                style={{ width: 35, height: 35}}
                 focused={focused}
               />
             )

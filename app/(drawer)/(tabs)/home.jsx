@@ -49,7 +49,6 @@ const Home = () => {
   const [events, setEvents] = useState([]);
   
   const toggleEvents = () => {
-    
   
     if (eventsVisible) {
       setShowEventsButtonVisible(true);
