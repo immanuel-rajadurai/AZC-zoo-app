@@ -10,7 +10,7 @@ exports.handler = async (event) => {
             TableName: process.env.TABLE_NAME,
 
             Key: {
-                id
+                name
             },
 
             UpdateExpression: 'SET #count = #count + :val',
