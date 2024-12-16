@@ -4,10 +4,10 @@ import { images } from '../../../constants'
 
 
 import { generateClient } from 'aws-amplify/api';
-import { listEvents } from '../../../src/graphql/queries';
+import { listEvents } from '../../../src/graphql/queries'; 
 
-const client = generateClient();
-
+const client = generateClient(); 
+ 
 const generalEventsList = [
   { id: 1, name: "Classic zoo tour", image: "https://i.ytimg.com/vi/qg8DI7yGxB4/maxresdefault.jpg" },
   { id: 2, name: "Photography", image: "https://www.nczoo.org/sites/default/files/2024-06/zoo-tours-1.jpg" },
@@ -66,9 +66,6 @@ const InformationPage = () => {
 
     fetchEvents();
   }, []);
-
-
-
 
 
   const renderHorizontalList = (data) => (
