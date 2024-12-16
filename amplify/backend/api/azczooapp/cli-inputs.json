@@ -4,10 +4,9 @@
     "apiName": "azczooapp",
     "serviceName": "AppSync",
     "defaultAuthType": {
-      "mode": "API_KEY",
-      "expirationTime": 365,
-      "apiKeyExpirationDate": "2025-09-01T23:30:41.514Z",
-      "keyDescription": ""
-    }
+      "mode": "AWS_IAM"
+    },
+    "conflictResolution": {},
+    "additionalAuthTypes": []
   }
 }
