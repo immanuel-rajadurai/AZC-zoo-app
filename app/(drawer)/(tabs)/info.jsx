@@ -78,9 +78,8 @@ const InformationPage = () => {
     />
   );
 
-
-  
   return (
+    <View style={styles.container}>
     <ScrollView style={styles.container}>
       <TitleSection title="General Events" color="#3e7a36" />
       <View style={styles.horizontalListContainer}>
@@ -95,6 +94,8 @@ const InformationPage = () => {
         {renderHorizontalList(tigerEventsList)}
       </View>
     </ScrollView>
+    <View style={styles.halfCircle} />
+    </View>
   );
 };
 
@@ -118,6 +119,19 @@ const styles = StyleSheet.create({
   },
   horizontalListContainer: {
     marginBottom: 20,
+  },
+  halfCircle: {
+    position: 'absolute',
+    bottom: -40,  // Ensures it overlaps other components slightly
+    left: '53%',  // Start at the center of the screen
+    marginLeft: -100, // Move back by half the width to center it
+    width: 200,  // Width of the half-circle
+    height: 80,  // Height of the half-circle
+    backgroundColor: '#234e35',  // Dark green color
+    borderTopLeftRadius: 80,  // Creates a rounded top left corner
+    borderTopRightRadius: 80,  // Creates a rounded top right corner
+    zIndex: 2,  // Ensure it stays above other components
+    alignItems: 'center',
   },
   itemContainer: {
     alignItems: 'center',
