@@ -41,6 +41,8 @@ import listicon from "../assets/icons/listicon.png";
 import facebookIcon from "../assets/icons/facebook_icon.png";
 import instagramIcon from "../assets/icons/instagramlogo.png";
 import twitterIcon from "../assets/icons/twitterlogo.png";
+import infoIcon from "../assets/icons/info_icon.png";
+
 
 
 
@@ -87,5 +89,6 @@ export default {
   listicon,
   facebookIcon,
   instagramIcon,
-  twitterIcon
+  twitterIcon,
+  infoIcon
 };
