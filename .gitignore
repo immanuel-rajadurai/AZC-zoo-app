@@ -652,3 +652,4 @@ yarn-error.*
 *.tsbuildinfo
 
 # @end expo-cli
+.vscode/settings.json

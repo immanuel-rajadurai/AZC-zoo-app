@@ -331,3 +331,42 @@ export const onDeleteEventTag = /* GraphQL */ `
     }
   }
 `;
+export const onCreateOccurrenceCounter = /* GraphQL */ `
+  subscription OnCreateOccurrenceCounter(
+    $filter: ModelSubscriptionOccurrenceCounterFilterInput
+  ) {
+    onCreateOccurrenceCounter(filter: $filter) {
+      name
+      count
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateOccurrenceCounter = /* GraphQL */ `
+  subscription OnUpdateOccurrenceCounter(
+    $filter: ModelSubscriptionOccurrenceCounterFilterInput
+  ) {
+    onUpdateOccurrenceCounter(filter: $filter) {
+      name
+      count
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteOccurrenceCounter = /* GraphQL */ `
+  subscription OnDeleteOccurrenceCounter(
+    $filter: ModelSubscriptionOccurrenceCounterFilterInput
+  ) {
+    onDeleteOccurrenceCounter(filter: $filter) {
+      name
+      count
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
