@@ -661,11 +661,12 @@ const Challenge = () => {
         <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
           {selectedAnimal && (
             <>
-              <Text style={styles.title}>
-                {isInfoModal ? 'Animal' : 'Well Done! Animal Unlocked'}
-              </Text>
+              
               <Image source={{ uri: selectedAnimal.image }} style={modalStyle.image} />
               <Text style={modalStyle.species}>({selectedAnimal.species})</Text> 
+              <Text style={styles.title}>
+                {isInfoModal ? '' : 'Well Done! Animal Unlocked'}
+              </Text>
               <Text>
                 <Text style={modalStyle.sectionTitle}>Diet: </Text>
                 <Text style={modalStyle.sectionText}>{selectedAnimal.diet}</Text>
@@ -732,7 +733,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingBottom: 110
+    paddingBottom: 19
   },
   titleContainer: {
     backgroundColor: '#d4edda', // Light green background
@@ -769,7 +770,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     textAlign: 'center',
-    paddingRight: 17,
+    paddingRight: 20,
+    paddingLeft: 23,
     fontFamily: 'serif', // Suitable font
   },
   animalsLeft: {
@@ -786,7 +788,7 @@ const styles = StyleSheet.create({
   },
   cameraBar: {
     // backgroundColor: '#e8f5e9',
-    padding: 120,
+    padding: 30,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
@@ -880,7 +882,7 @@ const modalStyle = StyleSheet.create({
   modalContent: {
     width: '90%',
     backgroundColor: '#5a8c66',
-    borderRadius: 30,
+    // borderRadius: 30,
     padding: 0,
     // alignItems: 'center',
     position: 'relative',

@@ -729,7 +729,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingBottom: 110
+    paddingBottom: 19
   },
   titleContainer: {
     backgroundColor: '#d4edda', // Light green background
@@ -766,7 +766,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     textAlign: 'center',
-    paddingRight: 17,
+    paddingRight: 20,
+    paddingLeft: 23,
     fontFamily: 'serif', // Suitable font
   },
   animalsLeft: {
@@ -783,7 +784,7 @@ const styles = StyleSheet.create({
   },
   cameraBar: {
     // backgroundColor: '#e8f5e9',
-    padding: 120,
+    padding: 30,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',

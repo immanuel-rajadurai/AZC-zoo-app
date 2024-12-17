@@ -133,8 +133,6 @@ const Home = () => {
         console.log('error on fetching events', error)
       }
     }
-
-
     setRegion({
       latitude: 51.535121,
       longitude: -0.154131,
