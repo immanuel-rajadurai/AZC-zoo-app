@@ -211,7 +211,11 @@ const Home = () => {
       >
       
         <Overlay  
-          image={require("../../../assets/mapoverlays/zoomap3.png")}
+          image={
+            isOptionEnabled(2) 
+            ? require("../../../assets/mapoverlays/zoomap4.png")// Visual impairment map
+            : require("../../../assets/mapoverlays/zoomap3.png")// Standard map
+          }
           bounds={imageBounds}
           bearing={0}
           style={styles.overlay}
@@ -233,46 +237,14 @@ const Home = () => {
         ))}
 
         {options.map((option) =>
-          option.isEnabled ? (
+          option.isEnabled && option.id !== 2 ? (
             <Marker
               key={`marker-${option.id}`}
-              coordinate={
-                option.id === 1
-
-                  ? {latitude: 51.53520, longitude: -0.1553 }
-                  : { latitude: 51.53480, longitude: -0.1535 }
-
-                }
+              coordinate={{ latitude: 51.53480, longitude: -0.1535 }}
             >
               <Image
                 source={
-                  option.id === 1
-                    ? require('../../../assets/icons/accessibility.png')
-                    : require('../../../assets/icons/accessibility.png')
-                }
-                style={{ width: 30, height: 30 }}
-                resizeMode="contain"
-              />
-            </Marker>
-          ) : null
-        )}
-
-        {options.map((option) =>
-          option.isEnabled ? (
-            <Marker
-              key={`marker-${option.id}`}
-              coordinate={
-                option.id === 2
-                  ? { latitude: 51.53480, longitude: -0.1535 }
-                  : {latitude: 51.53520, longitude: -0.1553 }
-
-                } 
-            >
-              <Image
-                source={
-                  option.id === 2
-                    ? require('../../../assets/icons/accessibility.png')
-                    : require('../../../assets/icons/accessibility.png')
+                  require('../../../assets/icons/accessibility.png')
                 }
                 style={{ width: 30, height: 30 }}
                 resizeMode="contain"
