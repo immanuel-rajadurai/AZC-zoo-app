@@ -81,15 +81,15 @@ const InformationPage = () => {
   return (
     <View style={styles.container}>
     <ScrollView style={styles.container}>
-      <TitleSection title="General Events" color="#3e7a36" />
+      <TitleSection title="Experiences" color="#3e7a36" />
       <View style={styles.horizontalListContainer}>
         {renderHorizontalList(events)}
       </View>
-      <TitleSection title="Bird Shows" color="#36527a" />
+      <TitleSection title="Bird Shows" color="#3e7a36" />
       <View style={styles.horizontalListContainer}>
         {renderHorizontalList(birdEventsList)}
       </View>
-      <TitleSection title="Tiger Events" color="#9c3b3b" />
+      <TitleSection title="Tiger Events" color="#3e7a36" />
       <View style={styles.horizontalListContainer}>
         {renderHorizontalList(tigerEventsList)}
       </View>
@@ -103,22 +103,25 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: '#e8f5e9',
+    // backgroundColor: '#e8f5e9',
   },
   titleContainer: {
-    padding: 15,
-    borderRadius: 10,
+    padding: 5,
+    borderRadius: 15,
     marginBottom: 20,
+    marginTop: 20,
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
     color: '#fff', // White text color
     textAlign: 'left',
-    fontFamily: 'sans-serif-medium', // Suitable font
+    fontFamily: 'serif',
+    marginLeft: 10,
   },
   horizontalListContainer: {
     marginBottom: 20,
+    marginTop: 10,
   },
   halfCircle: {
     position: 'absolute',
@@ -136,27 +139,29 @@ const styles = StyleSheet.create({
   itemContainer: {
     alignItems: 'center',
     marginRight: 15,
+    marginRight: 15,
+    marginBottom: 10,
     backgroundColor: '#f0f0f0',
-    borderRadius: 10,
+    borderRadius: 2,
     padding: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 }, // Increase the height offset
-    shadowOpacity: 0.5, // Increase the opacity
-    shadowRadius: 6, // Increase the radius
-    elevation: 10, // Increase the elevation for Android
+    // shadowColor: '#000',
+    // shadowOffset: { width: 0, height: 4 }, // Increase the height offset
+    // shadowOpacity: 0.5, // Increase the opacity
+    // shadowRadius: 6, // Increase the radius
+    // elevation: 10, // Increase the elevation for Android
   },
   thumbnail: {
-    width: 180,
-    height: 100,
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: '#2e7d32', // Green border
+    width: 200,
+    height: 130,
+    // borderRadius: 10,
+    // borderWidth: 2,
+    // borderColor: '#2e7d32', // Green border
   },
   itemName: {
     marginTop: 10,
     fontSize: 16,
-    color: '#2e7d32', // Green color
-    fontFamily: 'sans-serif', // Suitable font
+    // color: '#2e7d32', // Green color
+    fontFamily: 'serif', // Suitable font
     textAlign: 'center',
   },
 });
