@@ -192,27 +192,23 @@ const Home = () => {
         showsUserLocation={true}
         followsUserLocation={true}
         customMapStyle={mapstyle1}
-        onRegionChangeComplete={(region) => setRegion(region)}
-        // onRegionChangeComplete={(newRegion) => {
-        //   // Set the region back to the specified bounds if the user tries to pan outside
-        //   if (
-        //     newRegion.latitude < 51.534 || // Lat min bound
-        //     newRegion.latitude > 51.536 || // Lat max bound
-        //     newRegion.longitude < -0.156 || // Lon min bound
-        //     newRegion.longitude > -0.152 // Lon max bound
-        //   ) {
-        //     mapRef.current.animateToRegion(region, 200); // Reset to original region
-        //   }
-        // }}
+        // onRegionChangeComplete={(region) => setRegion(region)}
+        onRegionChangeComplete={(newRegion) => {
+          // Set the region back to the specified bounds if the user tries to pan outside
+          if (
+            newRegion.latitude < 51.534 || // Lat min bound
+            newRegion.latitude > 51.536 || // Lat max bound
+            newRegion.longitude < -0.156 || // Lon min bound
+            newRegion.longitude > -0.152 // Lon max bound
+          ) {
+            mapRef.current.animateToRegion(region, 200); // Reset to original region
+          }
+        }}
         provider={MapView.PROVIDER_GOOGLE}
       >
       
         <Overlay  
-          image={
-            isOptionEnabled(2) 
-            ? require("../../../assets/mapoverlays/zoomap4.png")// Visual impairment map
-            : require("../../../assets/mapoverlays/zoomap3.png")// Standard map
-          }
+          image={require("../../../assets/mapoverlays/zoomap3.png")}
           bounds={imageBounds}
           bearing={0}
           style={styles.overlay}
@@ -234,14 +230,46 @@ const Home = () => {
         ))}
 
         {options.map((option) =>
-          option.isEnabled && option.id !== 2 ? (
+          option.isEnabled ? (
             <Marker
               key={`marker-${option.id}`}
-              coordinate={{ latitude: 51.53480, longitude: -0.1535 }}
+              coordinate={
+                option.id === 1
+
+                  ? {latitude: 51.53520, longitude: -0.1553 }
+                  : { latitude: 51.53480, longitude: -0.1535 }
+
+                }
             >
               <Image
                 source={
-                  require('../../../assets/icons/accessibility.png')
+                  option.id === 1
+                    ? require('../../../assets/icons/accessibility.png')
+                    : require('../../../assets/icons/accessibility.png')
+                }
+                style={{ width: 30, height: 30 }}
+                resizeMode="contain"
+              />
+            </Marker>
+          ) : null
+        )}
+
+        {options.map((option) =>
+          option.isEnabled ? (
+            <Marker
+              key={`marker-${option.id}`}
+              coordinate={
+                option.id === 2
+                  ? { latitude: 51.53480, longitude: -0.1535 }
+                  : {latitude: 51.53520, longitude: -0.1553 }
+
+                } 
+            >
+              <Image
+                source={
+                  option.id === 2
+                    ? require('../../../assets/icons/accessibility.png')
+                    : require('../../../assets/icons/accessibility.png')
                 }
                 style={{ width: 30, height: 30 }}
                 resizeMode="contain"
@@ -465,7 +493,6 @@ const styles = StyleSheet.create({
     height: 32,
     alignItems: "center", 
     zIndex: 2,
-    marginTop:20
   },
 });
 
@@ -582,7 +609,6 @@ const modalStyles = StyleSheet.create({
     borderRadius: 12,
     justifyContent: 'center',
     paddingHorizontal: 2,
-    marginTop: 20
   },
   toggleButtonOn: {
     backgroundColor: '#00533A', // background for ON
