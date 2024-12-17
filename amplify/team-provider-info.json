@@ -16,7 +16,11 @@
         "azczooapp": {}
       },
       "function": {
-        "updateOccurenceCounter": {}
+        "updateOccurenceCounter": {},
+        "incrementOccurenceCounterNew": {
+          "deploymentBucketName": "amplify-azczooapp-dev-37c55-deployment",
+          "s3Key": "amplify-builds/incrementOccurenceCounterNew-336e4250307273773978-build.zip"
+        }
       }
     }
   }

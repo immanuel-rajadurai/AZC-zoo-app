@@ -6,7 +6,12 @@
         "authConfig": {
           "additionalAuthenticationProviders": [],
           "defaultAuthentication": {
-            "authenticationType": "AWS_IAM"
+            "apiKeyConfig": {
+              "apiKeyExpirationDate": "2025-12-16T21:14:24.721Z",
+              "apiKeyExpirationDays": 365,
+              "description": ""
+            },
+            "authenticationType": "API_KEY"
           }
         }
       },
@@ -15,10 +20,34 @@
     }
   },
   "function": {
+    "incrementOccurenceCounterNew": {
+      "build": true,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "updateOccurenceCounter": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_incrementOccurenceCounterNew_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "incrementOccurenceCounterNew"
+        }
+      ]
+    },
+    "AMPLIFY_function_incrementOccurenceCounterNew_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "incrementOccurenceCounterNew"
+        }
+      ]
     }
   }
 }
