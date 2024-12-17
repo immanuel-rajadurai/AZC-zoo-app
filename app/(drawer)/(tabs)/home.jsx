@@ -195,18 +195,18 @@ const Home = () => {
         showsUserLocation={true}
         followsUserLocation={true}
         customMapStyle={mapstyle1}
-        // onRegionChangeComplete={(region) => setRegion(region)}
-        onRegionChangeComplete={(newRegion) => {
-          // Set the region back to the specified bounds if the user tries to pan outside
-          if (
-            newRegion.latitude < 51.534 || // Lat min bound
-            newRegion.latitude > 51.536 || // Lat max bound
-            newRegion.longitude < -0.156 || // Lon min bound
-            newRegion.longitude > -0.152 // Lon max bound
-          ) {
-            mapRef.current.animateToRegion(region, 200); // Reset to original region
-          }
-        }}
+        onRegionChangeComplete={(region) => setRegion(region)}
+        // onRegionChangeComplete={(newRegion) => {
+        //   // Set the region back to the specified bounds if the user tries to pan outside
+        //   if (
+        //     newRegion.latitude < 51.534 || // Lat min bound
+        //     newRegion.latitude > 51.536 || // Lat max bound
+        //     newRegion.longitude < -0.156 || // Lon min bound
+        //     newRegion.longitude > -0.152 // Lon max bound
+        //   ) {
+        //     mapRef.current.animateToRegion(region, 200); // Reset to original region
+        //   }
+        // }}
         provider={MapView.PROVIDER_GOOGLE}
       >
       
@@ -468,6 +468,7 @@ const styles = StyleSheet.create({
     height: 32,
     alignItems: "center", 
     zIndex: 2,
+    marginTop:20
   },
 });
 
@@ -584,6 +585,7 @@ const modalStyles = StyleSheet.create({
     borderRadius: 12,
     justifyContent: 'center',
     paddingHorizontal: 2,
+    marginTop: 20
   },
   toggleButtonOn: {
     backgroundColor: '#00533A', // background for ON
