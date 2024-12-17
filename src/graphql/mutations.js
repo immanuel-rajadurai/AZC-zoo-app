@@ -1,6 +1,17 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const incrementOccurenceCounter = /* GraphQL */ `
+  mutation IncrementOccurenceCounter($name: String!) {
+    incrementOccurenceCounter(name: $name) {
+      name
+      count
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createUser = /* GraphQL */ `
   mutation CreateUser(
     $input: CreateUserInput!
@@ -385,6 +396,48 @@ export const deleteEventTag = /* GraphQL */ `
       id
       eventID
       tagName
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createOccurrenceCounter = /* GraphQL */ `
+  mutation CreateOccurrenceCounter(
+    $input: CreateOccurrenceCounterInput!
+    $condition: ModelOccurrenceCounterConditionInput
+  ) {
+    createOccurrenceCounter(input: $input, condition: $condition) {
+      name
+      count
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateOccurrenceCounter = /* GraphQL */ `
+  mutation UpdateOccurrenceCounter(
+    $input: UpdateOccurrenceCounterInput!
+    $condition: ModelOccurrenceCounterConditionInput
+  ) {
+    updateOccurrenceCounter(input: $input, condition: $condition) {
+      name
+      count
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteOccurrenceCounter = /* GraphQL */ `
+  mutation DeleteOccurrenceCounter(
+    $input: DeleteOccurrenceCounterInput!
+    $condition: ModelOccurrenceCounterConditionInput
+  ) {
+    deleteOccurrenceCounter(input: $input, condition: $condition) {
+      name
+      count
       createdAt
       updatedAt
       __typename
