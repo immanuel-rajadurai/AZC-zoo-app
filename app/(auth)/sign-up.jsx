@@ -8,9 +8,58 @@ import CustomButtonBlack from '../../components/CustomButtonBlack';
 import { router } from 'expo-router';
 import CustomButton from '../../components/CustomButton'
 
+import { ListUsers, CreateUser } from "../../../src/graphql/queries";
 const SignUp = () => {
     const [agreeTerms, setAgreeTerms] = useState(false);
     const [stayUpdated, setStayUpdated] = useState(false);
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const usersResult = await client.graphql(
+                    { query: ListUsers }
+                );
+
+                console.log(usersResult);
+                console.log(usersResult.data.ListUsers.items);
+
+                setUsers(usersResult.data.ListUsers.items);
+            } catch (error) {
+                console.log('error on fetching users', error);
+            }
+        };
+
+        fetchUsers();
+    }, []);
+
+
+    const addTestUser = async () => {
+        try {
+            const testUser = {
+                input: {
+                    firstName: "Test",
+                    lastName: "User",
+                    username: "testuser",
+                    email: "testuser@example.com"
+                }
+            };
+
+            const result = await client.graphql(
+                { query: CreateUser, variables: testUser }
+            );
+
+            console.log('User created:', result.data.createUser);
+        } catch (error) {
+            console.log('Error creating user:', error);
+        }
+    };
+
+    useEffect(() => {
+        addTestUser();
+    }, []);
+
+    
+
 
     //   const [form, setForm] = useState({
 //     firstName: '',
