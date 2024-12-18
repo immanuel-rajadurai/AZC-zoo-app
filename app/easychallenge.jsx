@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { StyleSheet, Text, View, Button, Image, ActivityIndicator, TouchableOpacity, ScrollView, SafeAreaView, Modal, ImageBackground } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, ActivityIndicator, TouchableOpacity, ScrollView, SafeAreaView, Modal, ImageBackground, Linking, Alert } from 'react-native';
 import * as tf from '@tensorflow/tfjs';
 import * as jpeg from 'jpeg-js';
 import * as FileSystem from 'expo-file-system';
@@ -18,6 +18,8 @@ const Challenge = () => {
 
   const [model, setModel] = useState(null);
   const [modelLoaded, setModelLoaded] = useState(true);
+  const [challengeCompleted, setChallengeCompleted] = useState(false);
+  const [challengeCompletedModalVisible, setChallengeCompletedModalVisible] = useState(false);
   const [predictions, setPredictions] = useState(null);
   const [hasPermission, setHasPermission] = useState(null);
   const [image, setImage] = useState(null);
@@ -25,27 +27,28 @@ const Challenge = () => {
   const [scannedAnimals, setScannedAnimals] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
+  const [incorrectClassifiedObject, setIncorrectClassifiedObject] = useState(null);
   const [isInfoModal, setIsInfoModal] = useState(null);
   const [predictedAnimal, setPredictedAnimal] = useState(null);
   const [classifyingModalVisible, setClassifyingModalVisible] = useState(false);
   const [incorrectAnimalModalVisible, setIncorrectAnimalModalVisible] = useState(false);
 
   const animalInfo = {
-    leopard: {
-      name: "Leopard",
-      species: "Panthera Leopardis",
-      diet: "Carnivore",
-      length: "1.6 - 2.6 meters",
-      height: "60 - 70 cm",
-      weightM: "31 - 65 kg",
-      weightF: "17 - 58 kg",
-      habitat: "Savannas, grasslands, and forests",
+    hippopotamus: {
+      name: "Hippopotamus",
+      species: "Hippopotamus amphibius",
+      diet: "Herbivore",
+      length: "3.3 - 5 meters",
+      height: "1.3 - 1.6 meters",
+      weightM: "1,500 - 1,800 kg",
+      weightF: "1,300 - 1,500 kg",
+      habitat: "Rivers, lakes, and swamps in sub-Saharan Africa",
       conservationStatus: "Vulnerable",
       funFacts: [
-        "Leopards are the only cats that live in groups.",
-        "A group, or pride, can be up to 30 lions, depending on how much food and water is available."
+        "Hippos spend up to 16 hours a day submerged in rivers and lakes to keep their massive bodies cool.",
+        "Despite being herbivores, hippos are highly aggressive and are considered one of the most dangerous animals in Africa."
       ],
-      image: "https://cdn.britannica.com/30/136130-050-3370E37A/Leopard.jpg"
+      image: "https://t4.ftcdn.net/jpg/02/17/87/23/360_F_217872301_aFTJRtKZLTi66D6PT33FXoj9P43rhR18.jpg"
     },
     tiger: {
       name: "Tiger",
@@ -112,6 +115,33 @@ const Challenge = () => {
       image: "https://upload.wikimedia.org/wikipedia/commons/7/73/Lion_waiting_in_Namibia.jpg"
     }
   };
+
+  const shareToFacebook = () => {
+    const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+      'https://www.londonzoo.org/'
+    )}`;
+    Linking.openURL(facebookShareUrl).catch((err) =>
+      console.error('Error opening URL:', err)
+    );
+  };
+
+  const openInstagram = () => {
+    const instagramUrl = 'https://www.instagram.com/'; // Replace with your Instagram URL
+    Linking.openURL(instagramUrl).catch((err) =>
+      console.error('Error opening Instagram link:', err)
+    );
+  };
+
+  const shareToTwitter = () => {
+    const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+      'I just completed an Animal challenge at London Zoo! Check out my acheivement!'
+    )}&url=${encodeURIComponent('https://www.londonzoo.org/')}`;
+    
+    Linking.openURL(twitterShareUrl).catch((err) =>
+      console.error('Error opening URL:', err)
+    );
+  };
+  
   
   const ScannedAnimalsList = ({ targetAnimals, scannedAnimals }) => {
 
@@ -127,7 +157,6 @@ const Challenge = () => {
               {targetAnimals.map((animal, index) => {
                 const info = animalInfo[animal.toLowerCase()];
                 return (
-                  // <>
                   <TouchableOpacity key={index} onPress={() => showModal({ predictedAnimal: animal, info: true })}>
                     <View style={styles.animalCard}>
                       <View style={styles.imageContainer}>
@@ -136,8 +165,6 @@ const Challenge = () => {
                       <Text style={styles.animalName}>{info.name}</Text>
                     </View>
                   </TouchableOpacity>
-                  // </>
-                  
                 );
               })}
             </ScrollView>
@@ -149,12 +176,7 @@ const Challenge = () => {
           </View>
           <ScrollView style={styles.scrollView} persistentScrollbar={true}>
               {scannedAnimals.map((animal, index) => {
-                console.log("animal: " + animal);
-                
                 const info = animalInfo[animal.toLowerCase()];
-
-                console.log("animal info: " + info);
-
                 return (
                   <TouchableOpacity key={index} onPress={() => showModal({predictedAnimal:animal, info:true})}>
                     <View style={styles.animalCard}>
@@ -176,48 +198,116 @@ const Challenge = () => {
 
   useEffect(() => {
 
-    const loadTargetAnimals = async () => {
-      try {
-        const storedAnimals = await AsyncStorage.getItem('targetAnimals');
-
-        if (storedAnimals) {
-          setTargetAnimals(JSON.parse(storedAnimals));
-        } else {
-          const initialTargetAnimals = ['lion', 'african_elephant', 'leopard', 'ostrich', 'tiger'];
-          setTargetAnimals(initialTargetAnimals);
-          await AsyncStorage.setItem('targetAnimals', JSON.stringify(initialTargetAnimals));
-        }
- 
-      } catch (error) {
-        console.error('Failed to load zoo animals', error);
-      }
+    const initialiseChallenge = async () => {
 
       try {
-        let scannedAnimals = await AsyncStorage.getItem('scannedAnimals');
-  
-        if (scannedAnimals) {
-          setScannedAnimals(JSON.parse(scannedAnimals));
-        } else {
-          let emptyScannedAnimals = [];
-          setScannedAnimals(emptyScannedAnimals);
-          await AsyncStorage.setItem('scannedAnimals', JSON.stringify(emptyScannedAnimals));
-        }
-        
-        //Experimental code to reset scanned animals
-        // let emptyScannedAnimals = [];
-        // setScannedAnimals(emptyScannedAnimals);
-        // await AsyncStorage.setItem('scannedAnimals', JSON.stringify(emptyScannedAnimals));
 
-        // await AsyncStorage.setItem('targetAnimals', JSON.stringify(['lion', 'african_elephant', 'leopard', 'ostrich', 'tiger']));
+        const challengeCompletedFlag = await AsyncStorage.getItem('challengeCompletedFlag')
+
+        console.log("Challenge completed flag: ", challengeCompletedFlag);
+
+        if (challengeCompletedFlag && (challengeCompletedFlag == 'true')) {
+          console.log("challenge completed")
+
+          if (challengeCompletedFlag == "true") {
+            console.log("Challenge completed from initial useEffect");
+            console.log("The target animals at this stage are: ", targetAnimals);
+            console.log("The scanned animals at this stage are: ", scannedAnimals);
+
+            let storedScannedAnimals2 = await AsyncStorage.getItem('scannedAnimals');
+
+            console.log("The stored scanned animals at this stage are: ", storedScannedAnimals2);
+            // setChallengeCompleted(true);
+            setChallengeCompletedModalVisible(true);
+          }
+
+        } else {
+
+          //challenge is still in progress
+          console.log("Challenge in progress")
+
+          AsyncStorage.setItem('challengeCompletedFlag', 'false');
+
+          const initialTargetAnimals = ['lion', 'african_elephant', 'hippopotamus', 'ostrich', 'tiger'];
+
+          try {
+            const storedTargetAnimals = await AsyncStorage.getItem('targetAnimals');
+            console.log("stored target animals: " + storedTargetAnimals);
+
+            if (storedTargetAnimals) {
+              console.log("setting target animals to initial configuration");
+              setTargetAnimals(JSON.parse(storedTargetAnimals));
+            } else {
+              setTargetAnimals(initialTargetAnimals);
+              await AsyncStorage.setItem('targetAnimals', JSON.stringify(initialTargetAnimals));
+            }
+          } catch (error) {
+            console.log("Error occured during targetAnimal retrieval", error);
+          }
+        }
+
 
       } catch (error) {
         console.error('Failed to load zoo animals', error);
+      } finally {
+
+        try {
+          let storedScannedAnimals = await AsyncStorage.getItem('scannedAnimals');
+          
+          if (storedScannedAnimals) {
+            setScannedAnimals(JSON.parse(storedScannedAnimals));
+          } else {
+            console.log("Found no storedScannedAnimals therefore initialising new empty storedScannedAnimals");
+            let emptyScannedAnimals = [];
+            setScannedAnimals(emptyScannedAnimals);
+            await AsyncStorage.setItem('scannedAnimals', JSON.stringify(emptyScannedAnimals));
+          }
+          
+        } catch (error) {
+          console.error('Failed to load zoo animals', error);
+        }
+
+
+        try {
+          let storedScannedAnimals = await AsyncStorage.getItem('scannedAnimals');
+          
+          if (storedScannedAnimals) {
+            setScannedAnimals(JSON.parse(storedScannedAnimals));
+          } else {
+            console.log("Found no storedScannedAnimals therefore initialising new empty storedScannedAnimals");
+            let emptyScannedAnimals = [];
+            setScannedAnimals(emptyScannedAnimals);
+            await AsyncStorage.setItem('scannedAnimals', JSON.stringify(emptyScannedAnimals));
+          }
+          
+        } catch (error) {
+          console.log('Failed to initialiseChallenge', error);
+        }
+
+
+        // await AsyncStorage.setItem('targetAnimals', JSON.stringify(['tiger']));
+        // setTargetAnimals(['tiger']) 
+
+        // // let scannedAnimals = ['lion', 'african_elephant', 'leopard', 'ostrich'];
+        // let scannedAnimals = [];
+        // setScannedAnimals(scannedAnimals);
+        // await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
+
+        // await AsyncStorage.setItem('challengeCompletedFlag', 'false');
+        // setChallengeCompleted(false);
+        // setChallengeCompletedModalVisible(false); 
+
+        // await AsyncStorage.removeItem('targetAnimals') 
+        // await AsyncStorage.removeItem('scannedAnimals') 
+        // setScannedAnimals([])
+        // setTargetAnimals([])
       }
-  
+
     };
     
-    loadTargetAnimals();
+    initialiseChallenge();
   }, []);  
+
 
   useEffect(() => {
     console.log("Target animals: ", targetAnimals);
@@ -226,6 +316,7 @@ const Challenge = () => {
   useEffect(() => {
     console.log("Scanned animals: ", scannedAnimals);
   }, [scannedAnimals]);
+
 
   useEffect(() => {
 
@@ -264,64 +355,6 @@ const Challenge = () => {
     return tensor;
   }
 
-  async function classifyImageTest() {
-    
-    if (model) {
-
-      console.log("loading image")
-      const asset = Asset.fromModule(animalPhoto);
-      await asset.downloadAsync();
-      const imageUri = asset.localUri || asset.uri;
-
-      const base64String = await FileSystem.readAsStringAsync(imageUri, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
-
-      const imageBuffer = Uint8Array.from(atob(base64String), c => c.charCodeAt(0));
-
-      const imageTensor = tf.tidy(() => {
-        const decodedImage = decodeImage(imageBuffer);
-        return decodedImage.resizeNearestNeighbor([224, 224]).toFloat().expandDims();
-      });
-
-      console.log("image loaded. classifying image")
-
-      const prediction = await model.predict(imageTensor).data();
-      const highestPredictionIndex = prediction.indexOf(Math.max(...prediction));
-      const predictedClassEntry = labels[highestPredictionIndex];
-      const predictedAnimal = predictedClassEntry ? predictedClassEntry[1] : 'Unknown'; // class name
-
-      console.log("Predicted Animal: " + predictedAnimal)
-
-      if (Object.values(targetAnimals).includes(predictedAnimal)) {
-
-        showModal({predictedAnimal:predictedAnimal}); 
-  
-        try {
-  
-          if (!scannedAnimals.includes(predictedAnimal)) {
-            scannedAnimals.push(predictedAnimal);
-            setScannedAnimals(scannedAnimals);
-  
-            let updatedTargetAnimals = targetAnimals.filter(animal => animal !== predictedAnimal);
-            setTargetAnimals(updatedTargetAnimals);
-            await AsyncStorage.setItem('targetAnimals', JSON.stringify(updatedTargetAnimals));
-          }
-  
-          await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
-  
-        } catch (error) {
-          console.error('Failed to load scanned animals', error);
-        }
-  
-      } else {
-        console.log(predictedAnimal + " is not in targetAnimals: " + targetAnimals)
-      }
-
-    }
-
-  }
-
   async function classifyImage(imageUri) {
     if (model) {
       try {
@@ -340,7 +373,6 @@ const Challenge = () => {
         
         console.log("classifying image...")
 
-        
         const prediction = await model.predict(imageTensor).data();
         const highestPredictionIndex = prediction.indexOf(Math.max(...prediction));
         const predictedClassEntry = labels[highestPredictionIndex];
@@ -383,29 +415,50 @@ const Challenge = () => {
     console.log("image picker opened");
 
     // Launch the camera to take a picture
-    const result = await ImagePicker.launchCameraAsync({
+    // const result = await ImagePicker.launchCameraAsync({
+    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    //   allowsEditing: false,
+    //   aspect: [4, 3],
+    //   quality: 1,
+    // });
+    
+  
+
+    //Launch the image library to picka photo
+    const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: false,
       aspect: [4, 3],
       quality: 1,
     });
 
-    console.log("image picker closed")
+    // if (result.canceled) {
+    //   console.log("image picker closed prematurely")
+    //   setClassifyingModalVisible(false);
+    // } 
+    // console.log("image picker closed")
+
+    setClassifyingModalVisible(true);
+
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     if (!result.canceled) {
+
+      // setClassifyingModalVisible(true);
+
       setImage(result.assets[0].uri);
 
-      setClassifyingModalVisible(true);
-
-      // let predictedAnimalResult = await classifyImage(result.assets[0].uri);
-      const asset = Asset.fromModule(animalPhoto);
-      await asset.downloadAsync();
-      const imageUri = asset.localUri || asset.uri;
-      let predictedAnimalResult = await classifyImage(imageUri);
-      let predictedAnimal = predictedAnimalResult.toLowerCase()
+      let predictedAnimalResult = await classifyImage(result.assets[0].uri);
 
       setClassifyingModalVisible(false);
-      
+
+      //code for camera photo taker to extract image
+      // const asset = Asset.fromModule(animalPhoto);
+      // await asset.downloadAsync();
+      // const imageUri = asset.localUri || asset.uri;
+      // let predictedAnimalResult = await classifyImage(imageUri);
+      let predictedAnimal = predictedAnimalResult.toLowerCase()
+
       //check whether the animal is correct or not
       if (Object.values(targetAnimals).includes(predictedAnimal)) {
 
@@ -415,13 +468,31 @@ const Challenge = () => {
   
           if (!scannedAnimals.includes(predictedAnimal)) {
             scannedAnimals.push(predictedAnimal);
-            setScannedAnimals(scannedAnimals);
+            
   
             let updatedTargetAnimals = targetAnimals.filter(animal => animal !== predictedAnimal);
+            
+            setScannedAnimals(scannedAnimals);
             setTargetAnimals(updatedTargetAnimals);
+
+            if (updatedTargetAnimals.length === 0) {
+              console.log("Challenge completed");
+              setChallengeCompleted(true);
+              setChallengeCompletedModalVisible(true);
+              AsyncStorage.setItem('challengeCompletedFlag', 'true');
+
+              console.log("populating scannedAnimals with: " + scannedAnimals);
+              await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
+            } else {
+              setChallengeCompleted(false);
+              setChallengeCompletedModalVisible(false);
+            }
+
+
             await AsyncStorage.setItem('targetAnimals', JSON.stringify(updatedTargetAnimals));
           } 
-  
+          
+          console.log("populating scannedAnimals with: " + scannedAnimals);
           await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
   
         } catch (error) {
@@ -430,11 +501,11 @@ const Challenge = () => {
   
       } else {
           console.log("IN takePicture: " + predictedAnimal + " is not in targetAnimals: " + targetAnimals)
-
+          setIncorrectClassifiedObject(predictedAnimal)
           setIncorrectAnimalModalVisible(true);
       }
 
-      console.log("file location: ", result.assets[0].uri);
+      // console.log("file location: ", result.assets[0].uri);
     }
 
     // classifyImageTest();
@@ -470,6 +541,10 @@ const Challenge = () => {
   const closeClassifyingModal = () => {
     setClassifyingModalVisible(false);
   };
+
+  const closeChallengeCompletedModal = () => {
+    setChallengeCompletedModalVisible(false);
+  }
 
   const showIncorrectAnimalModal = () => {
     setIncorrectAnimalModalVisible(true);
@@ -516,14 +591,61 @@ const Challenge = () => {
     <Modal
       animationType="slide"
       transparent={true}
+      visible={challengeCompletedModalVisible}
+      onRequestClose={closeChallengeCompletedModal}
+    >
+      <SafeAreaView style={modalStyle.modalContainer}>
+      <View style={modalStyle.modalContent}>
+      <Text style={styles.title}>Challenge Completed!</Text>
+        <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
+          <Text></Text>
+          <Text style={modalStyle.rewardText}>Congratulations! You have completed the challenge</Text>
+          <Text></Text>
+          <Text style={modalStyle.rewardText}>Come collect your prize at the kiosk inside the gift shop</Text>
+          <Text></Text>
+          <Text style={modalStyle.rewardText}>Proud of this acheivement? Share this with your friends!</Text>
+
+          <View style={modalStyle.shareButtonContainer}>
+          <TouchableOpacity onPress={shareToTwitter} style={modalStyle.shareButton}>
+              <Image source={icons.twitterIcon} style={{ width: 60, height: 60 }} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={shareToFacebook} style={modalStyle.shareButton}>
+              <Image source={icons.facebookIcon} style={{ width: 60, height: 60 }} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={openInstagram} style={modalStyle.shareButton}>
+              <Image source={icons.instagramIcon} style={{ width: 60, height: 60 }} />
+            </TouchableOpacity>
+          </View>
+
+        </ScrollView>
+        <TouchableOpacity onPress={closeChallengeCompletedModal} style={modalStyle.closeButton}>
+          <Text style={modalStyle.closeButtonText}>Close</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+    </Modal>
+
+    <Modal
+      animationType="slide"
+      transparent={true}
       visible={incorrectAnimalModalVisible}
       onRequestClose={closeIncorrectAnimalModal}
     >
       <SafeAreaView style={modalStyle.modalContainer}>
         <View style={modalStyle.modalContent}>
-          <Text style={styles.title}>Animal not on list</Text>
-          <Text style={styles.subtitle}>You have either not photographed an animal on the list or your picture isn't clear enough</Text>
-          <Button title="Close" onPress={closeIncorrectAnimalModal} />
+          <Text style={styles.title}>Animal not classified</Text>
+          <Text style={modalStyle.species}>You have either not photographed an animal on the list or your picture isn't clear enough</Text>
+          <Text></Text>
+          <Text></Text>
+          <Text style={modalStyle.species}>Image detected: </Text>
+          <Text style={modalStyle.species}>{incorrectClassifiedObject}</Text> 
+          <Text></Text>
+          <Text></Text>
+          <Text></Text>
+          <Text></Text>
+          <TouchableOpacity onPress={closeIncorrectAnimalModal} style={modalStyle.closeButton}>
+            <Text style={modalStyle.closeButtonText}>Close</Text>
+            </TouchableOpacity>
         </View>
       </SafeAreaView>
     </Modal>
@@ -539,12 +661,12 @@ const Challenge = () => {
         <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
           {selectedAnimal && (
             <>
-              <Text style={styles.title}>
-                {isInfoModal ? 'Animal' : 'Well Done! Animal Unlocked'}
-              </Text>
+              
               <Image source={{ uri: selectedAnimal.image }} style={modalStyle.image} />
-              <Text style={modalStyle.animalName}>{selectedAnimal.name}</Text>
-              <Text style={modalStyle.species}>({selectedAnimal.species})</Text>
+              <Text style={modalStyle.species}>({selectedAnimal.species})</Text> 
+              <Text style={styles.title}>
+                {isInfoModal ? '' : 'Well Done! Animal Unlocked'}
+              </Text>
               <Text>
                 <Text style={modalStyle.sectionTitle}>Diet: </Text>
                 <Text style={modalStyle.sectionText}>{selectedAnimal.diet}</Text>
@@ -611,7 +733,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingBottom: 110
+    paddingBottom: 19
   },
   titleContainer: {
     backgroundColor: '#d4edda', // Light green background
@@ -648,7 +770,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     textAlign: 'center',
-    paddingRight: 17,
+    paddingRight: 20,
+    paddingLeft: 23,
     fontFamily: 'serif', // Suitable font
   },
   animalsLeft: {
@@ -665,7 +788,7 @@ const styles = StyleSheet.create({
   },
   cameraBar: {
     // backgroundColor: '#e8f5e9',
-    padding: 120,
+    padding: 30,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
@@ -759,7 +882,7 @@ const modalStyle = StyleSheet.create({
   modalContent: {
     width: '90%',
     backgroundColor: '#5a8c66',
-    borderRadius: 30,
+    // borderRadius: 30,
     padding: 0,
     // alignItems: 'center',
     position: 'relative',
@@ -817,5 +940,30 @@ const modalStyle = StyleSheet.create({
     fontFamily: 'serif',
     color: 'white',
   },
+  rewardText: {
+    fontSize: 16,
+    marginBottom: 20,
+    fontFamily: 'serif',
+    color: 'white',
+    alignContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+  },
+  shareButton: {
+    // backgroundColor: '#3b5998', // Facebook blue color
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 20,
+    // alignItems: 'center',
+  },
+  shareButtonContainer: {
+    flexDirection: 'row', // Align children in a row
+    justifyContent: 'space-evenly', // Space buttons evenly
+    alignItems: 'center', // Center buttons vertically
+    marginVertical: 10, // Add vertical margin
+  },
+  shareButtonText: {
+    color: '#fff',
+    fontSize: 16,
+  },
 });
-

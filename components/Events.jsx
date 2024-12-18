@@ -94,6 +94,7 @@ Once the challenge is completed, make your way to the gift shop to collect your 
               </TouchableOpacity>
             </View>
             <Text style={styles.subHeaderText}>What about an animal scavenger hunt !!!</Text>
+            <Text style={styles.subHeaderText}></Text>
             <Text style={styles.descriptionText}>
               Complete the challenges by taking a picture of all the animals listed and win a unique experience
             </Text>
@@ -153,7 +154,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     // borderRadius: 20,
     // elevation: 1,
-    width: 200,
+    width: 210,
     // width: '100%',
   },
   titleContainer: {
@@ -225,6 +226,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     flex: 1,
     marginLeft:30,
+    marginTop:30
   },
   subHeaderText: {
     fontSize: 20,

@@ -30,9 +30,9 @@ const Home = () => {
   const translateY = useRef(new Animated.Value(200)).current;
   const { height: screenHeight } = Dimensions.get('window');
   const [eventButtonTitle, setButtonTitle] = useState("Challenge");
-  const [accessibilityVisible, setAccessibilityVisible] = useState(false);
   const [isShowEventsButtonVisible, setShowEventsButtonVisible] = useState(true);
-  
+  const [accessibilityVisible, setAccessibilityVisible] = useState(false); 
+
   const onRefresh = async () => {
     setRefreshing(true);
     await refetch();
@@ -40,10 +40,10 @@ const Home = () => {
   }
  
   const [region, setRegion] = useState({
-    latitude: 48.7460,
-    longitude: 2.66315,
-    latitudeDelta: 0.01,
-    longitudeDelta: 0.01,
+    latitude: 51.535121,
+    longitude: -0.154131,
+    latitudeDelta: 0.003,
+    longitudeDelta: 0.003,
   });
 
   const [events, setEvents] = useState([]);
@@ -74,29 +74,10 @@ const Home = () => {
     }
   };
 
-  const toggleAccessibilityIcon = () => {
-    if (accessibilityVisible) {
-      Animated.timing(translateY, {
-        toValue: 0,
-        duration: 500,
-        useNativeDriver: true,
-      }).start(() => {
-        setAccessibilityVisible(false);
-      });
-    } else {
-      setAccessibilityVisible(true);
-      Animated.timing(translateY, {
-        toValue: -10,
-        duration: 5,
-        useNativeDriver: true,
-      }).start();
-    }
-  };
-
   const zooRegion = {
     latitude: 51.535121,
     longitude: -0.154131,
-    latitudeDelta: 0.003,
+    latitudeDelta: 0.003, 
     longitudeDelta: 0.003,
   };
 
@@ -109,8 +90,27 @@ const Home = () => {
         return;
       }
 
-      let location = await Location.getCurrentPositionAsync({});
-      setCurrentLocation(location.coords);
+      const location = await Location.watchPositionAsync(
+        {
+          accuracy: Location.Accuracy.BestForNavigation,
+          timeInterval: 1000, 
+          distanceInterval: 1, 
+        },
+        (location) => {
+          setCurrentLocation(location.coords);
+          setRegion((prevRegion) => ({
+            ...prevRegion,
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+          }));
+        }
+      );
+
+
+      // let location = await Location.getCurrentPositionAsync({
+      //   accuracy: Location.Accuracy.BestForNavigation
+      // });
+      // setCurrentLocation(location.coords);
 
       // setRegion({
       //   latitude: location.coords.latitude,
@@ -128,6 +128,7 @@ const Home = () => {
         );
 
         console.log(eventsResult);
+        console.log(eventsResult.data.listEvents.items);
 
         setEvents(eventsResult.data.listEvents.items)
       } catch (error) {
@@ -135,13 +136,12 @@ const Home = () => {
       }
     }
 
-    setEvents(eventsDummy)
 
     setRegion({
-      latitude: 48.7460,
-      longitude: 2.66315,
-      latitudeDelta: 0.01,
-      longitudeDelta: 0.01,
+      latitude: 51.535121,
+      longitude: -0.154131,
+      latitudeDelta: 0.003,
+      longitudeDelta: 0.003,
     });
 
     getLocation();
@@ -171,6 +171,21 @@ const Home = () => {
     [51.532581594564654, -0.15931530103070354], //southwest
     [51.536631441307364, -0.15031572508956532], //northeast
   ];
+
+  const [options, setOptions] = useState([
+    { id: 1, name: 'Mobility Impairments', isEnabled: false },
+    { id: 2, name: 'Visual Impairments', isEnabled: false },
+  ]);
+  
+  const toggleOption = (id) => {
+    setOptions((prevOptions) =>
+      prevOptions.map((option) =>
+        option.id === id ? { ...option, isEnabled: !option.isEnabled } : option
+      )
+    );
+  };
+  
+  const isOptionEnabled = (id) => options.find((option) => option.id === id)?.isEnabled;  
   
   return (
     <View style={styles.container}>
@@ -179,33 +194,34 @@ const Home = () => {
         ref={mapRef}
         initialRegion={zooRegion}
         showsUserLocation={true}
+        followsUserLocation={true}
         customMapStyle={mapstyle1}
         onRegionChangeComplete={(region) => setRegion(region)}
+        // onRegionChangeComplete={(newRegion) => {
+        //   // Set the region back to the specified bounds if the user tries to pan outside
+        //   if (
+        //     newRegion.latitude < 51.534 || // Lat min bound
+        //     newRegion.latitude > 51.536 || // Lat max bound
+        //     newRegion.longitude < -0.156 || // Lon min bound
+        //     newRegion.longitude > -0.152 // Lon max bound
+        //   ) {
+        //     mapRef.current.animateToRegion(region, 200); // Reset to original region
+        //   }
+        // }}
         provider={MapView.PROVIDER_GOOGLE}
-        rotateEnabled={false}
       >
-
+      
         <Overlay  
-          image={require("../../../assets/mapoverlays/zoomap3.png")}
+          image={
+            isOptionEnabled(2) 
+            ? require("../../../assets/mapoverlays/zoomap4.png")// Visual impairment map
+            : require("../../../assets/mapoverlays/zoomap3.png")// Standard map
+          }
           bounds={imageBounds}
           bearing={0}
           style={styles.overlay}
-          opacity={1}
+          opacity={0.8}
         />
-
-      {accessibilityVisible && (
-        <Marker
-        key="accessibilityIcon"
-        coordinate={{ latitude: 51.53520, longitude: -0.1553 }}
-        
-        >
-        <Image
-          source={accessibilityIcon}
-          style={{ width: 30, height: 30 }}
-          resizeMode="contain"
-        />
-        </Marker>
-      )}
 
         {animals.map((animal, index) => (
           <Marker
@@ -221,12 +237,24 @@ const Home = () => {
           </Marker>
         ))}
 
-         
-      </MapView>
+        {options.map((option) =>
+          option.isEnabled && option.id !== 2 ? (
+            <Marker
+              key={`marker-${option.id}`}
+              coordinate={{ latitude: 51.53480, longitude: -0.1535 }}
+            >
+              <Image
+                source={
+                  require('../../../assets/icons/accessibility.png')
+                }
+                style={{ width: 30, height: 30 }}
+                resizeMode="contain"
+              />
+            </Marker>
+          ) : null
+        )}
 
-      {/* <CustomButton handlePress={() => goToZoo()} title="Go to Zoo" /> */}
-      {/* <Text style={styles.text}>Current latitude: {region.latitude}</Text>
-      <Text style={styles.text}>Current longitude: {region.longitude}</Text> */}
+      </MapView>
 
       <Modal
         animationType="slide"
@@ -270,6 +298,83 @@ const Home = () => {
         </View>
       </Modal>
 
+      <TouchableOpacity
+        style={styles.toggleButton}
+        onPress={() => setAccessibilityVisible(!accessibilityVisible)}
+      >
+        <Image
+          source={require('../../../assets/icons/accessibility-filter.png')} style={styles.toggleButton}
+        />
+      </TouchableOpacity>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={accessibilityVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={modalStyles.accessibilityView}>
+          <View style={modalStyles.accessibilityModal}>
+            <Text style={modalStyles.accessibilityText}>Accessibility Options Overview</Text>
+
+            
+            <View style={modalStyles.optionContainer}>
+              <Image source={require('../../../assets/icons/mobility-impairment.png')} style={modalStyles.icon} />
+              <Text style={modalStyles.optionText}>Mobility Impairments</Text>
+              <TouchableOpacity
+                style={[
+                  modalStyles.toggleButton,
+                  isOptionEnabled(1) ? modalStyles.toggleButtonOn : modalStyles.toggleButtonOff, // Dynamic styles for ON/OFF states
+                ]}
+                onPress={() => toggleOption(1)} // Toggle function with an ID, you can adjust this based on your needs
+              >
+                <View style={modalStyles.toggleIndicator}>
+                  <View
+                    style={[
+                      modalStyles.indicator,
+                      isOptionEnabled(1) ? modalStyles.indicatorOn : modalStyles.indicatorOff, // Change indicator dynamically
+                    ]}
+                  />
+                </View>  
+              </TouchableOpacity>
+            </View>
+
+
+            
+            <View style={modalStyles.optionContainer}>
+              <Image source={require('../../../assets/icons/visual-impairment.png')} style={modalStyles.icon} />
+              <Text style={modalStyles.optionText}>Visual Impairments</Text>
+              <TouchableOpacity
+                style={[
+                  modalStyles.toggleButton,
+                  isOptionEnabled(2) ? modalStyles.toggleButtonOn : modalStyles.toggleButtonOff, // Dynamic styles for ON/OFF states
+                ]}
+                onPress={() => toggleOption(2)}
+              >
+                <View style={modalStyles.toggleIndicator}>
+                  <View
+                    style={[
+                      modalStyles.indicator,
+                      isOptionEnabled(2) ? modalStyles.indicatorOn : modalStyles.indicatorOff, // Change indicator dynamically
+                    ]}
+                  />
+                </View>  
+              </TouchableOpacity>
+            </View>
+
+            <TouchableOpacity
+              style={modalStyles.accessibilityCloseButton}
+              onPress={() => setAccessibilityVisible(false)} // Close the modal on button press
+            >
+              <Text style={modalStyles.accessibilityCloseButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+
       <View style={styles.halfCircle} />
 
       <View style={styles.bottombar} />
@@ -301,12 +406,6 @@ const Home = () => {
         </Animated.View>
 
       )}
-
-      <TouchableOpacity style={styles.toggleButton} onPress={toggleAccessibilityIcon}>
-        <Text style={styles.buttonText}>
-          {accessibilityVisible ? "Hide Disabled" : "Show Disabled"}
-        </Text>
-      </TouchableOpacity>
 
     </View>
   );
@@ -362,27 +461,15 @@ const styles = StyleSheet.create({
     zIndex: 1,
     alignItems: 'center', // Center horizontally
   },
-
-
   toggleButton: {
     position: "absolute",
-    bottom: 8, 
-    right: 8, 
-    backgroundColor: "#234e35",
-    paddingTop: 28,
-    paddingBottom: 28,
-    paddingLeft: 10,
-    paddingRight: 10,
-    borderRadius: 50,
-    width: 84, 
+    top: 16, 
+    right: 16, 
+    width: 32,
+    height: 32,
     alignItems: "center", 
     zIndex: 2,
-  },
-  buttonText: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 12,
-    textAlign: "center",
+    marginTop:20
   },
 });
 
@@ -457,6 +544,95 @@ const modalStyles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
   },
+  accessibilityView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  accessibilityModal: {
+    width: 340,
+    backgroundColor: '#ffffff',
+    padding: 20,
+    alignItems: 'center',
+  },
+  accessibilityText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 28,
+    color: '#000000',
+    textAlign: 'center',
+  },
+  optionContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 32,
+  },
+  icon: {
+    marginRight: 16,
+    marginLeft: 8,
+    width: 28,
+    height: 30,
+  },
+  optionText: {
+    fontSize: 16,
+    fontWeight: 700,
+    color: '#000000', 
+    marginRight: 20,
+    flex: 1,
+  },
+  toggleButton: {
+    width: 40,
+    height: 24,
+    borderRadius: 12,
+    justifyContent: 'center',
+    paddingHorizontal: 2,
+    marginTop: 20
+  },
+  toggleButtonOn: {
+    backgroundColor: '#00533A', // background for ON
+  },
+  toggleButtonOff: {
+    backgroundColor: '#000000', // background for OFF
+  },
+  toggleIndicator: {
+    width: 36,
+    height: 20,
+    borderRadius: 12,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    position: 'relative',
+  },
+  indicator: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    position: 'absolute',
+  },
+  indicatorOn: {
+    backgroundColor: '#00533A', // for ON state
+    right: 2,
+  },
+  indicatorOff: {
+    backgroundColor: '#000000', // for OFF state
+    left: 2,
+  },
+  buttonText: {
+    color: 'red',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  accessibilityCloseButton: {
+    backgroundColor: '#000000', // for close button
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 32,
+    marginTop: 20,
+  },
+  accessibilityCloseButtonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  }
 });
 
 export default Home;

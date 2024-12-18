@@ -10,6 +10,18 @@
       "StackName": "amplify-azczooapp-dev-37c55",
       "StackId": "arn:aws:cloudformation:eu-west-2:529765591688:stack/amplify-azczooapp-dev-37c55/2817ab50-5a2e-11ef-921e-0217178f59a3",
       "AmplifyAppId": "dokt53l33cnjq"
+    },
+    "categories": {
+      "api": {
+        "azczooapp": {}
+      },
+      "function": {
+        "updateOccurenceCounter": {},
+        "incrementOccurenceCounterNew": {
+          "deploymentBucketName": "amplify-azczooapp-dev-37c55-deployment",
+          "s3Key": "amplify-builds/incrementOccurenceCounterNew-336e4250307273773978-build.zip"
+        }
+      }
     }
   }
 }

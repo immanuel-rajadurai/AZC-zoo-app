@@ -1,24 +1,53 @@
 {
-    "build": {
-      "preview": {
-        "android": {
-            "image": "latest",
-          "buildType": "apk"
-        },
-        "node":"22.3.0"
+  "build": {
+    "preview": {
+      "android": {
+        "image": "latest",
+        "buildType": "apk"
       },
-      "preview2": {
-        "android": {
-          "gradleCommand": ":app:assembleRelease"
-        }
+      "ios": {
+        "image": "latest"
       },
-      "preview3": {
+      "env": {
+        "EAS_NO_DEFAULT_NPM_INSTALL": "1"
+      }
+    },
+    "gradle-release": {
+      "android": {
+        "gradleCommand": ":app:assembleRelease"
+      },
+      "env": {
+        "EAS_NO_DEFAULT_NPM_INSTALL": "1"
+      }
+    },
+    "development": {
+      "android": {
         "developmentClient": true
       },
-      "preview4": {
+      "env": {
+        "EAS_NO_DEFAULT_NPM_INSTALL": "1"
+      }
+    },
+    "internal": {
+      "android": {
         "distribution": "internal"
       },
-      "production": {}
+      "env": {
+        "EAS_NO_DEFAULT_NPM_INSTALL": "1"
+      }
+    },
+    "production": {
+      "android": {
+        "image": "latest",
+        "buildType": "app-bundle"
+      },
+      "ios": {
+        "image": "latest",
+        "distribution": "store"
+      },
+      "env": {
+        "EAS_NO_DEFAULT_NPM_INSTALL": "1"
+      }
     }
   }
-  
+}

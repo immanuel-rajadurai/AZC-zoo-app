@@ -128,19 +128,6 @@ const CustomDrawerContent = (props) => {
           options={{ headerShown: false }}
         />
 
-
-        <DrawerItem
-          label={() => (
-            <Text style={styles.drawerLabel}>
-              Wallet2
-            </Text>
-          )}
-          onPress={() => {
-              navigation.navigate('wallet2');
-          }}
-          options={{ headerShown: false }}
-        />
-
       </DrawerContentScrollView>
     )
 }
