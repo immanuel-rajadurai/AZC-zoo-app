@@ -42,6 +42,7 @@ import facebookIcon from "../assets/icons/facebook_icon.png";
 import instagramIcon from "../assets/icons/instagramlogo.png";
 import twitterIcon from "../assets/icons/twitterlogo.png";
 import infoIcon from "../assets/icons/info_icon.png";
+import bordeauxzooheader from "../assets/icons/zoo-bordeaux-logo.png";
 
 
 
@@ -90,5 +91,6 @@ export default {
   facebookIcon,
   instagramIcon,
   twitterIcon,
-  infoIcon
+  infoIcon,
+  bordeauxzooheader
 };

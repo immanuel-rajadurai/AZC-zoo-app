@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   topicText: {
-    color: "green",
+    color: "black",
     fontWeight: "bold",
     fontSize: 20,
   },

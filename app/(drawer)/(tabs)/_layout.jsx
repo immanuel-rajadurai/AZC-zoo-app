@@ -6,23 +6,6 @@ import { CustomHeader } from '../_layout';
 
 //green CSS colour #187c3c
 
-// const TabIcon = ({ icon, color, name, focused, style, textColor }) => {
-//   return (
-//     <View style={{ alignItems: 'center', justifyContent: 'center', gap: 2 }}>
-//       <Image
-//         source={icon}
-//         resizeMethod='contain'
-//         tintColor={color}
-//         className="w-35 h-35"
-//         style={[{ tintColor: color }, style]}
-//       />
-//       <Text className={`${focused ? 'font-psemibold' : 'font-pregular'} text-xs`} style={{ color: textColor }}>
-//         {name}
-//       </Text>
-//     </View>
-//   )
-// }
-
 const TabIcon = ({ icon, color, name, focused, style, textColor }) => {
   return (
     <View style={{ alignItems: 'center', justifyContent: 'center', gap: 2 }}>
@@ -55,7 +38,7 @@ const TabsLayout = () => {
       <Tabs
         screenOptions={{
         tabBarShowLabel: false,
-        tabBarActiveTintColor: '#619837',
+        tabBarActiveTintColor: 'white',
         tabBarInactiveTintColor: 'white',
         tabBarStyle: {
           backgroundColor: 'black',

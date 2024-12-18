@@ -169,7 +169,7 @@ const Animals = () => {
 
         <Image
           source={icons.listicon}
-          style={{ width: 60, height: 60, tintColor: "#7BC144" }}
+          style={{ width: 60, height: 60, tintColor: "black" }}
           resizeMode="contain"
         />
         <Image>
@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 15,
     margin: 10,
-    backgroundColor: '#f0fff0', // Optional light green background for contrast
+    backgroundColor: 'white', // Optional light green background for contrast
     alignItems: 'center',
     flexDirection: 'row',
   },
@@ -347,7 +347,7 @@ const styles = StyleSheet.create({
   animalName: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: 'darkgreen',
+    color: 'black',
     marginTop: 10,
     marginBottom: 10,
     textAlign: 'left',
@@ -363,7 +363,7 @@ const styles = StyleSheet.create({
     color: 'gray',
   },
   planButton: {
-    backgroundColor: 'darkgreen',
+    backgroundColor: 'black',
     borderRadius: 20,
     paddingVertical: 10, // Smaller vertical padding
     paddingHorizontal: 8, // Smaller horizontal padding
@@ -371,7 +371,7 @@ const styles = StyleSheet.create({
     width: 150, // Reduce minimum width
   },
   customButton: {
-    backgroundColor: 'darkgreen',
+    backgroundColor: 'black',
     borderRadius: 10,
     paddingVertical: 3, // Smaller vertical padding
     paddingHorizontal: 8, // Smaller horizontal padding
@@ -400,8 +400,8 @@ const modalStyle = StyleSheet.create({
   },
   modalContent: {
     width: '90%',
-    backgroundColor: '#5a8c66',
-    borderRadius: 30,
+    backgroundColor: 'black',
+    borderRadius: 0,
     padding: 0,
     // alignItems: 'center',
     position: 'relative',
@@ -411,7 +411,7 @@ const modalStyle = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     alignSelf: 'center',
-    backgroundColor: 'black',
+    backgroundColor: 'grey',
     padding: 10,
     borderRadius: 5,
   },

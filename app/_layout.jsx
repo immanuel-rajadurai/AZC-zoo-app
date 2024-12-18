@@ -67,7 +67,7 @@ const CustomHeader = ({ route }) => {
             </TouchableOpacity>
 
             <Image
-                source={icons.londonzooheader}
+                source={icons.bordeauxzooheader}
                 style={{ width: 160, height: 50, tintColor: "white" }}
                 resizeMode="contain"
               />

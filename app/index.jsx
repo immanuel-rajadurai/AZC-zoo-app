@@ -29,11 +29,11 @@ export default function App() {
   }, [navigation]);
 
     return (
-          <SafeAreaView className="h-full" backgroundColor='#234e35'>
+          <SafeAreaView className="h-full" backgroundColor='black'>
             <ScrollView contentContainerStyle={{ height: '100%'}}>
-              <View className="w-full justify-center items-center min-h-[85vh] px-4" backgroundColor='#234e35'>
+              <View className="w-full justify-center items-center min-h-[85vh] px-4" backgroundColor='black'>
                 <Image
-                  source={images.londonZooIcon}
+                  source={icons.bordeauxzooheader}
                   className="max-w--[380px] w-full h-[200px] mt-[240px]"
                   resizeMode="contain"
                 />

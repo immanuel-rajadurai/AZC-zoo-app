@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: 'darkgreen',
+    color: 'black',
     marginBottom: 20,
   },
   text: {
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
   placeName: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: 'darkgreen',
+    color: 'black',
     marginTop: 2,
     marginBottom: 2,
     textAlign: 'left',
