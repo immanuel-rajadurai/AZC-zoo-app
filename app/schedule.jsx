@@ -45,7 +45,6 @@ const Animals = () => {
     }
   }, [animalsRetrieved, scheduledAnimals]);
 
-
   useEffect(() => {
     console.log("scheduled animals in schedule.jsx: " + scheduledAnimals);
   }, [scheduledAnimals]);
@@ -244,11 +243,11 @@ const styles = StyleSheet.create({
   },
   animalItem: {
     borderRadius: 10, // Rounded corners
-    shadowColor: '#000', // Shadow color
-    shadowOffset: { width: 0, height: 2 }, // Shadow offset
-    shadowOpacity: 0.25, // Shadow opacity
-    shadowRadius: 3.84, // Shadow radius
-    elevation: 5, // Elevation for Android shadow
+    // shadowColor: '#000', // Shadow color
+    // shadowOffset: { width: 0, height: 2 }, // Shadow offset
+    // shadowOpacity: 0.25, // Shadow opacity
+    // shadowRadius: 3.84, // Shadow radius
+    // elevation: 5, // Elevation for Android shadow
     backgroundColor: '#fff', // Background color to make the shadow visible
     padding: 2, // Optional: Add padding to the component
     margin: 10, // Optional: Add margin to the component

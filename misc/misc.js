@@ -249,3 +249,110 @@
 
 
 
+/*
+
+async function classifyImageTest() {
+    
+    // const predictedAnimal = "tiger";
+
+    // setPredictedAnimal(predictedAnimal);
+
+    // if (Object.values(targetAnimals).includes(predictedAnimal)) {
+
+    //   showModal(predictedAnimal); 
+
+    //   try {
+
+    //     if (!scannedAnimals.includes(predictedAnimal)) {
+    //       scannedAnimals.push(predictedAnimal);
+    //       setScannedAnimals(scannedAnimals);
+
+    //       let updatedTargetAnimals = targetAnimals.filter(animal => animal !== predictedAnimal);
+    //       setTargetAnimals(updatedTargetAnimals);
+    //       await AsyncStorage.setItem('targetAnimals', JSON.stringify(updatedTargetAnimals));
+    //     }
+
+    //     await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
+
+    //   } catch (error) {
+    //     console.error('Failed to load scanned animals', error);
+    //   }
+
+    // } else {
+    //   console.log(predictedAnimal + " is not in targetAnimals: " + targetAnimals)
+    // }
+    
+    if (model) {
+
+      console.log("loading image")
+      const asset = Asset.fromModule(animalPhoto);
+      await asset.downloadAsync();
+      const imageUri = asset.localUri || asset.uri;
+
+      const base64String = await FileSystem.readAsStringAsync(imageUri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      const imageBuffer = Uint8Array.from(atob(base64String), c => c.charCodeAt(0));
+
+      const imageTensor = tf.tidy(() => {
+        const decodedImage = decodeImage(imageBuffer);
+        return decodedImage.resizeNearestNeighbor([224, 224]).toFloat().expandDims();
+      });
+
+      console.log("image loaded. classifying image")
+
+      const prediction = await model.predict(imageTensor).data();
+      const highestPredictionIndex = prediction.indexOf(Math.max(...prediction));
+      const predictedClassEntry = labels[highestPredictionIndex];
+      const predictedAnimal = predictedClassEntry ? predictedClassEntry[1] : 'Unknown'; // class name
+
+      console.log("Predicted Animal: " + predictedAnimal)
+
+      //add scanned animal to scanned animals list
+
+      // try {
+      //   let storedScannedAnimals = await AsyncStorage.getItem('scannedAnimals');
+      //   storedScannedAnimals = storedScannedAnimals ? JSON.parse(storedScannedAnimals) : [];
+      //   storedScannedAnimals.push(predictedAnimal);
+      //   await AsyncStorage.setItem('scannedAnimals', JSON.stringify(storedScannedAnimals));
+      
+      // } catch (error) {
+      //   console.error("failed to save scanned animals", error);
+      // }
+
+      // setPredictedAnimal(predictedAnimal);
+
+      // console.log("showing popup")
+
+      if (Object.values(targetAnimals).includes(predictedAnimal)) {
+
+        showModal({predictedAnimal:predictedAnimal}); 
+  
+        try {
+  
+          if (!scannedAnimals.includes(predictedAnimal)) {
+            scannedAnimals.push(predictedAnimal);
+            setScannedAnimals(scannedAnimals);
+  
+            let updatedTargetAnimals = targetAnimals.filter(animal => animal !== predictedAnimal);
+            setTargetAnimals(updatedTargetAnimals);
+            await AsyncStorage.setItem('targetAnimals', JSON.stringify(updatedTargetAnimals));
+          }
+  
+          await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
+  
+        } catch (error) {
+          console.error('Failed to load scanned animals', error);
+        }
+  
+      } else {
+        console.log(predictedAnimal + " is not in targetAnimals: " + targetAnimals)
+      }
+
+    }
+
+  }
+
+
+**/

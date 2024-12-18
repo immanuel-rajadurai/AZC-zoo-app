@@ -10,13 +10,16 @@ import Events from "../../../components/Events"
 import animals from "../../../data/animals";
 import eventsDummy from "../../../data/events";
 import ToggleShowInformationButton from '../../../components/ToggleShowInformationButton';
+import accessibilityIcon from "../../../assets/icons/accessibility.png";
+import { icons } from '../../../constants';
 
 import { generateClient } from 'aws-amplify/api';
-import { listEvents } from '../../src/graphql/queries';
+import { listEvents } from '../../../src/graphql/queries';
 
 const client = generateClient();
 
 const Home = () => {
+  
   const mapRef = useRef(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -26,7 +29,9 @@ const Home = () => {
   const [eventsVisible, setEventsVisible] = useState(false);
   const translateY = useRef(new Animated.Value(200)).current;
   const { height: screenHeight } = Dimensions.get('window');
-  const [eventButtonTitle, setButtonTitle] = useState("Show Information");
+  const [eventButtonTitle, setButtonTitle] = useState("Challenge");
+  const [accessibilityVisible, setAccessibilityVisible] = useState(false);
+  const [isShowEventsButtonVisible, setShowEventsButtonVisible] = useState(true);
   
   const onRefresh = async () => {
     setRefreshing(true);
@@ -44,18 +49,42 @@ const Home = () => {
   const [events, setEvents] = useState([]);
   
   const toggleEvents = () => {
+    
+  
     if (eventsVisible) {
+      setShowEventsButtonVisible(true);
       Animated.timing(translateY, {
         toValue: 0,
         duration: 500,
         useNativeDriver: true,
       }).start(() => {
         setEventsVisible(false);
-        setButtonTitle("Information");
+        setButtonTitle("Challenge");
       });
     } else {
       setEventsVisible(true);
-      setButtonTitle("Hide Information");
+      
+      setButtonTitle("Challenge");
+      Animated.timing(translateY, {
+        toValue: -10,
+        duration: 5,
+        useNativeDriver: true,
+      }).start();
+      setShowEventsButtonVisible(false);
+    }
+  };
+
+  const toggleAccessibilityIcon = () => {
+    if (accessibilityVisible) {
+      Animated.timing(translateY, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }).start(() => {
+        setAccessibilityVisible(false);
+      });
+    } else {
+      setAccessibilityVisible(true);
       Animated.timing(translateY, {
         toValue: -10,
         duration: 5,
@@ -83,12 +112,12 @@ const Home = () => {
       let location = await Location.getCurrentPositionAsync({});
       setCurrentLocation(location.coords);
 
-      setRegion({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-        latitudeDelta: 0.005,
-        longitudeDelta: 0.005,
-      });
+      // setRegion({
+      //   latitude: location.coords.latitude,
+      //   longitude: location.coords.longitude,
+      //   latitudeDelta: 0.005,
+      //   longitudeDelta: 0.005,
+      // });
     };
 
     const fetchEvents = async () => { 
@@ -107,6 +136,13 @@ const Home = () => {
     }
 
     setEvents(eventsDummy)
+
+    setRegion({
+      latitude: 48.7460,
+      longitude: 2.66315,
+      latitudeDelta: 0.01,
+      longitudeDelta: 0.01,
+    });
 
     getLocation();
     fetchEvents();
@@ -146,6 +182,7 @@ const Home = () => {
         customMapStyle={mapstyle1}
         onRegionChangeComplete={(region) => setRegion(region)}
         provider={MapView.PROVIDER_GOOGLE}
+        rotateEnabled={false}
       >
 
         <Overlay  
@@ -155,6 +192,20 @@ const Home = () => {
           style={styles.overlay}
           opacity={1}
         />
+
+      {accessibilityVisible && (
+        <Marker
+        key="accessibilityIcon"
+        coordinate={{ latitude: 51.53520, longitude: -0.1553 }}
+        
+        >
+        <Image
+          source={accessibilityIcon}
+          style={{ width: 30, height: 30 }}
+          resizeMode="contain"
+        />
+        </Marker>
+      )}
 
         {animals.map((animal, index) => (
           <Marker
@@ -169,6 +220,8 @@ const Home = () => {
             />
           </Marker>
         ))}
+
+         
       </MapView>
 
       {/* <CustomButton handlePress={() => goToZoo()} title="Go to Zoo" /> */}
@@ -219,15 +272,42 @@ const Home = () => {
 
       <View style={styles.halfCircle} />
 
-      <View style={styles.eventButton}>
-        <ToggleShowInformationButton title={eventButtonTitle} textStyles="text-white" handlePress={toggleEvents} />
-      </View>
+      <View style={styles.bottombar} />
+      
+      {isShowEventsButtonVisible && (
+        <View style={styles.eventButton}>
+          <ToggleShowInformationButton title={eventButtonTitle}  handlePress={toggleEvents} />
+        </View>
+      )}
 
       {eventsVisible && (
+
         <Animated.View style={[styles.animatedContainer, { transform: [{ translateY }] }]}>
-          <Events events={events} />
+          
+          <View style={styles.eventsContainer}>
+            {/* <Button title="Close" styles={styles.closeButton} onPress={toggleEvents} /> */}
+
+            <TouchableOpacity
+              style={styles.deleteButton}
+              onPress={toggleEvents} // Pass the fileUri to the deleteFile function
+            >
+              <Image
+                source={icons.pulldownbutton} // Replace with your delete icon
+                style={styles.deleteIcon}
+              />
+            </TouchableOpacity>
+            <Events styles={styles.test} events={events} />
+          </View>
         </Animated.View>
+
       )}
+
+      <TouchableOpacity style={styles.toggleButton} onPress={toggleAccessibilityIcon}>
+        <Text style={styles.buttonText}>
+          {accessibilityVisible ? "Hide Disabled" : "Show Disabled"}
+        </Text>
+      </TouchableOpacity>
+
     </View>
   );
 }
@@ -235,7 +315,7 @@ const Home = () => {
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    flex: 1,
+    flex: 1, 
     justifyContent: "flex-end",
     alignItems: "center",
   },
@@ -244,6 +324,14 @@ const styles = StyleSheet.create({
   },
   overlay: {
     transform: [{ rotate: '90deg' }],
+  },
+  eventsContainer: {
+    position: 'relative',
+    top: 100, // Adjust this value to move the events component further down
+    width: '100%',
+    alignItems: 'center',
+    padding: 0,
+    zIndex: 1,
   },
   text: {
     fontSize: 16,
@@ -259,37 +347,60 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 80,  // Creates a rounded top right corner
     zIndex: 2,  // Ensure it stays above other components
   },
+  bottombar: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    height: 10, // Adjust the thickness as needed
+    backgroundColor: '#8BC33A',
+  },
   eventButton: {
-    width: "70%",
+    width: "60%",
     padding: 5,
     position: "absolute",
     bottom: 0,
     zIndex: 1,
     alignItems: 'center', // Center horizontally
-  }
+  },
+
+
+  toggleButton: {
+    position: "absolute",
+    bottom: 8, 
+    right: 8, 
+    backgroundColor: "#234e35",
+    paddingTop: 28,
+    paddingBottom: 28,
+    paddingLeft: 10,
+    paddingRight: 10,
+    borderRadius: 50,
+    width: 84, 
+    alignItems: "center", 
+    zIndex: 2,
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 12,
+    textAlign: "center",
+  },
 });
 
 const modalStyles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 20,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    width: '90%',
+    backgroundColor: '#5a8c66',
+    borderRadius: 30,
+    padding: 0,
+    // alignItems: 'center',
+    position: 'relative',
+    borderColor: 'green', 
   },
   button: {
     borderRadius: 20,
@@ -297,7 +408,12 @@ const modalStyles = StyleSheet.create({
     elevation: 2,
   },
   buttonClose: {
-    backgroundColor: "green",
+    position: 'relative',
+    bottom: 20,
+    alignSelf: 'center',
+    backgroundColor: 'black',
+    padding: 10,
+    borderRadius: 5,
   },
   textStyle: {
     color: "white",
@@ -305,28 +421,32 @@ const modalStyles = StyleSheet.create({
     textAlign: "center",
   },
   topicText: {
-    color: "green",
-    fontWeight: "bold",
-    fontSize: 20,
-    margin: 10,
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
+    fontFamily: 'serif',
+    color: 'white',
   },
   subTopicText: {
-    color: "darkgreen",
-    fontSize: 16,
-    fontWeight: "bold",
-    fontStyle: "italic",
+    ontSize: 18,
+    fontStyle: 'italic',
+    fontWeight: 'bold',
+    textAlign: 'center',
     marginBottom: 10,
+    fontFamily: 'serif',
+    color: 'white',
+    marginLeft: 10,
   },
   modalText: {
-    marginBottom: 30,
-    fontSize: 14,
-    fontWeight: "bold",
-    textAlign: "left",
+    fontSize: 16,
+    marginBottom: 20,
+    fontFamily: 'serif',
+    color: 'white',
   },
   image: {
-    width: 100,
-    height: 100,
-    marginBottom: 15,
+    width: '100%', 
+    height: 150,
   },
   scrollContainer: {
     maxHeight: 100, // Set a max height for the scrollable area
@@ -336,10 +456,6 @@ const modalStyles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-  },
-  buttonMore: {
-    
-    backgroundColor: "green",
   },
 });
 

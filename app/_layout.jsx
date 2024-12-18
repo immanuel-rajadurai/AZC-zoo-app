@@ -33,6 +33,11 @@ const CustomHeader = ({ route }) => {
     setIsSearchVisible((prev) => !prev);
   };
 
+  const toggleSearch = () => {
+    setSearchQuery('');
+    setIsSearchVisible((prev) => !prev);
+  };
+
   useEffect(() => {
     if (isSearchVisible && searchInputRef.current) {
       searchInputRef.current.focus();
@@ -51,7 +56,7 @@ const CustomHeader = ({ route }) => {
         {!isSearchVisible ? (
           <>
             <TouchableOpacity
-              style={{ position: 'absolute', left: 50 }}
+              style={{ position: 'absolute', left: 10 }}
               onPress={toggleDrawer}
             >
               <Image
@@ -60,7 +65,7 @@ const CustomHeader = ({ route }) => {
                 resizeMode="contain"
               />
             </TouchableOpacity>
-            {/* <Text className="text-2xl font-psemibold text-white mb-3 mt-3">Zoo App</Text> */}
+
             <Image
                 source={icons.londonzooheader}
                 style={{ width: 160, height: 50, tintColor: "#7BC144" }}
@@ -68,16 +73,24 @@ const CustomHeader = ({ route }) => {
               />
           </>
         ) : (
+
+          <View style={styles.searchContainer}>
           <SearchInput
             ref={searchInputRef}
             value={searchQuery}
             handleChangeText={(text) => setSearchQuery(text)}
           />
+          <TouchableOpacity style={styles.closeButton} onPress={() => setIsSearchVisible(false)}>
+            <Image source={icons.deleteX} style={styles.closeIcon} />
+          </TouchableOpacity>
+        </View>
+
         )}
 
         <TouchableOpacity style={{
               position: 'absolute',
-              right: 50, 
+              right: 10, 
+        
             }} 
             onPress={handleSearchToggle} 
           >
@@ -88,6 +101,7 @@ const CustomHeader = ({ route }) => {
               width: 20,
               height: 20,
               tintColor: isSearchVisible ? 'black' : '#7BC144', 
+              left: 0
             }}
             resizeMode="contain"
           />
@@ -129,11 +143,37 @@ const RootLayout = () => {
           headerShown: false
         }} />
 
-        <Stack.Screen name="easychallenge" options={{ title: 'Easy Challenge' }} />
+        
+        {/* <Stack.Screen name="easychallenge" options={{ title: 'Easy Challenge' }} /> */}
+
+        <Stack.Screen
+            name="easychallenge"
+            // component={EasyChallengeScreen}
+            options={{
+              title: 'Easy Animal Scavenger Hunt',
+              headerStyle: {
+                backgroundColor: '#5a8c66', // Custom background color for this screen
+              },
+              headerTintColor: '#fff', // Custom color of the back arrow and title for this screen
+              headerTitleStyle: {
+                fontWeight: 'bold', // Custom title style for this screen
+              },
+            }}
+          />
 
         <Stack.Screen name="hardchallenge" options={{ title: 'Mystery Challenge (hard)' }} />
 
-        <Stack.Screen name="schedule" options={{ title: 'Your Scheduled Animals' }} />
+        <Stack.Screen name="schedule" options={{
+              title: 'Your zoo plan',
+              headerStyle: {
+                backgroundColor: '#5a8c66', // Custom background color for this screen
+              },
+              headerTintColor: '#fff', // Custom color of the back arrow and title for this screen
+              headerTitleStyle: {
+                fontWeight: 'bold', // Custom title style for this screen
+              },
+            }} 
+        />
         
 
       <Stack.Screen
@@ -141,7 +181,7 @@ const RootLayout = () => {
         options={{header: CustomHeader }}
       />
 
-      <Stack.Screen name="wallet" options={{ title: 'Wallet' }} />
+      <Stack.Screen name="wallet" options={{ title: 'Wallet', headerStyle: { backgroundColor: '#234e35' } }} />
 
       <Stack.Screen name="news" options={{ title: 'News' }} />
       <Stack.Screen name="information" options={{ title: 'Information' }} />
@@ -150,5 +190,57 @@ const RootLayout = () => {
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: '#234e35',
+  },
+  drawerToggle: {
+    position: 'absolute',
+    left: 10,
+  },
+  drawerIcon: {
+    width: 40,
+    height: 35,
+    tintColor: '#7BC144',
+  },
+  headerImage: {
+    width: 160,
+    height: 50,
+    tintColor: '#7BC144',
+  },
+  searchToggle: {
+    position: 'absolute',
+    right: 50,
+  },
+  searchIcon: {
+    width: 20,
+    height: 20,
+    tintColor: '#7BC144',
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10, // Adjust this value to control how low the input appears below the header
+    paddingHorizontal: 20, // Optional: Add horizontal padding
+  },
+  closeButton: {
+    marginRight: -50,
+    marginLeft: 5,
+  },
+  closeIcon: {
+    width: 30,
+    height: 30,
+    tintColor: 'white',
+  },
+});
 
 export default RootLayout;

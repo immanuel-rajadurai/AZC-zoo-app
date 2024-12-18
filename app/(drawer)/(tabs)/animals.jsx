@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import CustomButton from '../../../components/CustomButton';
+import { icons } from '../../../constants';
 
 
 const Animals = () => {
@@ -31,7 +32,11 @@ const Animals = () => {
       <TouchableOpacity style={styles.animalItem} onPress={() => onPress(animal)}>
         <View style={styles.header}>
         <View style={styles.column}>
-          <Image source={{ uri: animal.image }} style={styles.animalImage} />
+            <View style={styles.imageContainer}>
+              <Image source={{ uri: animal.image }} style={styles.animalImage} />
+              {scheduledAnimals.includes(animal.name) && <Icon name="heart" size={20} color="red" style={styles.icon} />}
+              {!scheduledAnimals.includes(animal.name) && <Icon name="heart" size={20} color="lightgrey" style={styles.icon} />}
+            </View>
           {/* {!scheduledAnimals.includes(animal.name) && ( */}
               <TouchableOpacity
                 style={styles.customButton}
@@ -40,6 +45,8 @@ const Animals = () => {
                 <Text style={styles.customButtonText}>
                   {scheduledAnimals.includes(animal.name) ? 'Added to Plan' : 'Add to Plan'}
                 </Text>
+                
+
               </TouchableOpacity>
           {/* )} */}
         </View>
@@ -154,10 +161,20 @@ const Animals = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Animals</Text>
+
       <View style={styles.infoBox}>
         <Text style={styles.infoText}>
           Make a plan of animals that you want to visit throughout the zoo
         </Text>
+
+        <Image
+          source={icons.listicon}
+          style={{ width: 60, height: 60, tintColor: "#7BC144" }}
+          resizeMode="contain"
+        />
+        <Image>
+
+        </Image>
       </View>
       <View style={styles.buttonContainer}>
       <TouchableOpacity
@@ -244,6 +261,7 @@ const styles = StyleSheet.create({
     margin: 10,
     backgroundColor: '#f0fff0', // Optional light green background for contrast
     alignItems: 'center',
+    flexDirection: 'row',
   },
   infoText: {
     fontSize: 14,
@@ -281,6 +299,13 @@ const styles = StyleSheet.create({
     zIndex: 2,  // Ensure it stays above other components
     alignItems: 'center'
   },
+  bottombar: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    height: 10, // Adjust the thickness as needed
+    backgroundColor: '#8BC33A',
+  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -296,11 +321,11 @@ const styles = StyleSheet.create({
   },
   animalItem: {
     borderRadius: 10, // Rounded corners
-    shadowColor: '#000', // Shadow color
-    shadowOffset: { width: 0, height: 2 }, // Shadow offset
-    shadowOpacity: 0.25, // Shadow opacity
-    shadowRadius: 3.84, // Shadow radius
-    elevation: 5, // Elevation for Android shadow
+    // shadowColor: '#000', // Shadow color
+    // shadowOffset: { width: 0, height: 2 }, // Shadow offset
+    // shadowOpacity: 0.25, // Shadow opacity
+    // shadowRadius: 3.84, // Shadow radius
+    // elevation: 5, // Elevation for Android shadow
     backgroundColor: '#fff', // Background color to make the shadow visible
     padding: 2, // Optional: Add padding to the component
     margin: 10, // Optional: Add margin to the component
@@ -309,7 +334,15 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     marginRight: 1,
-    borderRadius: 10
+    borderRadius: 80
+  },
+  icon: {
+    position: 'absolute',
+    top: 5, // Adjust this value to position the icon vertically inside the image
+    left: 4, // Adjust this value to position the icon horizontally inside the image
+  },
+  imageContainer: {
+    position: 'relative', // Make the container relative for absolute positioning
   },
   animalName: {
     fontSize: 20,
@@ -367,25 +400,25 @@ const modalStyle = StyleSheet.create({
   },
   modalContent: {
     width: '90%',
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 20,
-    alignItems: 'center',
+    backgroundColor: '#5a8c66',
+    borderRadius: 30,
+    padding: 0,
+    // alignItems: 'center',
     position: 'relative',
-    borderWidth: 2, 
     borderColor: 'green', 
   },
   closeButton: {
     position: 'absolute',
     bottom: 20,
     alignSelf: 'center',
-    backgroundColor: '#068c08',
+    backgroundColor: 'black',
     padding: 10,
     borderRadius: 5,
   },
   closeButtonText: {
     color: 'white',
     fontWeight: 'bold',
+    fontFamily: 'serif',
   },
   modalTitle: {
     fontSize: 24,
@@ -394,32 +427,38 @@ const modalStyle = StyleSheet.create({
     textAlign: 'center',
   },
   image: {
-    width: 150, 
+    width: '100%', 
     height: 150,
-    borderRadius: 10, 
-    borderWidth: 2, 
-    borderColor: 'green',
-    alignSelf: 'center',
   },
   animalName: {
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
+    fontFamily: 'serif',
+    color: 'white',
   },
   species: {
     fontSize: 18,
     fontStyle: 'italic',
+    fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 10,
+    fontFamily: 'serif',
+    color: 'white',
+    marginLeft: 10,
   },
   sectionTitle: {
     fontWeight: 'bold',
     marginBottom: 20,
+    fontFamily: 'serif',
+    color: 'white',
   },
   
   sectionText: {
     fontSize: 16,
     marginBottom: 20,
+    fontFamily: 'serif',
+    color: 'white',
   },
 });
 
