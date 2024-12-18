@@ -15,7 +15,7 @@ const ToggleShowInformationButton = ({ title, handlePress, containerStyles, text
         isLoading ? styles.loading : null
       ]}
     >
-      <Image source={icons.upcareticon} />
+      <Image style={{tintColor:'black'}} source={icons.upcareticon} />
       <Text style={styles.text}>
         {title}
       </Text>
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     zIndex: 1000,
   },
   button: {
-    backgroundColor: '#8BC33A',
+    backgroundColor: 'grey',
     borderTopLeftRadius: 150,
     borderTopRightRadius: 150,
     borderBottomLeftRadius: 20, // Higher border-radius for arch effect

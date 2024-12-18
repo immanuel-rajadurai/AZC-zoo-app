@@ -81,15 +81,15 @@ const InformationPage = () => {
   return (
     <View style={styles.container}>
     <ScrollView style={styles.container}>
-      <TitleSection title="Experiences" color="#3e7a36" />
+      <TitleSection title="Experiences" color="black" />
       <View style={styles.horizontalListContainer}>
         {renderHorizontalList(events)}
       </View>
-      <TitleSection title="Bird Shows" color="#3e7a36" />
+      <TitleSection title="Bird Shows" color="black" />
       <View style={styles.horizontalListContainer}>
         {renderHorizontalList(birdEventsList)}
       </View>
-      <TitleSection title="Tiger Events" color="#3e7a36" />
+      <TitleSection title="Tiger Events" color="black" />
       <View style={styles.horizontalListContainer}>
         {renderHorizontalList(tigerEventsList)}
       </View>
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     marginLeft: -100, // Move back by half the width to center it
     width: 200,  // Width of the half-circle
     height: 80,  // Height of the half-circle
-    backgroundColor: '#234e35',  // Dark green color
+    backgroundColor: 'black',  // Dark green color
     borderTopLeftRadius: 80,  // Creates a rounded top left corner
     borderTopRightRadius: 80,  // Creates a rounded top right corner
     zIndex: 2,  // Ensure it stays above other components

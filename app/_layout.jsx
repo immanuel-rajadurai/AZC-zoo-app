@@ -189,7 +189,7 @@ const RootLayout = () => {
         options={{header: CustomHeader }}
       />
 
-      <Stack.Screen name="wallet" options={{ title: 'Wallet', headerStyle: { backgroundColor: '#234e35' } }} />
+      <Stack.Screen name="wallet" options={{ title: 'Wallet', headerStyle: { backgroundColor: 'grey' } }} />
 
       <Stack.Screen name="news" options={{ title: 'News' }} />
       <Stack.Screen name="information" options={{ title: 'Information' }} />
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingVertical: 10,
-    backgroundColor: '#234e35',
+    backgroundColor: 'white',
   },
   drawerToggle: {
     position: 'absolute',

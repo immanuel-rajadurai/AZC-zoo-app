@@ -6,22 +6,48 @@ import { CustomHeader } from '../_layout';
 
 //green CSS colour #187c3c
 
+// const TabIcon = ({ icon, color, name, focused, style, textColor }) => {
+//   return (
+//     <View style={{ alignItems: 'center', justifyContent: 'center', gap: 2 }}>
+//       <Image
+//         source={icon}
+//         resizeMethod='contain'
+//         tintColor={color}
+//         className="w-35 h-35"
+//         style={[{ tintColor: color }, style]}
+//       />
+//       <Text className={`${focused ? 'font-psemibold' : 'font-pregular'} text-xs`} style={{ color: textColor }}>
+//         {name}
+//       </Text>
+//     </View>
+//   )
+// }
+
 const TabIcon = ({ icon, color, name, focused, style, textColor }) => {
   return (
     <View style={{ alignItems: 'center', justifyContent: 'center', gap: 2 }}>
       <Image
         source={icon}
-        resizeMethod='contain'
-        tintColor={color}
-        className="w-15 h-15"
-        style={[{ tintColor: color }, style]}
+        resizeMethod="contain"
+        style={[{ tintColor: color, width: 35, height: 35 }, style]}
       />
-      <Text className={`${focused ? 'font-psemibold' : 'font-pregular'} text-xs`} style={{ color: textColor }}>
+      <Text
+        numberOfLines={1} // Prevent wrapping to a new line
+        style={{
+          color: textColor,
+          fontSize: 12,
+          textAlign: 'center',
+          fontWeight: focused ? 'bold' : 'normal',
+           width: '100%'
+        }}
+      >
         {name}
       </Text>
     </View>
-  )
-}
+  );
+};
+
+
 
 const TabsLayout = () => {
   return (
@@ -30,11 +56,11 @@ const TabsLayout = () => {
         screenOptions={{
         tabBarShowLabel: false,
         tabBarActiveTintColor: '#619837',
-        tabBarInactiveTintColor: '#7BC144',
+        tabBarInactiveTintColor: 'white',
         tabBarStyle: {
-          backgroundColor: '#234e35',
+          backgroundColor: 'black',
           borderTopWidth: 0,
-          borderTopColor: '#232533',
+          borderTopColor: 'black',
           height: 80,
           paddingBottom: 0,
           paddingTop: 20,
@@ -42,7 +68,7 @@ const TabsLayout = () => {
         tabBarItemStyle: {
           justifyContent: 'center',
           alignItems: 'center',
-          width: 'auto',
+          width: '110%',
         },
         tabBarLabelStyle: {
           flex: 1,
@@ -61,7 +87,7 @@ const TabsLayout = () => {
               <TabIcon
                 icon={icons.showsicon}
                 color={color}
-                textColor="#619837"
+                textColor="white"
                 name="Shows"
                 focused={focused}
                 style={{ width: 35, height: 35}}
@@ -78,8 +104,8 @@ const TabsLayout = () => {
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
                 icon={icons.cafe}
-                // color={color}
-                textColor="#619837"
+                textColor="white"
+                color="white"
                 name="Food"
                 focused={focused}
                 style={{ width: 35, height: 35}}
@@ -97,7 +123,7 @@ const TabsLayout = () => {
               <TabIcon
                 icon={icons.mapicon}
                 // color={color}
-                textColor="#234e35"
+                textColor="white"
                 name="Home"
                 focused={focused}
                 style={{ width: 85, height: 100}}
@@ -114,8 +140,8 @@ const TabsLayout = () => {
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
                 icon={icons.infoIcon}
-                color={color}
-                textColor="#619837"
+                color="white"
+                textColor="white"
                 name="Info"
                 style={{ width: 35, height: 35}}
                 focused={focused}
@@ -133,7 +159,7 @@ const TabsLayout = () => {
               <TabIcon
                 icon={icons.paw}
                 color={color}
-                textColor="#619837"
+                textColor="white"
                 name="Animals"
                 focused={focused}
                 className="w-52 h-72"
@@ -146,6 +172,9 @@ const TabsLayout = () => {
       </Tabs>
     </>
   )
+  
 }
+
+
 
 export default TabsLayout;

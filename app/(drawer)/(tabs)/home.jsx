@@ -440,7 +440,7 @@ const styles = StyleSheet.create({
     bottom: -40,  // Ensures it overlaps other components slightly
     width: 200,  // Width of the half-circle
     height: 80,  // Height of the half-circle
-    backgroundColor: '#234e35',  // Dark green color
+    backgroundColor: 'black',  // Dark green color
     borderTopLeftRadius: 80,  // Creates a rounded top left corner
     borderTopRightRadius: 80,  // Creates a rounded top right corner
     zIndex: 2,  // Ensure it stays above other components
@@ -450,7 +450,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: '100%',
     height: 10, // Adjust the thickness as needed
-    backgroundColor: '#8BC33A',
+    backgroundColor: 'grey',
   },
   eventButton: {
     width: "60%",
