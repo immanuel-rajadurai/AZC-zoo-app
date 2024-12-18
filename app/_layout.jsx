@@ -51,7 +51,7 @@ const CustomHeader = ({ route }) => {
   };
 
   return (
-    <SafeAreaView style={{ backgroundColor: '#234e35' }}>
+    <SafeAreaView style={{ backgroundColor: 'black' }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 1, paddingHorizontal: 15, position: 'relative'}}>
         {!isSearchVisible ? (
           <>
@@ -61,14 +61,14 @@ const CustomHeader = ({ route }) => {
             >
               <Image
                 source={icons.sidetabgreen}
-                style={{ width: 40, height: 35, tintColor: "#7BC144" }}
+                style={{ width: 40, height: 35, tintColor: "white" }}
                 resizeMode="contain"
               />
             </TouchableOpacity>
 
             <Image
                 source={icons.londonzooheader}
-                style={{ width: 160, height: 50, tintColor: "#7BC144" }}
+                style={{ width: 160, height: 50, tintColor: "white" }}
                 resizeMode="contain"
               />
           </>
@@ -100,7 +100,7 @@ const CustomHeader = ({ route }) => {
             style={{
               width: 20,
               height: 20,
-              tintColor: isSearchVisible ? 'black' : '#7BC144', 
+              tintColor: isSearchVisible ? 'black' : 'white', 
               left: 0
             }}
             resizeMode="contain"

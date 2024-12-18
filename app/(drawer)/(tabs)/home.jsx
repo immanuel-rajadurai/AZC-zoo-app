@@ -167,8 +167,8 @@ const Home = () => {
   };
 
   const imageBounds = [
-    [51.532581594564654, -0.15931530103070354], //southwest
-    [51.536631441307364, -0.15031572508956532], //northeast
+    [51.532581594564654, -0.1622530103070354], //southwest
+    [51.536631441307364, -0.15011572508956532], //northeast
   ];
 
   const [options, setOptions] = useState([
@@ -214,12 +214,12 @@ const Home = () => {
           image={
             isOptionEnabled(2) 
             ? require("../../../assets/mapoverlays/zoomap4.png")// Visual impairment map
-            : require("../../../assets/mapoverlays/zoomap3.png")// Standard map
+            : require("../../../assets/mapoverlays/overlay.png")// Standard map
           }
           bounds={imageBounds}
           bearing={0}
           style={styles.overlay}
-          opacity={0.8}
+          opacity={1}
         />
 
         {animals.map((animal, index) => (
