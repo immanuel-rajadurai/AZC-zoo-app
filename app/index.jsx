@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     marginBottom: -10, // Adjust this value to ensure the icon touches the button
   },
   closeButton: {
-    backgroundColor: 'black',
+    backgroundColor: 'grey',
     padding: 10,
     borderRadius: 5,
     width: 200,
