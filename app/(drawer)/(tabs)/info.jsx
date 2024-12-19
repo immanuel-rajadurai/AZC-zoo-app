@@ -3,13 +3,13 @@ import { View, Text, StyleSheet, ScrollView, FlatList, Image } from 'react-nativ
 import { images } from '../../../constants'
 
 
-import { generateClient } from 'aws-amplify/api';
-import { listEvents } from '../../../src/graphql/queries'; 
+// import { generateClient } from 'aws-amplify/api';
+// import { listEvents } from '../../../src/graphql/queries'; 
 
-const client = generateClient(); 
+// const client = generateClient(); 
  
 const generalEventsList = [
-  { id: 1, name: "Classic zoo tour", image: "https://i.ytimg.com/vi/qg8DI7yGxB4/maxresdefault.jpg" },
+  { id: 1, name: "Classic zoo tour", image: "https://www.baligoldentour.com/images/bali-activities-tour/bali-zoo-park-tours.jpg" },
   { id: 2, name: "Photography", image: "https://www.nczoo.org/sites/default/files/2024-06/zoo-tours-1.jpg" },
   { id: 3, name: "Zookeeper session", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxirguW66tX_jYE0qc0uu9srV7CfEs8e5ZZQ&s" }
 ];
@@ -44,28 +44,28 @@ const InformationPage = () => {
 
   const [events, setEvents] = useState([]);
 
-  useEffect(() => {
+  // useEffect(() => {
   
-    const fetchEvents = async () => { 
+  //   const fetchEvents = async () => { 
 
-      try {
-        const eventsResult = await client.graphql(
-          {query: listEvents}
-        );
+  //     try {
+  //       const eventsResult = await client.graphql(
+  //         {query: listEvents}
+  //       );
 
-        // console.log(eventsResult.data.listEvents.items);
+  //       // console.log(eventsResult.data.listEvents.items);
 
-        setEvents(eventsResult.data.listEvents.items)
+  //       setEvents(eventsResult.data.listEvents.items)
 
-        console.log("");
-        console.log(events[0])
-      } catch (error) {
-        console.log('error on fetching events', error)
-      }
-    }
+  //       console.log("");
+  //       console.log(events[0])
+  //     } catch (error) {
+  //       console.log('error on fetching events', error)
+  //     }
+  //   }
 
-    fetchEvents();
-  }, []);
+  //   fetchEvents();
+  // }, []);
 
 
   const renderHorizontalList = (data) => (
@@ -83,7 +83,7 @@ const InformationPage = () => {
     <ScrollView style={styles.container}>
       <TitleSection title="Experiences" color="#162b4c" />
       <View style={styles.horizontalListContainer}>
-        {renderHorizontalList(events)}
+        {renderHorizontalList(generalEventsList)}
       </View>
       <TitleSection title="Bird Shows" color="#162b4c" />
       <View style={styles.horizontalListContainer}>

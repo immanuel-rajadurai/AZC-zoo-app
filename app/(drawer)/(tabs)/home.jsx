@@ -13,10 +13,10 @@ import ToggleShowInformationButton from '../../../components/ToggleShowInformati
 import accessibilityIcon from "../../../assets/icons/accessibility.png";
 import { icons } from '../../../constants';
 
-import { generateClient } from 'aws-amplify/api';
-import { listEvents } from '../../../src/graphql/queries';
+// import { generateClient } from 'aws-amplify/api';
+// import { listEvents } from '../../src/graphql/queries';
 
-const client = generateClient();
+// const client = generateClient();
 
 const Home = () => {
   
@@ -30,9 +30,9 @@ const Home = () => {
   const translateY = useRef(new Animated.Value(200)).current;
   const { height: screenHeight } = Dimensions.get('window');
   const [eventButtonTitle, setButtonTitle] = useState("Challenge");
+  const [accessibilityVisible, setAccessibilityVisible] = useState(false);
   const [isShowEventsButtonVisible, setShowEventsButtonVisible] = useState(true);
-  const [accessibilityVisible, setAccessibilityVisible] = useState(false); 
-
+  
   const onRefresh = async () => {
     setRefreshing(true);
     // await refetch();
@@ -74,10 +74,29 @@ const Home = () => {
     }
   };
 
+  const toggleAccessibilityIcon = () => {
+    if (accessibilityVisible) {
+      Animated.timing(translateY, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }).start(() => {
+        setAccessibilityVisible(false);
+      });
+    } else {
+      setAccessibilityVisible(true);
+      Animated.timing(translateY, {
+        toValue: -10,
+        duration: 5,
+        useNativeDriver: true,
+      }).start();
+    }
+  };
+
   const zooRegion = {
     latitude: 51.535121,
     longitude: -0.154131,
-    latitudeDelta: 0.003, 
+    latitudeDelta: 0.003,
     longitudeDelta: 0.003,
   };
 
@@ -120,20 +139,20 @@ const Home = () => {
       // });
     };
 
-    const fetchEvents = async () => { 
+    // const fetchEvents = async () => { 
 
-      try {
-        const eventsResult = await client.graphql(
-          {query: listEvents}
-        );
+    //   try {
+    //     const eventsResult = await client.graphql(
+    //       {query: listEvents}
+    //     );
 
-        console.log(eventsResult.data.listEvents.items);
+    //     console.log(eventsResult);
 
-        setEvents(eventsResult.data.listEvents.items)
-      } catch (error) {
-        console.log('error on fetching events', error)
-      }
-    }
+    //     setEvents(eventsResult.data.listEvents.items)
+    //   } catch (error) {
+    //     console.log('error on fetching events', error)
+    //   }
+    // }
 
 
     setRegion({
@@ -143,8 +162,8 @@ const Home = () => {
       longitudeDelta: 0.003,
     });
 
-    getLocation();
-    fetchEvents();
+    // getLocation();
+    // fetchEvents();
   }, []);
 
   const goToZoo = () => {
@@ -166,25 +185,15 @@ const Home = () => {
       });
   };
 
+  // const imageBounds = [
+  //   [51.532581594564654, -0.15931530103070354], //southwest
+  //   [51.536631441307364, -0.15031572508956532], //northeast
+  // ];
+
   const imageBounds = [
     [51.532581594564654, -0.1622530103070354], //southwest
     [51.536631441307364, -0.15011572508956532], //northeast
   ];
-
-  const [options, setOptions] = useState([
-    { id: 1, name: 'Mobility Impairments', isEnabled: false },
-    { id: 2, name: 'Visual Impairments', isEnabled: false },
-  ]);
-  
-  const toggleOption = (id) => {
-    setOptions((prevOptions) =>
-      prevOptions.map((option) =>
-        option.id === id ? { ...option, isEnabled: !option.isEnabled } : option
-      )
-    );
-  };
-  
-  const isOptionEnabled = (id) => options.find((option) => option.id === id)?.isEnabled;  
   
   return (
     <View style={styles.container}>
@@ -196,62 +205,17 @@ const Home = () => {
         followsUserLocation={true}
         customMapStyle={mapstyle1}
         onRegionChangeComplete={(region) => setRegion(region)}
-        // onRegionChangeComplete={(newRegion) => {
-        //   // Set the region back to the specified bounds if the user tries to pan outside
-        //   if (
-        //     newRegion.latitude < 51.534 || // Lat min bound
-        //     newRegion.latitude > 51.536 || // Lat max bound
-        //     newRegion.longitude < -0.156 || // Lon min bound
-        //     newRegion.longitude > -0.152 // Lon max bound
-        //   ) {
-        //     mapRef.current.animateToRegion(region, 200); // Reset to original region
-        //   }
-        // }}
         provider={MapView.PROVIDER_GOOGLE}
       >
       
         <Overlay  
-          image={
-            isOptionEnabled(2) 
-            ? require("../../../assets/mapoverlays/zoomap4.png")// Visual impairment map
-            : require("../../../assets/mapoverlays/overlay.png")// Standard map
-          }
+          image={require("../../../assets/mapoverlays/overlay.png")}
           bounds={imageBounds}
           bearing={0}
           style={styles.overlay}
           opacity={1}
         />
 
-        {/* {animals.map((animal, index) => (
-          <Marker
-            key={index}
-            coordinate={animal.coordinates}
-            onPress={() => handleAnimalPress(animal)}
-          >
-            <Image
-              source={animal.image}
-              style={{ width: 60, height: 60 }}
-              resizeMode="contain"
-            />
-          </Marker>
-        ))}
-
-        {options.map((option) =>
-          option.isEnabled && option.id !== 2 ? (
-            <Marker
-              key={`marker-${option.id}`}
-              coordinate={{ latitude: 51.53480, longitude: -0.1535 }}
-            >
-              <Image
-                source={
-                  require('../../../assets/icons/accessibility.png')
-                }
-                style={{ width: 30, height: 30 }}
-                resizeMode="contain"
-              />
-            </Marker>
-          ) : null
-        )} */}
 
       </MapView>
 
@@ -297,83 +261,6 @@ const Home = () => {
         </View>
       </Modal>
 
-      <TouchableOpacity
-        style={styles.toggleButton}
-        onPress={() => setAccessibilityVisible(!accessibilityVisible)}
-      >
-        <Image
-          source={require('../../../assets/icons/accessibility-filter.png')} style={styles.toggleButton}
-        />
-      </TouchableOpacity>
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={accessibilityVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={modalStyles.accessibilityView}>
-          <View style={modalStyles.accessibilityModal}>
-            <Text style={modalStyles.accessibilityText}>Accessibility Options Overview</Text>
-
-            
-            <View style={modalStyles.optionContainer}>
-              <Image source={require('../../../assets/icons/mobility-impairment.png')} style={modalStyles.icon} />
-              <Text style={modalStyles.optionText}>Mobility Impairments</Text>
-              <TouchableOpacity
-                style={[
-                  modalStyles.toggleButton,
-                  isOptionEnabled(1) ? modalStyles.toggleButtonOn : modalStyles.toggleButtonOff, // Dynamic styles for ON/OFF states
-                ]}
-                onPress={() => toggleOption(1)} // Toggle function with an ID, you can adjust this based on your needs
-              >
-                <View style={modalStyles.toggleIndicator}>
-                  <View
-                    style={[
-                      modalStyles.indicator,
-                      isOptionEnabled(1) ? modalStyles.indicatorOn : modalStyles.indicatorOff, // Change indicator dynamically
-                    ]}
-                  />
-                </View>  
-              </TouchableOpacity>
-            </View>
-
-
-            
-            <View style={modalStyles.optionContainer}>
-              <Image source={require('../../../assets/icons/visual-impairment.png')} style={modalStyles.icon} />
-              <Text style={modalStyles.optionText}>Visual Impairments</Text>
-              <TouchableOpacity
-                style={[
-                  modalStyles.toggleButton,
-                  isOptionEnabled(2) ? modalStyles.toggleButtonOn : modalStyles.toggleButtonOff, // Dynamic styles for ON/OFF states
-                ]}
-                onPress={() => toggleOption(2)}
-              >
-                <View style={modalStyles.toggleIndicator}>
-                  <View
-                    style={[
-                      modalStyles.indicator,
-                      isOptionEnabled(2) ? modalStyles.indicatorOn : modalStyles.indicatorOff, // Change indicator dynamically
-                    ]}
-                  />
-                </View>  
-              </TouchableOpacity>
-            </View>
-
-            <TouchableOpacity
-              style={modalStyles.accessibilityCloseButton}
-              onPress={() => setAccessibilityVisible(false)} // Close the modal on button press
-            >
-              <Text style={modalStyles.accessibilityCloseButtonText}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-
       <View style={styles.halfCircle} />
 
       <View style={styles.bottombar} />
@@ -405,6 +292,12 @@ const Home = () => {
         </Animated.View>
 
       )}
+
+      <TouchableOpacity style={styles.toggleButton} onPress={toggleAccessibilityIcon}>
+        <Text style={styles.buttonText}>
+          {accessibilityVisible ? "Hide Disabled" : "Show Disabled"}
+        </Text>
+      </TouchableOpacity>
 
     </View>
   );
@@ -460,15 +353,27 @@ const styles = StyleSheet.create({
     zIndex: 1,
     alignItems: 'center', // Center horizontally
   },
+
+
   toggleButton: {
     position: "absolute",
-    top: 16, 
-    right: 16, 
-    width: 32,
-    height: 32,
+    bottom: 8, 
+    right: 8, 
+    backgroundColor: "grey",
+    paddingTop: 28,
+    paddingBottom: 28,
+    paddingLeft: 10,
+    paddingRight: 10,
+    borderRadius: 50,
+    width: 84, 
     alignItems: "center", 
     zIndex: 2,
-    marginTop:20
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 12,
+    textAlign: "center",
   },
 });
 
@@ -543,95 +448,6 @@ const modalStyles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
   },
-  accessibilityView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  accessibilityModal: {
-    width: 340,
-    backgroundColor: '#ffffff',
-    padding: 20,
-    alignItems: 'center',
-  },
-  accessibilityText: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 28,
-    color: '#000000',
-    textAlign: 'center',
-  },
-  optionContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 32,
-  },
-  icon: {
-    marginRight: 16,
-    marginLeft: 8,
-    width: 28,
-    height: 30,
-  },
-  optionText: {
-    fontSize: 16,
-    fontWeight: 700,
-    color: '#000000', 
-    marginRight: 20,
-    flex: 1,
-  },
-  toggleButton: {
-    width: 40,
-    height: 24,
-    borderRadius: 12,
-    justifyContent: 'center',
-    paddingHorizontal: 2,
-    marginTop: 20
-  },
-  toggleButtonOn: {
-    backgroundColor: '#00533A', // background for ON
-  },
-  toggleButtonOff: {
-    backgroundColor: '#000000', // background for OFF
-  },
-  toggleIndicator: {
-    width: 36,
-    height: 20,
-    borderRadius: 12,
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    position: 'relative',
-  },
-  indicator: {
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    position: 'absolute',
-  },
-  indicatorOn: {
-    backgroundColor: '#00533A', // for ON state
-    right: 2,
-  },
-  indicatorOff: {
-    backgroundColor: '#000000', // for OFF state
-    left: 2,
-  },
-  buttonText: {
-    color: 'red',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  accessibilityCloseButton: {
-    backgroundColor: '#000000', // for close button
-    borderRadius: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 32,
-    marginTop: 20,
-  },
-  accessibilityCloseButtonText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
-  }
 });
 
 export default Home;
