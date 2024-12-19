@@ -41,9 +41,9 @@ const TabsLayout = () => {
         tabBarActiveTintColor: 'white',
         tabBarInactiveTintColor: 'white',
         tabBarStyle: {
-          backgroundColor: 'black',
+          backgroundColor: '#162b4c',
           borderTopWidth: 0,
-          borderTopColor: 'black',
+          borderTopColor: '#162b4c',
           height: 80,
           paddingBottom: 0,
           paddingTop: 20,
@@ -107,9 +107,9 @@ const TabsLayout = () => {
                 icon={icons.mapicon}
                 // color={color}
                 textColor="white"
-                name="Home"
+                name=""
                 focused={focused}
-                style={{ width: 85, height: 100}}
+                style={{ width: 85, height: 80, marginBottom: 30}}
               />
             )
           }}

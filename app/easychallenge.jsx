@@ -766,7 +766,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 17,
     fontWeight: 'bold',
-    color: 'black',
+    color: '#162b4c',
     marginTop: 10,
     marginBottom: 10,
     textAlign: 'center',
@@ -892,7 +892,7 @@ const modalStyle = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     alignSelf: 'center',
-    backgroundColor: 'black',
+    backgroundColor: '#162b4c',
     padding: 10,
     borderRadius: 5,
   },

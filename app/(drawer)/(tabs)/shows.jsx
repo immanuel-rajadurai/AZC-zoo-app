@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     bottom: -40,  // Ensures it overlaps other components slightly
     width: 200,  // Width of the half-circle
     height: 80,  // Height of the half-circle
-    backgroundColor: 'black',  // Dark green color
+    backgroundColor: '#162b4c',  // Dark green color
     borderTopLeftRadius: 80,  // Creates a rounded top left corner
     borderTopRightRadius: 80,  // Creates a rounded top right corner
     zIndex: 2,  // Ensure it stays above other components
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     // elevation: 5, // Elevation for Android shadow
     backgroundColor: '#fff', // Background color to make the shadow visible
     padding: 10, // Optional: Add padding to the component
-    margin: 10, // Optional: Add margin to the component
+    margin: 2, // Optional: Add margin to the component
   },
   placeImage: {
     width: 100,

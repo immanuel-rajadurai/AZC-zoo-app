@@ -15,7 +15,7 @@ const ToggleShowInformationButton = ({ title, handlePress, containerStyles, text
         isLoading ? styles.loading : null
       ]}
     >
-      <Image style={{tintColor:'black'}} source={icons.upcareticon} />
+      <Image style={{tintColor:'#162b4c'}} source={icons.upcareticon} />
       <Text style={styles.text}>
         {title}
       </Text>

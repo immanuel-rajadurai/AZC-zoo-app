@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
   animalName: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: 'darkgreen',
+    color: '#162b4c',
     marginTop: 10,
     marginBottom: 10,
     textAlign: 'left',
@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
     color: 'gray',
   },
   customButton: {
-    backgroundColor: 'darkgreen',
+    backgroundColor: '#162b4c',
     borderRadius: 10,
     paddingVertical: 3, // Smaller vertical padding
     paddingHorizontal: 8, // Smaller horizontal padding
@@ -289,6 +289,8 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 12, // Slightly smaller font size
     fontWeight: 'bold',
+    flexWrap: 'wrap',
+    textAlign: 'center'
   },
   cardSectionTitle: {
     fontWeight: 'bold',

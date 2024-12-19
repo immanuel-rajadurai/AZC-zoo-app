@@ -29,9 +29,9 @@ export default function App() {
   }, [navigation]);
 
     return (
-          <SafeAreaView className="h-full" backgroundColor='black'>
+          <SafeAreaView className="h-full" backgroundColor='#162b4c'>
             <ScrollView contentContainerStyle={{ height: '100%'}}>
-              <View className="w-full justify-center items-center min-h-[85vh] px-4" backgroundColor='black'>
+              <View className="w-full justify-center items-center min-h-[85vh] px-4" backgroundColor='#162b4c'>
                 <Image
                   source={icons.bordeauxzooheader}
                   className="max-w--[380px] w-full h-[200px] mt-[240px]"

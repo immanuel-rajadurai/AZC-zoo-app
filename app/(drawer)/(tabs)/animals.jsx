@@ -255,7 +255,7 @@ export default Animals;
 const styles = StyleSheet.create({
   infoBox: {
     borderWidth: 2,
-    borderColor: 'darkgreen',
+    borderColor: '#162b4c',
     borderRadius: 10,
     padding: 15,
     margin: 10,
@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
   },
   infoText: {
     fontSize: 14,
-    color: 'darkgreen',
+    color: '#162b4c',
     textAlign: 'center',
   },
   container: {
@@ -293,7 +293,7 @@ const styles = StyleSheet.create({
     bottom: -40,  // Ensures it overlaps other components slightly
     width: 200,  // Width of the half-circle
     height: 80,  // Height of the half-circle
-    backgroundColor: 'black',  // Dark green color
+    backgroundColor: '#162b4c',  // Dark green color
     borderTopLeftRadius: 80,  // Creates a rounded top left corner
     borderTopRightRadius: 80,  // Creates a rounded top right corner
     zIndex: 2,  // Ensure it stays above other components
@@ -347,7 +347,7 @@ const styles = StyleSheet.create({
   animalName: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: 'black',
+    color: '#162b4c',
     marginTop: 10,
     marginBottom: 10,
     textAlign: 'left',
@@ -363,7 +363,7 @@ const styles = StyleSheet.create({
     color: 'gray',
   },
   planButton: {
-    backgroundColor: 'black',
+    backgroundColor: '#162b4c',
     borderRadius: 20,
     paddingVertical: 10, // Smaller vertical padding
     paddingHorizontal: 8, // Smaller horizontal padding
@@ -371,7 +371,7 @@ const styles = StyleSheet.create({
     width: 150, // Reduce minimum width
   },
   customButton: {
-    backgroundColor: 'black',
+    backgroundColor: '#162b4c',
     borderRadius: 10,
     paddingVertical: 3, // Smaller vertical padding
     paddingHorizontal: 8, // Smaller horizontal padding
@@ -383,6 +383,8 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 12, // Slightly smaller font size
     fontWeight: 'bold',
+    flexWrap: 'wrap',
+    textAlign: 'center'
   },
   cardSectionTitle: {
     fontWeight: 'bold',
@@ -400,7 +402,7 @@ const modalStyle = StyleSheet.create({
   },
   modalContent: {
     width: '90%',
-    backgroundColor: 'black',
+    backgroundColor: '#162b4c',
     borderRadius: 0,
     padding: 0,
     // alignItems: 'center',

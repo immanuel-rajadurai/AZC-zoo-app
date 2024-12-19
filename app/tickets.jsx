@@ -10,7 +10,7 @@ const Tickets = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
         <WebView 
-            source={{ uri: 'https://zsllondonzoo.seetickets.com/zsl/zsl-london-zoo?_gl=1*1ad2eww*_gcl_au*MTcxMjM1MjUyNC4xNzI5NTg4NDE2*_ga*MTM4MjAzNTM0Ny4xNzI5NTg4NDE2*_ga_MWZNHV9X89*MTcyOTU4ODQxNS4xLjAuMTcyOTU4ODQxNS42MC4wLjA.'}}
+            source={{ uri: 'https://billetterie.zoo-bordeaux-pessac.com/en/'}}
             style={{ flex: 1 }} 
         />
     </SafeAreaView>

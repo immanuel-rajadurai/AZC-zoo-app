@@ -51,7 +51,7 @@ const CustomHeader = ({ route }) => {
   };
 
   return (
-    <SafeAreaView style={{ backgroundColor: 'black' }}>
+    <SafeAreaView style={{ backgroundColor: '#162b4c' }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 1, paddingHorizontal: 15, position: 'relative'}}>
         {!isSearchVisible ? (
           <>
@@ -100,7 +100,7 @@ const CustomHeader = ({ route }) => {
             style={{
               width: 20,
               height: 20,
-              tintColor: isSearchVisible ? 'black' : 'white', 
+              tintColor: isSearchVisible ? '#162b4c' : 'white', 
               left: 0
             }}
             resizeMode="contain"

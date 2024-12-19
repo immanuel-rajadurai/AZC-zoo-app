@@ -222,7 +222,7 @@ const Home = () => {
           opacity={1}
         />
 
-        {animals.map((animal, index) => (
+        {/* {animals.map((animal, index) => (
           <Marker
             key={index}
             coordinate={animal.coordinates}
@@ -251,7 +251,7 @@ const Home = () => {
               />
             </Marker>
           ) : null
-        )}
+        )} */}
 
       </MapView>
 
@@ -440,7 +440,7 @@ const styles = StyleSheet.create({
     bottom: -40,  // Ensures it overlaps other components slightly
     width: 200,  // Width of the half-circle
     height: 80,  // Height of the half-circle
-    backgroundColor: 'black',  // Dark green color
+    backgroundColor: '#162b4c',  // Dark green color
     borderTopLeftRadius: 80,  // Creates a rounded top left corner
     borderTopRightRadius: 80,  // Creates a rounded top right corner
     zIndex: 2,  // Ensure it stays above other components

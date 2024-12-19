@@ -81,15 +81,15 @@ const InformationPage = () => {
   return (
     <View style={styles.container}>
     <ScrollView style={styles.container}>
-      <TitleSection title="Experiences" color="black" />
+      <TitleSection title="Experiences" color="#162b4c" />
       <View style={styles.horizontalListContainer}>
         {renderHorizontalList(events)}
       </View>
-      <TitleSection title="Bird Shows" color="black" />
+      <TitleSection title="Bird Shows" color="#162b4c" />
       <View style={styles.horizontalListContainer}>
         {renderHorizontalList(birdEventsList)}
       </View>
-      <TitleSection title="Tiger Events" color="black" />
+      <TitleSection title="Tiger Events" color="#162b4c" />
       <View style={styles.horizontalListContainer}>
         {renderHorizontalList(tigerEventsList)}
       </View>
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   title: {
-    fontSize: 28,
+    fontSize: 23,
     fontWeight: 'bold',
     color: '#fff', // White text color
     textAlign: 'left',
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     marginLeft: -100, // Move back by half the width to center it
     width: 200,  // Width of the half-circle
     height: 80,  // Height of the half-circle
-    backgroundColor: 'black',  // Dark green color
+    backgroundColor: '#162b4c',  // Dark green color
     borderTopLeftRadius: 80,  // Creates a rounded top left corner
     borderTopRightRadius: 80,  // Creates a rounded top right corner
     zIndex: 2,  // Ensure it stays above other components
@@ -138,12 +138,12 @@ const styles = StyleSheet.create({
   },
   itemContainer: {
     alignItems: 'center',
-    marginRight: 15,
-    marginRight: 15,
+    marginRight: 10,
+    marginRight: 10,
     marginBottom: 10,
     backgroundColor: '#f0f0f0',
     borderRadius: 2,
-    padding: 10,
+    padding: 2,
     // shadowColor: '#000',
     // shadowOffset: { width: 0, height: 4 }, // Increase the height offset
     // shadowOpacity: 0.5, // Increase the opacity
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   },
   itemName: {
     marginTop: 10,
-    fontSize: 16,
+    fontSize: 13,
     // color: '#2e7d32', // Green color
     fontFamily: 'serif', // Suitable font
     textAlign: 'center',

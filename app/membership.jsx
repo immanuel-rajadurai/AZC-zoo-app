@@ -10,7 +10,7 @@ const Membership = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
         <WebView 
-            source={{ uri: 'https://www.londonzoo.org/plan-your-visit/london-zoo-membership'}}
+            source={{ uri: 'https://billetterie.zoo-bordeaux-pessac.com/billetterie/abonnements/'}}
             style={{ flex: 1 }} 
         />
     </SafeAreaView>
