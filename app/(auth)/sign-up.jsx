@@ -1,6 +1,6 @@
 import { View, Text, ScrollView, Image, Alert, Linking } from 'react-native';
 import Checkbox from 'expo-checkbox';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { images, icons } from '../../constants';
 import FormField from '../../components/FormField';
@@ -8,7 +8,7 @@ import CustomButtonBlack from '../../components/CustomButtonBlack';
 import { router } from 'expo-router';
 import CustomButton from '../../components/CustomButton'
 
-import { ListUsers, CreateUser } from "../../../src/graphql/queries";
+import { ListUsers, CreateUser } from "../../src/graphql/queries";
 const SignUp = () => {
     const [agreeTerms, setAgreeTerms] = useState(false);
     const [stayUpdated, setStayUpdated] = useState(false);
@@ -37,7 +37,7 @@ const SignUp = () => {
         try {
             const testUser = {
                 input: {
-                    firstName: "Test",
+                    firstName: "Jane",
                     lastName: "User",
                     username: "testuser",
                     email: "testuser@example.com"
