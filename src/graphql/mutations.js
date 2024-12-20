@@ -12,6 +12,17 @@ export const incrementOccurenceCounter = /* GraphQL */ `
     }
   }
 `;
+export const incrementOccurrenceCounterNew = /* GraphQL */ `
+  mutation IncrementOccurrenceCounterNew($name: String!, $incrementBy: Int!) {
+    incrementOccurrenceCounterNew(name: $name, incrementBy: $incrementBy) {
+      name
+      count
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createUser = /* GraphQL */ `
   mutation CreateUser(
     $input: CreateUserInput!
@@ -438,6 +449,48 @@ export const deleteOccurrenceCounter = /* GraphQL */ `
     deleteOccurrenceCounter(input: $input, condition: $condition) {
       name
       count
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createOccurrenceCounterHistory = /* GraphQL */ `
+  mutation CreateOccurrenceCounterHistory(
+    $input: CreateOccurrenceCounterHistoryInput!
+    $condition: ModelOccurrenceCounterHistoryConditionInput
+  ) {
+    createOccurrenceCounterHistory(input: $input, condition: $condition) {
+      name
+      history
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateOccurrenceCounterHistory = /* GraphQL */ `
+  mutation UpdateOccurrenceCounterHistory(
+    $input: UpdateOccurrenceCounterHistoryInput!
+    $condition: ModelOccurrenceCounterHistoryConditionInput
+  ) {
+    updateOccurrenceCounterHistory(input: $input, condition: $condition) {
+      name
+      history
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteOccurrenceCounterHistory = /* GraphQL */ `
+  mutation DeleteOccurrenceCounterHistory(
+    $input: DeleteOccurrenceCounterHistoryInput!
+    $condition: ModelOccurrenceCounterHistoryConditionInput
+  ) {
+    deleteOccurrenceCounterHistory(input: $input, condition: $condition) {
+      name
+      history
       createdAt
       updatedAt
       __typename

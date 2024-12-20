@@ -75,3 +75,8 @@ type Mutation {
   incrementOccurrenceCounterNew(name: String!, incrementBy: Int!): OccurrenceCounter
     @function(name: "incrementOccurenceCounterNew-${env}")
 }
+
+type OccurrenceCounterHistory @model {
+  name: String! @primaryKey
+  history: [Int!]!
+}
