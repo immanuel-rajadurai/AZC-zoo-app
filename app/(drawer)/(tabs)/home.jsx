@@ -136,7 +136,6 @@ const Home = () => {
       }
     }
 
-
     setRegion({
       latitude: 51.535121,
       longitude: -0.154131,

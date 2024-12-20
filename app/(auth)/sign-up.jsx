@@ -9,21 +9,56 @@ import { router } from 'expo-router';
 import CustomButton from '../../components/CustomButton'
 
 import { ListUsers, CreateUser } from "../../src/graphql/queries";
+
+import { generateClient } from 'aws-amplify/api';
+import { listEvents } from '../../src/graphql/queries';
+import { API, graphqlOperation } from 'aws-amplify';
+
+
+const client = generateClient();
+
+
+const listUsers2 = /* GraphQL */ `
+  query List {
+    listUsers {
+        items {
+        firstName
+        lastName
+        email
+        }
+    }
+    }
+`;
+
+
+
+const createUserTemplate = `
+  mutation CreateUser($email: String!, $firstName: String!, $lastName: String!, $optedIn: Boolean!) {
+    createUser(input: {email: $email, firstName: $firstName, lastName: $lastName, optedIn: $optedIn}) {
+      email
+      firstName
+      lastName
+    }
+  }
+`;
+
+
 const SignUp = () => {
     const [agreeTerms, setAgreeTerms] = useState(false);
     const [stayUpdated, setStayUpdated] = useState(false);
+    const [users, setUsers] = useState([]);
 
     useEffect(() => {
         const fetchUsers = async () => {
             try {
                 const usersResult = await client.graphql(
-                    { query: ListUsers }
+                    { query: listUsers2 }
                 );
 
-                console.log(usersResult);
-                console.log(usersResult.data.ListUsers.items);
+                // console.log(usersResult);
+                // console.log(usersResult.data.listUsers.items);
 
-                setUsers(usersResult.data.ListUsers.items);
+                setUsers(usersResult.data.listUsers.items);
             } catch (error) {
                 console.log('error on fetching users', error);
             }
@@ -33,28 +68,30 @@ const SignUp = () => {
     }, []);
 
 
-    const addTestUser = async () => {
-        try {
-            const testUser = {
-                input: {
-                    firstName: "Jane",
-                    lastName: "User",
-                    username: "testuser",
-                    email: "testuser@example.com"
-                }
-            };
-
-            const result = await client.graphql(
-                { query: CreateUser, variables: testUser }
-            );
-
-            console.log('User created:', result.data.createUser);
-        } catch (error) {
-            console.log('Error creating user:', error);
-        }
-    };
 
     useEffect(() => {
+        const addTestUser = async () => {
+            console.log('Adding test user...');
+            try {
+             
+                let inputVariables = {
+                    firstName: "Jane4",
+                    lastName: "Doe",
+                    email: "janedoe4@gmail.com",
+                    optedIn: true
+                }
+            
+                const usersResult = await client.graphql({
+                    query: createUserTemplate,
+                    variables: inputVariables, 
+                });
+    
+                console.log('User created:', usersResult.data.createUser);
+            } catch (error) {
+                console.log('Error creating user:', error);
+            }
+        };
+
         addTestUser();
     }, []);
 
