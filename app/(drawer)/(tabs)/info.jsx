@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, FlatList, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, FlatList, Image, TouchableOpacity, Modal, SafeAreaView } from 'react-native';
 import { images } from '../../../constants'
 
 
@@ -20,19 +20,22 @@ const birdEventsList = [
   { id: 3, name: "Bird handling", image: "https://www.wise-owl.co.uk/wp-content/uploads/2019/03/shows-1.jpg" }
 ];
 
-
 const tigerEventsList = [
   { id: 1, name: "Learn about Tigers", image: "https://cdn.britannica.com/83/195983-138-66807699/numbers-tiger-populations.jpg?w=800&h=450&c=crop" },
   { id: 2, name: "Tiger feeding", image: "https://static01.nyt.com/images/2020/04/07/us/07xp-newtigerking/merlin_171122598_a64a8924-51f2-4010-a7a3-892b3e94513d-superJumbo.jpg" },
   { id: 3, name: "White tiger showcase", image: "https://upload.wikimedia.org/wikipedia/commons/4/40/Standing_white_tiger.jpg" }
 ];
 
-const HorizontalListItem = ({ item }) => (
-  <View style={styles.itemContainer}>
-    <Image source={{ uri: item.image }} style={styles.thumbnail} />
-    <Text style={styles.itemName}>{item.name}</Text>
-  </View>
-);
+const HorizontalListItem = ({ item, onPress }) => {
+  return (
+    <TouchableOpacity onPress={() => onPress(item)}>
+      <View style={styles.itemContainer}>
+        <Image source={{ uri: item.image }} style={styles.thumbnail} />
+        <Text style={styles.itemName}>{item.name}</Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
 
 const TitleSection = ({ title, color }) => (
   <View style={[styles.titleContainer, { backgroundColor: color }]}>
@@ -43,22 +46,35 @@ const TitleSection = ({ title, color }) => (
 const InformationPage = () => {
 
   const [events, setEvents] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+
+  const handlePress = (item) => {
+    setModalVisible(true);
+    setSelectedEvent(item);
+  };
+  
+  const closeModal = () => {
+    setModalVisible(false);
+    setSelectedEvent(null);
+  };
+
+  
 
   useEffect(() => {
   
     const fetchEvents = async () => { 
+      console.log("fetching events")
 
       try {
         const eventsResult = await client.graphql(
           {query: listEvents}
         );
 
-        // console.log(eventsResult.data.listEvents.items);
+        console.log(eventsResult.data.listEvents.items);
 
         setEvents(eventsResult.data.listEvents.items)
 
-        console.log("");
-        console.log(events[0])
       } catch (error) {
         console.log('error on fetching events', error)
       }
@@ -73,7 +89,7 @@ const InformationPage = () => {
       data={data}
       horizontal
       keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item }) => <HorizontalListItem item={item} />}
+      renderItem={({ item }) => <HorizontalListItem item={item} onPress={handlePress}/>}
       showsHorizontalScrollIndicator={false}
     />
   );
@@ -94,6 +110,57 @@ const InformationPage = () => {
         {renderHorizontalList(tigerEventsList)}
       </View>
     </ScrollView>
+    {/* <Modal
+      visible={modalVisible}
+      transparent={true}
+      animationType="slide"
+      onRequestClose={closeModal}
+    >
+      <SafeAreaView style={modalStyle.modalContainer}>
+        <View style={modalStyle.modalContent}>
+          <ScrollView>
+            {selectedEvent && (
+              <>
+                <Text style={modalStyle.modalTitle}>{selectedEvent.name}</Text>
+                <Image source={{ uri: selectedEvent.image }} style={styles.placeImage} />
+                <Text style={modalStyle.species}>{selectedEvent.description}</Text> 
+              </>
+            )}
+          </ScrollView>
+          <TouchableOpacity onPress={closeModal} style={modalStyle.closeButton}>
+            <Text style={modalStyle.closeButtonText}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </Modal> */}
+
+     <Modal
+        visible={modalVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={closeModal}
+      >
+        <SafeAreaView style={modalStyle.modalContainer}>
+          <View style={modalStyle.modalContent}>
+            <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
+              {selectedEvent && (
+                <>
+                  <Image source={{ uri: selectedEvent.image }} style={modalStyle.image} />
+                  <Text style={modalStyle.animalName}>{selectedEvent.name}</Text>
+                  <Text>
+                    <Text style={modalStyle.sectionText}>{selectedEvent.description}</Text>
+                  </Text>
+                </>
+              )}
+            </ScrollView>
+            <TouchableOpacity onPress={closeModal} style={modalStyle.closeButton}>
+              <Text style={modalStyle.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      </Modal>
+
+
     <View style={styles.halfCircle} />
     </View>
   );
@@ -159,11 +226,88 @@ const styles = StyleSheet.create({
   },
   itemName: {
     marginTop: 10,
+    marginRight: 10,
     fontSize: 16,
     // color: '#2e7d32', // Green color
     fontFamily: 'serif', // Suitable font
     textAlign: 'center',
   },
 });
+
+
+const modalStyle = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    width: '90%',
+    backgroundColor: '#5a8c66',
+    // borderRadius: 30,
+    padding: 0,
+    // alignItems: 'center',
+    position: 'relative',
+    borderColor: 'green', 
+  },
+  closeButton: {
+    position: 'absolute',
+    bottom: 20,
+    alignSelf: 'center',
+    backgroundColor: 'black',
+    padding: 10,
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontFamily: 'serif',
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  image: {
+    width: '100%', 
+    height: 150,
+  },
+  animalName: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontFamily: 'serif',
+    color: 'white',
+  },
+  species: {
+    fontSize: 18,
+    fontStyle: 'italic',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 10,
+    fontFamily: 'serif',
+    color: 'white',
+    marginLeft: 10,
+  },
+  sectionTitle: {
+    fontWeight: 'bold',
+    marginBottom: 20,
+    fontFamily: 'serif',
+    color: 'white',
+  },
+  
+  sectionText: {
+    fontSize: 16,
+    marginBottom: 20,
+    fontFamily: 'serif',
+    color: 'white',
+  },
+});
+
+
+
+
 
 export default InformationPage;

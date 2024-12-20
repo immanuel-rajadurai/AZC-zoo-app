@@ -13,11 +13,6 @@ import ToggleShowInformationButton from '../../../components/ToggleShowInformati
 import accessibilityIcon from "../../../assets/icons/accessibility.png";
 import { icons } from '../../../constants';
 
-import { generateClient } from 'aws-amplify/api';
-import { listEvents } from '../../../src/graphql/queries';
-
-const client = generateClient();
-
 const Home = () => {
   
   const mapRef = useRef(null);
@@ -120,21 +115,6 @@ const Home = () => {
       // });
     };
 
-    const fetchEvents = async () => { 
-
-      try {
-        const eventsResult = await client.graphql(
-          {query: listEvents}
-        );
-
-        console.log(eventsResult.data.listEvents.items);
-
-        setEvents(eventsResult.data.listEvents.items)
-      } catch (error) {
-        console.log('error on fetching events', error)
-      }
-    }
-
 
     setRegion({
       latitude: 51.535121,
@@ -144,7 +124,6 @@ const Home = () => {
     });
 
     getLocation();
-    fetchEvents();
   }, []);
 
   const goToZoo = () => {
@@ -196,17 +175,6 @@ const Home = () => {
         followsUserLocation={true}
         customMapStyle={mapstyle1}
         onRegionChangeComplete={(region) => setRegion(region)}
-        // onRegionChangeComplete={(newRegion) => {
-        //   // Set the region back to the specified bounds if the user tries to pan outside
-        //   if (
-        //     newRegion.latitude < 51.534 || // Lat min bound
-        //     newRegion.latitude > 51.536 || // Lat max bound
-        //     newRegion.longitude < -0.156 || // Lon min bound
-        //     newRegion.longitude > -0.152 // Lon max bound
-        //   ) {
-        //     mapRef.current.animateToRegion(region, 200); // Reset to original region
-        //   }
-        // }}
         provider={MapView.PROVIDER_GOOGLE}
       >
       
@@ -341,7 +309,6 @@ const Home = () => {
             </View>
 
 
-            
             <View style={modalStyles.optionContainer}>
               <Image source={require('../../../assets/icons/visual-impairment.png')} style={modalStyles.icon} />
               <Text style={modalStyles.optionText}>Visual Impairments</Text>
