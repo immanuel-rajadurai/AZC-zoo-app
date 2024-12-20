@@ -71,9 +71,12 @@ const InformationPage = () => {
           {query: listEvents}
         );
 
-        console.log(eventsResult.data.listEvents.items);
+        const retrievedEvents = eventsResult?.data?.listEvents?.items || [];
 
-        setEvents(eventsResult.data.listEvents.items)
+
+        console.log(retrievedEvents);
+
+        setEvents(retrievedEvents)
 
       } catch (error) {
         console.log('error on fetching events', error)

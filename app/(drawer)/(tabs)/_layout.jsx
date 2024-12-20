@@ -11,17 +11,24 @@ const TabIcon = ({ icon, color, name, focused, style, textColor }) => {
     <View style={{ alignItems: 'center', justifyContent: 'center', gap: 2 }}>
       <Image
         source={icon}
-        resizeMethod='contain'
-        tintColor={color}
-        className="w-15 h-15"
-        style={[{ tintColor: color }, style]}
+        resizeMethod="contain"
+        style={[{ tintColor: color, width: 35, height: 35 }, style]}
       />
-      <Text className={`${focused ? 'font-psemibold' : 'font-pregular'} text-xs`} style={{ color: textColor }}>
+      <Text
+        numberOfLines={1} // Prevent wrapping to a new line
+        style={{
+          color: textColor,
+          fontSize: 12,
+          textAlign: 'center',
+          fontWeight: focused ? 'bold' : 'normal',
+           width: '100%'
+        }}
+      >
         {name}
       </Text>
     </View>
-  )
-}
+  );
+};
 
 const TabsLayout = () => {
   return (
@@ -100,7 +107,7 @@ const TabsLayout = () => {
                 textColor="#234e35"
                 name="Home"
                 focused={focused}
-                style={{ width: 85, height: 100}}
+                style={{ width: 85, height: 80, marginBottom: 30}}
               />
             )
           }}
