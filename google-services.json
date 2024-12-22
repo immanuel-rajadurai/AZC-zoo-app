@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "959990537127",
+    "project_id": "appv1-4feff",
+    "storage_bucket": "appv1-4feff.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:959990537127:android:d93bff6dfd5479035b3482",
+        "android_client_info": {
+          "package_name": "com.immraj.app_v1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMK_DfIHsrwvPZ7lnG0RK8Hac1QxmU1FQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
