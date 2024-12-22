@@ -16,12 +16,65 @@ import { Amplify } from 'aws-amplify';
 import amplifyconfig from '../src/amplifyconfiguration.json';
 Amplify.configure(amplifyconfig);
 
+import messaging from '@react-native-firebase/messaging';
+
+
 //command to start up the app
 // npx expo start --tunnel
 //com.jsm.app_v1
 export default function App() {
 
   const navigation = useNavigation();
+
+  const requestUserPermission = async () => {
+    const authStatus = await messaging().requestPermission();
+    const enabled = 
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED || 
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    if (enabled) {
+      console.log('ENABLED Authorization status:', authStatus);
+    }
+  };
+
+  useEffect(() => {
+    if (requestUserPermission()) {
+      messaging()
+        .getToken()
+        .then((token) => {
+          console.log('retrieved FCM Token:', token);
+        });
+    } else {
+      console.log('FCM Permission Denied', authStatus);
+    }
+
+    //check whether initial notification is available
+    messaging()
+      .getInitialNotification()
+      .then(async (remoteMessage) => {
+        if (remoteMessage) {
+          console.log('Notification caused app to open from quit state:', remoteMessage.notification);
+        }
+      });
+
+    //assume a message-notification contains a "type" property in the data payload of the screen to open
+    // handles when notification is open from background
+    messaging().onNotificationOpenedApp((remoteMessage) => {
+      console.log('Notification caused app to open from background state:', remoteMessage.notification);
+    });
+
+    //register background handler
+    messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+      console.log('Message handled in the background!', remoteMessage);
+    });
+
+    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+      Alert.alert("A new FCM message arrived!", JSON.stringify(remoteMessage));
+    });
+
+    return unsubscribe;
+  }, []);
+
 
   useEffect(() => {
     // Print the current router stack
@@ -45,26 +98,6 @@ export default function App() {
                 <Text></Text>
                 <Text></Text> 
 
-                {/* <View style={styles.container}>
-                  <View style={styles.iconButtonContainer}>
-                    <Image
-                      source={icons.elephantlogo}
-                      style={styles.icon}
-                      resizeMode="contain"
-                    />
-
-                    <TouchableOpacity style={styles.closeButton}>
-                      <Text style={styles.closeButtonText}>Close</Text>
-                    </TouchableOpacity> */}
-
-
-                    {/* <CustomButtonBlack
-                      title="Continue"
-                      handlePress={() => router.push('/home')}
-                      containerStyles={styles.button}
-                    /> */}
-                  {/* </View>
-                </View> */}
 
                 <View style={styles.container}>
                     <View style={styles.iconButtonContainer}>
