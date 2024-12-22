@@ -13,6 +13,7 @@ import ToggleShowInformationButton from '../../../components/ToggleShowInformati
 import accessibilityIcon from "../../../assets/icons/accessibility.png";
 import { icons } from '../../../constants';
 
+
 const Home = () => {
   
   const mapRef = useRef(null);
@@ -33,7 +34,8 @@ const Home = () => {
     // await refetch();
     setRefreshing(false);
   }
- 
+
+
   const [region, setRegion] = useState({
     latitude: 51.535121,
     longitude: -0.154131,
