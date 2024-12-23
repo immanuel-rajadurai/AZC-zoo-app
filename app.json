@@ -26,6 +26,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.immraj.app_v1",
+      "googleServicesFile": "./google-services.json",
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyDsREq71IL0oAyTucaHmf46PSlTQumCA5Y"
