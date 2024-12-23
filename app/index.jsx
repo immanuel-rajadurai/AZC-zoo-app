@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { Text, View, Image, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, View, Image, ScrollView, StyleSheet, TouchableOpacity, Platform, Alert   } from 'react-native';
 import { Redirect, router, Router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { images, icons } from '../constants/';
@@ -16,70 +16,108 @@ import { Amplify } from 'aws-amplify';
 import amplifyconfig from '../src/amplifyconfiguration.json';
 Amplify.configure(amplifyconfig);
 
-import messaging from '@react-native-firebase/messaging';
+// import messaging from '@react-native-firebase/messaging';
+
+// import firebase from '../firebaseConfig';
+// import { messaging } from '../firebaseConfig';
+
+import * as Notifications from 'expo-notifications';
 
 
-//command to start up the app
-// npx expo start --tunnel
-//com.jsm.app_v1
 export default function App() {
 
   const navigation = useNavigation();
-
-  const requestUserPermission = async () => {
-    const authStatus = await messaging().requestPermission();
-    const enabled = 
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED || 
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-    if (enabled) {
-      console.log('ENABLED Authorization status:', authStatus);
-    }
-  };
-
-  useEffect(() => {
-    if (requestUserPermission()) {
-      messaging()
-        .getToken()
-        .then((token) => {
-          console.log('retrieved FCM Token:', token);
-        });
-    } else {
-      console.log('FCM Permission Denied', authStatus);
-    }
-
-    //check whether initial notification is available
-    messaging()
-      .getInitialNotification()
-      .then(async (remoteMessage) => {
-        if (remoteMessage) {
-          console.log('Notification caused app to open from quit state:', remoteMessage.notification);
-        }
+  async function registerForPushNotificationsAsync() {
+    let token;
+  
+    if (Platform.OS === 'android') {
+      await Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
       });
-
-    //assume a message-notification contains a "type" property in the data payload of the screen to open
-    // handles when notification is open from background
-    messaging().onNotificationOpenedApp((remoteMessage) => {
-      console.log('Notification caused app to open from background state:', remoteMessage.notification);
-    });
-
-    //register background handler
-    messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-      console.log('Message handled in the background!', remoteMessage);
-    });
-
-    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-      Alert.alert("A new FCM message arrived!", JSON.stringify(remoteMessage));
-    });
-
-    return unsubscribe;
-  }, []);
-
+    }
+  
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+  
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+  
+    if (finalStatus !== 'granted') {
+      Alert.alert('Permission required', 'Push notifications permission is required to use this feature.');
+      return;
+    }
+  
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log('Expo Push Token:', token);
+    return token;
+  }
 
   useEffect(() => {
-    // Print the current router stack
-    console.log('Current Router Stack:', navigation.getState());
-  }, [navigation]);
+    registerForPushNotificationsAsync();
+
+    // Listener for notifications received while the app is foregrounded
+    const subscription = Notifications.addNotificationReceivedListener((notification) => {
+      console.log('Notification received:', notification);
+    });
+
+    return () => subscription.remove();
+  }, []);
+  
+
+  // const requestUserPermission = async () => {
+  //   const authStatus = await messaging().requestPermission();
+  //   const enabled = 
+  //     authStatus === messaging.AuthorizationStatus.AUTHORIZED || 
+  //     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+  //   if (enabled) {
+  //     console.log('ENABLED Authorization status:', authStatus);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (requestUserPermission()) {
+  //     messaging()
+  //       .getToken()
+  //       .then((token) => {
+  //         console.log('retrieved FCM Token:', token);
+  //       });
+  //   } else {
+  //     console.log('FCM Permission Denied', authStatus);
+  //   }
+
+  //   //check whether initial notification is available
+  //   messaging()
+  //     .getInitialNotification()
+  //     .then(async (remoteMessage) => {
+  //       if (remoteMessage) {
+  //         console.log('Notification caused app to open from quit state:', remoteMessage.notification);
+  //       }
+  //     });
+
+  //   //assume a message-notification contains a "type" property in the data payload of the screen to open
+  //   // handles when notification is open from background
+  //   messaging().onNotificationOpenedApp((remoteMessage) => {
+  //     console.log('Notification caused app to open from background state:', remoteMessage.notification);
+  //   });
+
+  //   //register background handler
+  //   messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+  //     console.log('Message handled in the background!', remoteMessage);
+  //   });
+
+  //   const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+  //     Alert.alert("A new FCM message arrived!", JSON.stringify(remoteMessage));
+  //   });
+
+  //   return unsubscribe;
+  // }, []);
+
 
     return (
           <SafeAreaView className="h-full" backgroundColor='#234e35'>
