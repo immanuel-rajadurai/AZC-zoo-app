@@ -12,6 +12,7 @@ import eventsDummy from "../../../data/events";
 import ToggleShowInformationButton from '../../../components/ToggleShowInformationButton';
 import accessibilityIcon from "../../../assets/icons/accessibility.png";
 import { icons } from '../../../constants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home = () => {
   
@@ -26,6 +27,7 @@ const Home = () => {
   const [eventButtonTitle, setButtonTitle] = useState("Challenge");
   const [isShowEventsButtonVisible, setShowEventsButtonVisible] = useState(true);
   const [accessibilityVisible, setAccessibilityVisible] = useState(false); 
+  const [mobilityImpairments, setMobilityImpairments] = useState(false);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -141,16 +143,41 @@ const Home = () => {
     { id: 2, name: 'Visual Impairments', isEnabled: false },
   ]);
   
-  const toggleOption = (id) => {
+  // Fetch toggle states from AsyncStorage and update options
+  useEffect(() => {
+    const initializeOptions = async () => {
+      const updatedOptions = await Promise.all(
+        options.map(async (option) => {
+          const savedState = await AsyncStorage.getItem(option.name);
+          return {
+            ...option,
+            isEnabled: savedState === 'true',
+          };
+        })
+      );
+      setOptions(updatedOptions);
+    };
+
+    initializeOptions();
+  }, []);
+
+  // Update toggle state in both state and AsyncStorage
+  const toggleOption = async (id) => {
     setOptions((prevOptions) =>
-      prevOptions.map((option) =>
-        option.id === id ? { ...option, isEnabled: !option.isEnabled } : option
-      )
+      prevOptions.map((option) => {
+        if (option.id === id) {
+          const newValue = !option.isEnabled;
+          AsyncStorage.setItem(option.name, newValue.toString());
+          return { ...option, isEnabled: newValue };
+        }
+        return option;
+      })
     );
   };
   
   const isOptionEnabled = (id) => options.find((option) => option.id === id)?.isEnabled;  
   
+
   return (
     <View style={styles.container}>
       <MapView
