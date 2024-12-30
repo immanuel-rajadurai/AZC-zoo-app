@@ -14,10 +14,20 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { useNavigation } from '@react-navigation/native';
 import { customGrad } from '@tensorflow/tfjs';
 import DrawerNavigator from './(drawer)/_layout';
-
+import * as Notifications from "expo-notifications";
+import { NotificationProvider } from 'context/NotificationContext';
 
 
 SplashScreen.preventAutoHideAsync();
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
+
 
 
 const CustomHeader = ({ route }) => {
@@ -133,7 +143,8 @@ const RootLayout = () => {
 
   return (
     // <GlobalProvider>
-    <>
+    // <>
+    <NotificationProvider>
       <Stack>
         <Stack.Screen name="index" options={{
             headerShown:false
@@ -195,7 +206,8 @@ const RootLayout = () => {
       <Stack.Screen name="information" options={{ title: 'Information' }} />
       <Stack.Screen name="events" options={{ title: 'Events' }} />
     </Stack>
-    </>
+    {/* // </> */}
+    </NotificationProvider>
   );
 };
 

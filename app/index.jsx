@@ -1,42 +1,63 @@
+// import { useGlobalContext } from '../context/GlobalProvider';
+// import { ModelProvider } from './modelContext';
+// import CustomButtonBlack from '../components/CustomButtonBlack';
+// import { NavigationContainer } from '@react-navigation/native';
+// import { useNavigation } from '@react-navigation/native';
+// import CustomButton from '../components/CustomButton';
+
 import { StatusBar } from 'expo-status-bar';
 import { Text, View, Image, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { Redirect, router, Router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { images, icons } from '../constants/';
-import CustomButton from '../components/CustomButton';
-import { useGlobalContext } from '../context/GlobalProvider';
-import { ModelProvider } from './modelContext';
-import CustomButtonBlack from '../components/CustomButtonBlack';
-import { NavigationContainer } from '@react-navigation/native';
-import { useNavigation } from '@react-navigation/native';
-import React, { useEffect } from 'react';
 
+import React, { useEffect } from 'react';
 
 import { Amplify } from 'aws-amplify';
 import amplifyconfig from '../src/amplifyconfiguration.json';
 Amplify.configure(amplifyconfig);
+
+import { useNotification } from '../context/NotificationContext';
 
 //command to start up the app
 // npx expo start --tunnel
 //com.jsm.app_v1
 export default function App() {
 
-  const navigation = useNavigation();
+  const { expoPushToken, notification, error } = useNotification();
 
-  useEffect(() => {
-    // Print the current router stack
-    console.log('Current Router Stack:', navigation.getState());
-  }, [navigation]);
+  if (error) {
+    return <Text>Error: {error.message}</Text>
+  }
+  console.log("Notification: " + JSON.stringify(notification, null, 2));
+
+  // useEffect(() => {
+  //   // Print the current router stack
+  //   console.log('Current Router Stack:', navigation.getState());
+  // }, [navigation]);
 
     return (
           <SafeAreaView className="h-full" backgroundColor='#234e35'>
             <ScrollView contentContainerStyle={{ height: '100%'}}>
+
               <View className="w-full justify-center items-center min-h-[85vh] px-4" backgroundColor='#234e35'>
                 <Image
                   source={images.londonZooIcon}
                   className="max-w--[380px] w-full h-[200px] mt-[240px]"
                   resizeMode="contain"
                 />
+
+              {/* <SafeAreaView style={{ flex: 1 }}> */}
+                <Text type="subtitle">Your push token:</Text>
+                <Text>{expoPushToken}</Text>
+
+                <Text type="subtitle">Latest notification:</Text>
+                <Text>{notification?.request.content.title}</Text>
+                <Text>
+                  {JSON.stringify(notification?.request.content.data, null, 2)}
+                </Text>
+              {/* </SafeAreaView> */}
+
 
                 <Text></Text>
                 <Text></Text>
