@@ -66,6 +66,23 @@ const SignUp = () => {
     }, []);
 
     const handleContinue = async () => {
+        if (!agreeTerms) {
+            Alert.alert('Error', 'You must agree to the Terms and Conditions to continue.');
+            return;
+        }
+
+        if (!firstName || !lastName || !username || !email) {
+            Alert.alert('Error', 'All fields must be filled out to continue.');
+            return;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            Alert.alert('Error', 'Please enter a valid email address.');
+            return;
+        }
+
+
         try {
             const inputVariables = {
                 firstName,
@@ -82,8 +99,14 @@ const SignUp = () => {
             console.log('User created:', usersResult.data.createUser);
             router.push('/home');
         } catch (error) {
-            console.log('Error creating user:', error);
+            if (error.errors && error.errors[0].errorType === 'DynamoDB:ConditionalCheckFailedException') {
+                Alert.alert('Error', 'This email is already in use.');
+            } else {
+                console.log('Error creating user:', error);
+                Alert.alert('Error', 'An error occurred while creating the user.');
+            }
         }
+        
     };
 
     return (
