@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 
 import { icons } from '../constants'
 
-const FormField = ( {title, value, placeholder, handleChangeText, otherStyles, ...props}) => {
+const FormField = ( {title, value, placeholder, handleChangeText, keyboardType, otherStyles, ...props}) => {
 
   // const [showPassword, setshowPassword] = useState(false)
 
@@ -16,6 +16,7 @@ const FormField = ( {title, value, placeholder, handleChangeText, otherStyles, .
         <TextInput
             className="flex-1 text-white font-psemibold text-base"
             value={value}
+            keyboardType={keyboardType}
             placeholder={placeholder}
             placeholderTextColor="white"
             onChangeText={handleChangeText}
