@@ -53,7 +53,7 @@ const InformationPage = () => {
           {query: listEvents}
         );
 
-        // console.log(eventsResult.data.listEvents.items);
+        console.log(eventsResult.data.listEvents.items);
 
         setEvents(eventsResult.data.listEvents.items)
 

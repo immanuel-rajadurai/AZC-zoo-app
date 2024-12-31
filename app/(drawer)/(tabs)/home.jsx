@@ -12,11 +12,7 @@ import eventsDummy from "../../../data/events";
 import ToggleShowInformationButton from '../../../components/ToggleShowInformationButton';
 import accessibilityIcon from "../../../assets/icons/accessibility.png";
 import { icons } from '../../../constants';
-
-import { generateClient } from 'aws-amplify/api';
-import { listEvents } from '../../../src/graphql/queries';
-
-const client = generateClient();
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home = () => {
   
@@ -28,10 +24,10 @@ const Home = () => {
   const [refreshing, setRefreshing] = useState(false)
   const [eventsVisible, setEventsVisible] = useState(false);
   const translateY = useRef(new Animated.Value(200)).current;
-  const { height: screenHeight } = Dimensions.get('window');
   const [eventButtonTitle, setButtonTitle] = useState("Challenge");
   const [isShowEventsButtonVisible, setShowEventsButtonVisible] = useState(true);
   const [accessibilityVisible, setAccessibilityVisible] = useState(false); 
+  const [mobilityImpairments, setMobilityImpairments] = useState(false);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -50,7 +46,6 @@ const Home = () => {
   
   const toggleEvents = () => {
     
-  
     if (eventsVisible) {
       setShowEventsButtonVisible(true);
       Animated.timing(translateY, {
@@ -105,36 +100,7 @@ const Home = () => {
           }));
         }
       );
-
-
-      // let location = await Location.getCurrentPositionAsync({
-      //   accuracy: Location.Accuracy.BestForNavigation
-      // });
-      // setCurrentLocation(location.coords);
-
-      // setRegion({
-      //   latitude: location.coords.latitude,
-      //   longitude: location.coords.longitude,
-      //   latitudeDelta: 0.005,
-      //   longitudeDelta: 0.005,
-      // });
     };
-
-    const fetchEvents = async () => { 
-
-      try {
-        const eventsResult = await client.graphql(
-          {query: listEvents}
-        );
-
-        console.log(eventsResult);
-        console.log(eventsResult.data.listEvents.items);
-
-        setEvents(eventsResult.data.listEvents.items)
-      } catch (error) {
-        console.log('error on fetching events', error)
-      }
-    }
 
     setRegion({
       latitude: 51.535121,
@@ -143,8 +109,9 @@ const Home = () => {
       longitudeDelta: 0.003,
     });
 
+   
+
     getLocation();
-    fetchEvents();
   }, []);
 
   const goToZoo = () => {
@@ -176,16 +143,41 @@ const Home = () => {
     { id: 2, name: 'Visual Impairments', isEnabled: false },
   ]);
   
-  const toggleOption = (id) => {
+  // Fetch toggle states from AsyncStorage and update options
+  useEffect(() => {
+    const initializeOptions = async () => {
+      const updatedOptions = await Promise.all(
+        options.map(async (option) => {
+          const savedState = await AsyncStorage.getItem(option.name);
+          return {
+            ...option,
+            isEnabled: savedState === 'true',
+          };
+        })
+      );
+      setOptions(updatedOptions);
+    };
+
+    initializeOptions();
+  }, []);
+
+  // Update toggle state in both state and AsyncStorage
+  const toggleOption = async (id) => {
     setOptions((prevOptions) =>
-      prevOptions.map((option) =>
-        option.id === id ? { ...option, isEnabled: !option.isEnabled } : option
-      )
+      prevOptions.map((option) => {
+        if (option.id === id) {
+          const newValue = !option.isEnabled;
+          AsyncStorage.setItem(option.name, newValue.toString());
+          return { ...option, isEnabled: newValue };
+        }
+        return option;
+      })
     );
   };
   
   const isOptionEnabled = (id) => options.find((option) => option.id === id)?.isEnabled;  
   
+
   return (
     <View style={styles.container}>
       <MapView
@@ -196,17 +188,6 @@ const Home = () => {
         followsUserLocation={true}
         customMapStyle={mapstyle1}
         onRegionChangeComplete={(region) => setRegion(region)}
-        // onRegionChangeComplete={(newRegion) => {
-        //   // Set the region back to the specified bounds if the user tries to pan outside
-        //   if (
-        //     newRegion.latitude < 51.534 || // Lat min bound
-        //     newRegion.latitude > 51.536 || // Lat max bound
-        //     newRegion.longitude < -0.156 || // Lon min bound
-        //     newRegion.longitude > -0.152 // Lon max bound
-        //   ) {
-        //     mapRef.current.animateToRegion(region, 200); // Reset to original region
-        //   }
-        // }}
         provider={MapView.PROVIDER_GOOGLE}
       >
       

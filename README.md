@@ -39,3 +39,16 @@ either `npx expo start -c` or `npm expo start --tunnel`
 `ERROR Use process(css).then(cb) to work with async plugins`
 
 run `npm install tailwindcss@3.2.2 --legacy-peer-deps`
+
+### Commands for Powershell
+
+npm cache clean --force
+
+#### Delete package-lock.json
+Remove-Item -Path .\package-lock.json -Force
+
+#### Delete node_modules directory
+Remove-Item -Recurse -Force .\node_modules
+
+#### Install all packages with legacy peer dependencies
+npm install --legacy-peer-deps
