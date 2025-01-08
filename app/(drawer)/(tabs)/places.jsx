@@ -7,12 +7,41 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { icons } from '../../../constants';
 
+import { generateClient } from 'aws-amplify/api';
+import { listPlaces } from '../../../src/graphql/queries'; 
+
+const client = generateClient(); 
+
 const Places = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
-  const [scheduledAnimals, setScheduledAnimals] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [places, setPlaces] = useState([]);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    
+      const fetchPlaces = async () => { 
+  
+        try {
+          const placesResult = await client.graphql(
+            {query: listPlaces}
+          );
+  
+          console.log(placesResult.data.listPlaces.items);
+  
+          setPlaces(placesResult.data.listPlaces.items)
+  
+          console.log("");
+          console.log(places[0])
+        } catch (error) {
+          console.log('error on fetching places', error)
+        }
+      }
+  
+      fetchPlaces();
+    }, []);
+
+
 
   const closeModal = () => {
     setModalVisible(false);
@@ -47,7 +76,7 @@ const Places = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Food at the zoo</Text>
       <FlatList
-        data={placesData}
+        data={places}
         renderItem={({ item }) => <PlaceItem place={item} onPress={handlePress} />}
         keyExtractor={(item) => item.name}
         style={styles.animalList}

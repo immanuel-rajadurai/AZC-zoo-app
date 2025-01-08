@@ -2,18 +2,48 @@ import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity, Modal, SafeA
 import React, { useState, useEffect } from 'react';
 import { animalImages, animalData } from '../../../data/animals';
 import { placesData, images } from '../../../data/places';
-import { eventsDummy } from '../../../data/events';
+import { showsData } from '../../../data/shows';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { icons } from '../../../constants';
 
+import { generateClient } from 'aws-amplify/api';
+import { listEvents } from '../../../src/graphql/queries'; 
+
+const client = generateClient(); 
+
+
 const Places = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
-  const [scheduledAnimals, setScheduledAnimals] = useState([]);
-  const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
+  const [events, setEvents] = useState([]);
+
+
+  useEffect(() => {
+    
+      const fetchEvents = async () => { 
+  
+        try {
+          const eventsResult = await client.graphql(
+            {query: listEvents}
+          );
+  
+          console.log(eventsResult.data.listEvents.items);
+  
+          setEvents(eventsResult.data.listEvents.items)
+  
+          console.log("");
+          console.log(events[0])
+        } catch (error) {
+          console.log('error on fetching events', error)
+        }
+      }
+  
+      fetchEvents();
+    }, []);
+
 
   const closeModal = () => {
     setModalVisible(false);
@@ -31,7 +61,7 @@ const Places = () => {
           <Image source={{ uri: place.image }} style={styles.placeImage} />
           <View style={styles.column}>
             <Text style={styles.placeName}>{place.name}</Text>
-            <Text style={styles.text}>{place.description}</Text>
+            <Text style={styles.text} numberOfLines={5}>{place.description}</Text>
           </View>
           <Image source={icons.rightChevron} style={styles.chevron} />
         </View>
@@ -48,7 +78,7 @@ const Places = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Shows</Text>
       <FlatList
-        data={placesData}
+        data={events}
         renderItem={({ item }) => <PlaceItem place={item} onPress={handlePress} />}
         keyExtractor={(item) => item.name}
         style={styles.animalList}
@@ -156,7 +186,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     marginRight: 10,
-    borderRadius: 80
+    borderRadius: 10
   },
   placeName: {
     fontSize: 20,

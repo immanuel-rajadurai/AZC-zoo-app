@@ -4,7 +4,6 @@ var eventsDummy = [{
     "description": "Come and see our eagles as they fly in the sky",
     "image": "https://wildlife.foothillsclusters.com/wp-content/uploads/2023/05/230518-03.jpg",
   },
-  
   {
     "id":"2",
     "name": "Animal feeding",
@@ -12,7 +11,6 @@ var eventsDummy = [{
     "image": "https://cms.whipsnadezoo.org/sites/default/files/styles/responsive/public/1024/1024/0/2022-12/Meet-the-Animals-24-Photo-by-Justin-Doherty.jpg.webp",
     
   },
-  
   {
     "id":"3",
     "name": "Tiger festival",
