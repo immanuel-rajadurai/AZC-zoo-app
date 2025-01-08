@@ -331,3 +331,41 @@ export const listOccurrenceCounters = /* GraphQL */ `
     }
   }
 `;
+export const getOccurrenceCounterHistory = /* GraphQL */ `
+  query GetOccurrenceCounterHistory($name: String!) {
+    getOccurrenceCounterHistory(name: $name) {
+      name
+      history
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listOccurrenceCounterHistories = /* GraphQL */ `
+  query ListOccurrenceCounterHistories(
+    $name: String
+    $filter: ModelOccurrenceCounterHistoryFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listOccurrenceCounterHistories(
+      name: $name
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        name
+        history
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
