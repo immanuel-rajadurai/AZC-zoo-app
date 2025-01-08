@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import React from 'react'
 
 const CustomButtonBlack = ({ title, handlePress, containerStyles, textStyles, isLoading}) => {
@@ -6,15 +6,35 @@ const CustomButtonBlack = ({ title, handlePress, containerStyles, textStyles, is
     <TouchableOpacity 
       onPress={handlePress}
       activeOpacity={0.7}
-      className={`bg-black rounded-xl min-h-[62px] justify-center items-center 
+      className={`
       ${containerStyles} ${isLoading ? 'opacity-50':''}`}
       disabled={isLoading}
+      style={styles.customButton}
     >
-      <Text className={`text-white font-psemibold text-lg`}>
+      <Text style={styles.closeButtonText}>
         {title}
       </Text>
     </TouchableOpacity>
   )
 }
+
+const styles = StyleSheet.create({
+  customButton: {
+    backgroundColor: 'black',
+    padding: 10,
+    borderRadius: 5,
+    width: 200,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  closeButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontFamily: 'serif',
+    fontSize: 30,
+    justifyContent: 'center',
+    textAlign: 'center'
+  },
+})
 
 export default CustomButtonBlack

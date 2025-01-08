@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MapView, { Marker, Overlay } from 'react-native-maps';
 import * as Location from 'expo-location';
-import { useRouter } from 'expo-router'; // Import useRouter
+import { useRouter } from 'expo-router'; 
 import CustomButton from '../../../components/CustomButton';
 import { mapstyle1 } from "../../../styling/mapstyles";
 import Events from "../../../components/Events"
