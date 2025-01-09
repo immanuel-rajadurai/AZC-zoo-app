@@ -9,6 +9,8 @@ import { icons } from '../../../constants';
 
 import { generateClient } from 'aws-amplify/api';
 import { listPlaces } from '../../../src/graphql/queries'; 
+import { listPlaceAnimals } from '../../../src/graphql/queries'; 
+
 
 const client = generateClient(); 
 
@@ -16,6 +18,8 @@ const Places = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [places, setPlaces] = useState([]);
+  const [placeAnimals, setPlaceAnimals] = useState([]);
+  const [placesWithoutAnimals, setPlacesWithoutAnimals] = useState([]);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -30,17 +34,69 @@ const Places = () => {
           console.log(placesResult.data.listPlaces.items);
   
           setPlaces(placesResult.data.listPlaces.items)
-  
-          console.log("");
-          console.log(places[0])
+          
+          // console.log("");
+          // console.log("Places");
+          // console.log(places[0])
         } catch (error) {
           console.log('error on fetching places', error)
         }
       }
-  
-      fetchPlaces();
-    }, []);
 
+      const fetchPlaceAnimals = async () => { 
+  
+        try {
+          const placeAnimalsResult = await client.graphql(
+            {query: listPlaceAnimals}
+          );
+  
+          console.log(placeAnimalsResult.data.listPlaceAnimals.items);
+  
+          setPlaceAnimals(placeAnimalsResult.data.listPlaceAnimals.items)
+          
+          // console.log("");
+          // console.log("PlaceAnimals");
+          // console.log(placeAnimals[0])
+        } catch (error) {
+          console.log('error on fetching places', error)
+        }
+      }
+
+      const fetchNonExhibitPlaces = async () => { 
+        try {
+          // Fetch places and placeAnimals simultaneously
+          const [placesResult, placeAnimalsResult] = await Promise.all([
+            client.graphql({ query: listPlaces }),
+            client.graphql({ query: listPlaceAnimals }),
+          ]);
+      
+          // Extract data directly from results
+          const fetchedPlaces = placesResult.data.listPlaces.items;
+          const fetchedPlaceAnimals = placeAnimalsResult.data.listPlaceAnimals.items;
+      
+          console.log("Fetched Places:", fetchedPlaces);
+          console.log("Fetched Place Animals:", fetchedPlaceAnimals);
+      
+          // Compute filtered places
+          const placeAnimalPlaceIds = fetchedPlaceAnimals.map(pa => pa.placeID);
+          const filteredPlaces = fetchedPlaces.filter(place => !placeAnimalPlaceIds.includes(place.id));
+      
+          console.log("Filtered Places:", filteredPlaces);
+      
+          // Update state with computed values
+          setPlaces(fetchedPlaces);
+          setPlaceAnimals(fetchedPlaceAnimals);
+          setPlacesWithoutAnimals(filteredPlaces);
+        } catch (error) {
+          console.error("Error fetching places or placeAnimals:", error);
+        }
+      };
+
+
+      fetchNonExhibitPlaces();
+      // fetchPlaces();
+      // fetchPlaceAnimals();
+    }, []);
 
 
   const closeModal = () => {
@@ -56,10 +112,26 @@ const Places = () => {
     return (
       <TouchableOpacity style={styles.placeItem} onPress={() => onPress(place)}>
         <View style={styles.header}>
+        <View style={styles.imageContainer}>
           <Image source={{ uri: place.image }} style={styles.placeImage} />
+          
+          {/* Status below the image */}
+          <View style={styles.statusContainer}>
+            {place.isOpen ? (
+              <Text style={[styles.statusText, styles.openStatus]}>
+                Open <Icon name="check-circle" size={20} color="green" />
+              </Text>
+            ) : (
+              <Text style={[styles.statusText, styles.closedStatus]}>
+                Closed <Icon name="times-circle" size={20} color="red" />
+              </Text>
+            )}
+          </View>
+        </View>
+
           <View style={styles.column}>
             <Text style={styles.placeName}>{place.name}</Text>
-            <Text style={styles.text}>{place.description}</Text>
+            <Text style={styles.text} numberOfLines={5}>{place.description}</Text>
           </View>
           <Image source={icons.rightChevron} style={styles.chevron} />
         </View>
@@ -76,7 +148,7 @@ const Places = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Food at the zoo</Text>
       <FlatList
-        data={places}
+        data={placesWithoutAnimals}
         renderItem={({ item }) => <PlaceItem place={item} onPress={handlePress} />}
         keyExtractor={(item) => item.name}
         style={styles.animalList}
@@ -112,6 +184,25 @@ const Places = () => {
 export default Places;
 
 const styles = StyleSheet.create({
+  imageContainer: {
+    alignItems: 'center', // Center the image and status
+    marginRight: 10, // Add space between image/status and other content
+  },
+  statusContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 10, // Adjust spacing as needed
+  },
+  statusText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  openStatus: {
+    color: 'green', // Green color for "Open"
+  },
+  closedStatus: {
+    color: 'red', // Red color for "Closed"
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
