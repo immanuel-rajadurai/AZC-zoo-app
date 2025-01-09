@@ -7,15 +7,43 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import CustomButton from '../../../components/CustomButton';
 import { icons } from '../../../constants';
 
+import { generateClient } from 'aws-amplify/api';
+import { listAnimals } from '../../../src/graphql/queries'; 
+
+const client = generateClient(); 
 
 const Animals = () => {
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [animals, setAnimals] = useState([]);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [scheduledAnimals, setScheduledAnimals] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const navigation = useNavigation();
+
+  useEffect(() => {
+
+    const fetchAnimals = async () => { 
+        try {
+          const animalsResult = await client.graphql(
+            {query: listAnimals}
+          );
+
+          console.log("animalsResult", animalsResult.data.listAnimals.items);
+
+          setAnimals(animalsResult.data.listAnimals.items)
+          
+          console.log("");
+          console.log("Animals");
+          console.log("animals: ", animals)
+        } catch (error) {
+          console.log('error on fetching places', error)
+        }
+    }
+    fetchAnimals();
+  }, []);
+
 
   const closeModal = () => {
     setModalVisible(false);

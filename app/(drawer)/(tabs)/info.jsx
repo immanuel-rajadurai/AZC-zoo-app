@@ -110,29 +110,6 @@ const InformationPage = () => {
         {renderHorizontalList(tigerEventsList)}
       </View>
     </ScrollView>
-    {/* <Modal
-      visible={modalVisible}
-      transparent={true}
-      animationType="slide"
-      onRequestClose={closeModal}
-    >
-      <SafeAreaView style={modalStyle.modalContainer}>
-        <View style={modalStyle.modalContent}>
-          <ScrollView>
-            {selectedEvent && (
-              <>
-                <Text style={modalStyle.modalTitle}>{selectedEvent.name}</Text>
-                <Image source={{ uri: selectedEvent.image }} style={styles.placeImage} />
-                <Text style={modalStyle.species}>{selectedEvent.description}</Text> 
-              </>
-            )}
-          </ScrollView>
-          <TouchableOpacity onPress={closeModal} style={modalStyle.closeButton}>
-            <Text style={modalStyle.closeButtonText}>Close</Text>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
-    </Modal> */}
 
      <Modal
         visible={modalVisible}
@@ -297,7 +274,6 @@ const modalStyle = StyleSheet.create({
     fontFamily: 'serif',
     color: 'white',
   },
-  
   sectionText: {
     fontSize: 16,
     marginBottom: 20,

@@ -16,7 +16,7 @@ const client = generateClient();
 
 const Places = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedAnimal, setSelectedAnimal] = useState(null);
+  const [selectedPlace, setSelectedPlace] = useState(null);
   const [places, setPlaces] = useState([]);
   const [placeAnimals, setPlaceAnimals] = useState([]);
   const [placesWithoutAnimals, setPlacesWithoutAnimals] = useState([]);
@@ -101,7 +101,7 @@ const Places = () => {
 
   const closeModal = () => {
     setModalVisible(false);
-    setSelectedAnimal(null);
+    setSelectedPlace(null);
   };
 
   const NavigateToSchedule = () => {
@@ -140,7 +140,7 @@ const Places = () => {
   };
 
   const handlePress = (place) => {
-    setSelectedAnimal(place);
+    setSelectedPlace(place);
     setModalVisible(true);
   };
 
@@ -153,6 +153,7 @@ const Places = () => {
         keyExtractor={(item) => item.name}
         style={styles.animalList}
       />
+
       <Modal
         visible={modalVisible}
         transparent={true}
@@ -161,12 +162,16 @@ const Places = () => {
       >
         <SafeAreaView style={modalStyle.modalContainer}>
           <View style={modalStyle.modalContent}>
-            <ScrollView>
-              {selectedAnimal && (
+            <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
+              {selectedPlace && (
                 <>
-                  <Text style={modalStyle.modalTitle}>{selectedAnimal.name}</Text>
-                  <Image source={{ uri: selectedAnimal.image }} style={styles.placeImage} />
-                  <Text style={modalStyle.species}>{selectedAnimal.description}</Text> 
+                
+                  <Text style={modalStyle.placeName}>{selectedPlace.name}</Text>
+                  <Image source={{ uri: selectedPlace.image }} style={modalStyle.image} />
+                  <Text></Text>
+                  <Text>
+                    <Text style={modalStyle.sectionText}>{selectedPlace.description}</Text> 
+                  </Text>
                 </>
               )}
             </ScrollView>
@@ -277,6 +282,10 @@ const styles = StyleSheet.create({
     marginRight: 10,
     borderRadius: 10
   },
+  image: {
+    width: '100%', 
+    height: 150,
+  },
   placeName: {
     fontSize: 20,
     fontWeight: 'bold',
@@ -300,76 +309,144 @@ const styles = StyleSheet.create({
 });
 
 
+// const modalStyle = StyleSheet.create({
+//   modalContainer: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+//   },
+//   modalContent: {
+//     width: '90%',
+//     backgroundColor: '#5a8c66',
+//     // borderRadius: 30,
+//     padding: 0,
+//     // alignItems: 'center',
+//     position: 'relative',
+//     borderColor: 'green', 
+//   },
+//   modalTitle: {
+//     fontSize: 24,
+//     fontWeight: 'bold',
+//     marginBottom: 10,
+//     textAlign: 'center',
+//   },
+//   animalListElement: {
+//     borderRadius: 10, // Rounded corners
+//     shadowColor: '#000', // Shadow color
+//     shadowOffset: { width: 0, height: 2 }, // Shadow offset
+//     shadowOpacity: 0.25, // Shadow opacity
+//     shadowRadius: 3.84, // Shadow radius
+//     elevation: 5, // For Android shadow
+//   },
+//   animalImage: {
+//     width: 90,
+//     height: 90,
+//     borderRadius: 15,
+//   },
+//   animalName: {
+//     fontSize: 20,
+//     fontWeight: 'bold',
+//     textAlign: 'center',
+//     color: 'black',
+//   },
+//   species: {
+//     fontSize: 16,
+//     fontStyle: 'italic',
+//     textAlign: 'center',
+//     color: 'grey',
+//     marginBottom: 20,
+//   },
+//   sectionTitle: {
+//     fontSize: 18,
+//     fontWeight: 'bold',
+//   },
+//   sectionText: {
+//     fontSize: 16,
+//     color: 'black',
+//   },
+//   closeButton: {
+//     position: 'absolute',
+//     bottom: 20,
+//     alignSelf: 'center',
+//     backgroundColor: 'black',
+//     padding: 10,
+//     borderRadius: 5,
+//   },
+//   closeButtonText: {
+//     color: 'white',
+//     fontWeight: 'bold',
+//     fontFamily: 'serif',
+//   },
+// });
+
+
 const modalStyle = StyleSheet.create({
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
-    width: '95%',
-    maxHeight: '75%',
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 10,
-    elevation: 5,
+    width: '90%',
+    backgroundColor: '#5a8c66',
+    // borderRadius: 30,
+    padding: 0,
+    // alignItems: 'center',
+    position: 'relative',
+    borderColor: 'green', 
+  },
+  closeButton: {
+    position: 'absolute',
+    bottom: 20,
+    alignSelf: 'center',
+    backgroundColor: 'black',
+    padding: 10,
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontFamily: 'serif',
   },
   modalTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: 'green',
-    marginBottom: 15,
-    justifyContent: 'center',
+    marginBottom: 10,
     textAlign: 'center',
-    marginTop: 30,
   },
-  animalListElement: {
-    borderRadius: 10, // Rounded corners
-    shadowColor: '#000', // Shadow color
-    shadowOffset: { width: 0, height: 2 }, // Shadow offset
-    shadowOpacity: 0.25, // Shadow opacity
-    shadowRadius: 3.84, // Shadow radius
-    elevation: 5, // For Android shadow
+  image: {
+    width: '100%', 
+    height: 150,
   },
-  animalImage: {
-    width: 90,
-    height: 90,
-    borderRadius: 15,
-  },
-  animalName: {
+  placeName: {
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: 'black',
+    fontFamily: 'serif',
+    color: 'white',
   },
-  species: {
-    fontSize: 16,
+  description: {
+    fontSize: 18,
     fontStyle: 'italic',
+    fontWeight: 'bold',
     textAlign: 'center',
-    color: 'grey',
-    marginBottom: 20,
+    marginBottom: 10,
+    fontFamily: 'serif',
+    color: 'white',
+    marginLeft: 10,
   },
   sectionTitle: {
-    fontSize: 18,
     fontWeight: 'bold',
+    marginBottom: 20,
+    fontFamily: 'serif',
+    color: 'white',
   },
   sectionText: {
     fontSize: 16,
-    color: 'black',
-  },
-  closeButton: {
-    backgroundColor: 'green',
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 20,
-  },
-  closeButtonText: {
-    color: '#fff',
-    textAlign: 'center',
-    fontSize: 16,
+    marginBottom: 20,
+    fontFamily: 'serif',
+    color: 'white',
   },
 });
