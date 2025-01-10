@@ -9,7 +9,7 @@ const Animals = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
 
-  const [scheduledAnimals, setScheduledAnimals] = useState(null); 
+  const [scheduledAnimals, setScheduledAnimals] = useState([]); 
   const [scheduledAnimalsDetails, setScheduledAnimalsDetails] = useState(null);  
   const [loading, setLoading] = useState(true); // Add loading state
   const [animalsRetrieved, setAnimalsRetrieved] = useState(false); // Add state to track retrieval
@@ -24,7 +24,9 @@ const Animals = () => {
 
        const retrievedScheduledAnimals = await AsyncStorage.getItem('scheduledAnimals');
 
-       setScheduledAnimals(JSON.parse(retrievedScheduledAnimals));
+       console.log("scheduled animals in schedule.jsx: " + retrievedScheduledAnimals);
+
+       setScheduledAnimals(retrievedScheduledAnimals ? JSON.parse(retrievedScheduledAnimals) : []);
        setAnimalsRetrieved(true)
 
     //    if (retrievedScheduledAnimals) {
@@ -45,18 +47,22 @@ const Animals = () => {
     }
   }, [animalsRetrieved, scheduledAnimals]);
 
-  useEffect(() => {
-    console.log("scheduled animals in schedule.jsx: " + scheduledAnimals);
-  }, [scheduledAnimals]);
+  // useEffect(() => {
+  //   console.log("scheduled animals in schedule.jsx: " + scheduledAnimals);
+  // }, [scheduledAnimals]);
+
+  async function test() {
+    console.log("button pressed");
+  }
+
 
   const AnimalItem = ({ animal, onPress }) => {
 
     return (
-      <TouchableOpacity style={styles.animalItem} onPress={() => onPress(animal)}>
+      // <TouchableOpacity style={styles.animalItem} onPress={() => onPress(animal)}>
         <View style={styles.header}>
         <View style={styles.column}>
           <Image source={{ uri: animal.image }} style={styles.animalImage} />
-          {/* {!scheduledAnimals.includes(animal.name) && ( */}
               <TouchableOpacity
                 style={styles.customButton}
                 onPress={() => removeFromSchedule(animal.name)}
@@ -65,7 +71,6 @@ const Animals = () => {
                   {scheduledAnimals.includes(animal.name) ? 'Remove from Plan' : 'Added to Plan'}
                 </Text>
               </TouchableOpacity>
-          {/* )} */}
         </View>
         <View style={styles.column}>
             <Text style={styles.animalName}>{animal.name}</Text>
@@ -81,12 +86,13 @@ const Animals = () => {
             </View>
           </View>
         </View>
-      </TouchableOpacity>
+      // </TouchableOpacity>
     );
   };
   
   //onPress={() => removeFromSchedule(animal.name)}
 
+ 
   async function removeFromSchedule(animalName) {
 
     console.log("calling removeFromSchedule");
@@ -100,8 +106,6 @@ const Animals = () => {
 
         const updatedScheduledAnimalsDetails = updatedScheduledAnimals.map(name => filterAnimalsByName(name)).flat();
         setScheduledAnimalsDetails(updatedScheduledAnimalsDetails);
-
-        
       }
 
       console.log("animal removed from schedule now: " + scheduledAnimals);
@@ -109,8 +113,6 @@ const Animals = () => {
     } catch (error) {
       console.error('Failed to load scanned animals', error);
     }
-
-   
   };
 
   const handlePress = (animal) => {
@@ -136,7 +138,7 @@ const Animals = () => {
         style={styles.animalList}
       />
 
-<Modal
+      <Modal
         visible={modalVisible}
         transparent={true}
         animationType="slide"

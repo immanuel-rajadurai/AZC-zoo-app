@@ -47,8 +47,8 @@ const styles = StyleSheet.create({
     right: 5, // Position the delete button at the top-right corner
   },
   deleteIcon: {
-    width: 24,
-    height: 24, // Set the size of the delete icon
+    width: 30,
+    height: 30, // Set the size of the delete icon
   },
 });
 

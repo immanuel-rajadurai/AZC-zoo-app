@@ -183,7 +183,7 @@ const Animals = () => {
       }
     } catch (error) {
       console.error('Failed to modify scheduled animals', error);
-    }
+    } 
   }
 
   return (

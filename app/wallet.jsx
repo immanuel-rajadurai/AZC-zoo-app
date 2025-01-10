@@ -154,7 +154,7 @@ const Wallet = () => {
 
       {/* Button to pick a new document */}
       <TouchableOpacity
-        style={{ position: 'absolute', right: 20, bottom: 40 }}
+        style={{ position: 'absolute', right: 20, bottom: 85 }}
         onPress={pickDocument}
       >
         <Image
