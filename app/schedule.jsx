@@ -3,50 +3,71 @@ import React, { useState, useEffect } from 'react';
 import { animalImages, animalData } from '../data/animals';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { generateClient } from 'aws-amplify/api';
+import { listAnimals } from '../src/graphql/queries'; 
+
+const client = generateClient(); 
 
 const Animals = () => {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
-
+  const [animals, setAnimals] = useState([]);
   const [scheduledAnimals, setScheduledAnimals] = useState([]); 
   const [scheduledAnimalsDetails, setScheduledAnimalsDetails] = useState(null);  
   const [loading, setLoading] = useState(true); // Add loading state
   const [animalsRetrieved, setAnimalsRetrieved] = useState(false); // Add state to track retrieval
 
   const filterAnimalsByName = (name) => {
-    return animalData.filter(animal => animal.name === name);
+    return animals.filter(animal => animal.name === name);
   };
 
   useEffect(() => {
-
-    const filterScheduledAnimals = async () => {
-
-       const retrievedScheduledAnimals = await AsyncStorage.getItem('scheduledAnimals');
-
-       console.log("scheduled animals in schedule.jsx: " + retrievedScheduledAnimals);
-
-       setScheduledAnimals(retrievedScheduledAnimals ? JSON.parse(retrievedScheduledAnimals) : []);
-       setAnimalsRetrieved(true)
-
-    //    if (retrievedScheduledAnimals) {
-    //     const filteredAnimals = retrievedScheduledAnimals.map(name => filterAnimalsByName(name)).flat();
-    //     setScheduledAnimalsDetails(filteredAnimals);
-    //    }
-
-       setLoading(false);
+    const fetchAnimals = async () => {
+      try {
+        const animalsResult = await client.graphql({ query: listAnimals });
+        const fetchedAnimals = animalsResult.data.listAnimals.items;
+        console.log("Raw animals in animals.jsx: ", fetchedAnimals);
+  
+        setAnimals(fetchedAnimals);
+      } catch (error) {
+        console.error("Error fetching animals in animals.jsx:", error);
+      }
     };
-    
-    filterScheduledAnimals();
-  }, []); 
-
+  
+    const fetchScheduledAnimals = async () => {
+      try {
+        const retrievedScheduledAnimals = await AsyncStorage.getItem('scheduledAnimals');
+        const parsedScheduledAnimals = retrievedScheduledAnimals ? JSON.parse(retrievedScheduledAnimals) : [];
+        console.log("Scheduled animals in animals.jsx:", parsedScheduledAnimals);
+  
+        setScheduledAnimals(parsedScheduledAnimals);
+      } catch (error) {
+        console.error("Error fetching scheduled animals:", error);
+      }
+    };
+  
+    const initializeData = async () => {
+      setLoading(true); // Start loading
+      await fetchAnimals(); // Fetch animals
+      await fetchScheduledAnimals(); // Fetch scheduled animals
+      setLoading(false); // Stop loading after data is fetched
+    };
+  
+    initializeData();
+  }, []);
+  
   useEffect(() => {
-    if (animalsRetrieved) {
-      const filteredAnimals = scheduledAnimals.map(name => filterAnimalsByName(name)).flat();
+    if (animals.length > 0 && scheduledAnimals.length > 0) {
+      console.log("Filtering scheduled animals...");
+      const filteredAnimals = scheduledAnimals.map((name) => filterAnimalsByName(name)).flat();
       setScheduledAnimalsDetails(filteredAnimals);
+      console.log("Filtered animals in animals.jsx:", JSON.stringify(filteredAnimals, null, 2));
+    } else {
+      console.log("Animals or scheduledAnimals is empty.");
     }
-  }, [animalsRetrieved, scheduledAnimals]);
-
+  }, [animals, scheduledAnimals]);
+  
   // useEffect(() => {
   //   console.log("scheduled animals in schedule.jsx: " + scheduledAnimals);
   // }, [scheduledAnimals]);

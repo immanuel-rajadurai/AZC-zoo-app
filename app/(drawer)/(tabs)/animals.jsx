@@ -30,15 +30,13 @@ const Animals = () => {
             {query: listAnimals}
           );
 
-          console.log("animalsResult", animalsResult.data.listAnimals.items);
-
           setAnimals(animalsResult.data.listAnimals.items)
           
           console.log("");
           console.log("Animals");
           console.log("animals: ", animals)
         } catch (error) {
-          console.log('error on fetching places', error)
+          console.log('error on fetching animals', error)
         }
     }
     fetchAnimals();
@@ -213,7 +211,7 @@ const Animals = () => {
       </TouchableOpacity>
         </View>
       <FlatList
-        data={animalData}
+        data={animals}
         renderItem={({ item }) => <AnimalItem animal={item} onPress={handlePress} />}
         keyExtractor={(item) => item.name}
         style={styles.animalList}
