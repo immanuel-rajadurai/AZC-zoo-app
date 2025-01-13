@@ -4,7 +4,11 @@ import eventsDummy from '../data/events.js';
 import { animalData , animalImages} from '../data/animals';
 import { icons } from '../constants';
 import { useRouter } from 'expo-router';
+import { generateClient } from 'aws-amplify/api';
 import { API, graphqlOperation } from 'aws-amplify';
+
+
+const client = generateClient();
 
 
 const SearchInput = forwardRef(({ title, value, placeholder, handleChangeText, otherStyles, ...props }, ref) => {
@@ -15,86 +19,90 @@ const SearchInput = forwardRef(({ title, value, placeholder, handleChangeText, o
   const [activeTab, setActiveTab] = useState('events'); // State to track the active tab
   const router = useRouter();
 
+  const searchAnimalsQuery = `
+  query SearchAnimalsByName($wildcard: String!) {
+    searchAnimals(filter: { name: { wildcard: $wildcard } }) {
+      items {
+        id
+        name
+        scientificName
+        habitat
+        diet
+        behaviour
+        weightMale
+        weightFemale
+        image
+        conservationStatus
+        funFacts
+      }
+    }
+  }
+`;
+
+const searchPlacesQuery = `
+  query SearchPlacesByName($wildcard: String!) {
+    searchPlaces(filter: { name: { wildcard: $wildcard } }) {
+      items {
+        id
+        name
+        image
+        description
+      }
+    }
+  }
+`;
+
+
   // Function to handle search submission
-  const handleSearchSubmit = () => {
+  const handleSearchSubmit = async () => {
 
-    testQuery();
+    try {
+      const wildcardValue = '*lio*'; // Dynamically set the wildcard value
+      const variables = { wildcard: wildcardValue };
+  
+      const result = await client.graphql({
+          query: searchAnimalsQuery,
+          variables: variables,
+      });
 
-    searchAnimalByName('Panda')
-    .then((results) => {
-        console.log('Found Animals:', results);
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-    });
-    
+      console.log('Search Results:', result.data.searchAnimals.items);
+      setAnimalResults(result.data.searchAnimals.items)
+    } catch (error) {
+        console.error('Error during search:', error);
+        Alert.alert('Error', 'An error occurred while searching for animals.');
+    }
 
-    
+    try {
+      const wildcardValue = '*Lio*'; // Dynamically set the wildcard value
+      const variables = { wildcard: wildcardValue }; // Pass it as a variable
+  
+      const result = await client.graphql({
+          query: searchPlacesQuery,
+          variables: variables, // Pass the variables object
+      });
+  
+      console.log('Search Results:', result.data.searchPlaces.items);
+      setEventResults(result.data.searchPlaces.items)
+    } catch (error) {
+        console.error('Error during search:', error);
+        Alert.alert('Error', 'An error occurred while searching for places.');
+    }
 
-    const filteredEvents = eventsDummy.filter((item) =>
-      item.name.toLowerCase().includes(value.toLowerCase())
-    );
-    const filteredAnimalResults = animalData.filter((item) =>
-      item.name.toLowerCase().includes(value.toLowerCase())
-    );
-    setEventResults(filteredEvents);
-    setAnimalResults(filteredAnimalResults);
+
+
+    // const filteredEvents = eventsDummy.filter((item) =>
+    //   item.name.toLowerCase().includes(value.toLowerCase())
+    // );
+    // const filteredAnimalResults = animalData.filter((item) =>
+    //   item.name.toLowerCase().includes(value.toLowerCase())
+    // );
+    // setEventResults(filteredEvents);
+    // setAnimalResults(filteredAnimalResults);
     setModalVisible(true);
   };
 
-  const testQuery = async () => {
-    const query = `
-        query ListAnimals {
-            listAnimals {
-                items {
-                    id
-                    name
-                }
-            }
-        }
-    `;
 
-    try {
-        const response = await API.graphql(graphqlOperation(query));
-        console.log('Test Query Result:', response.data);
-    } catch (error) {
-        console.error('Test Query Error:', error);
-    }
-  };
-
-  const searchAnimalByName = async (name) => {
-    const query = `
-        query SearchAnimals($filter: ModelAnimalFilterInput) {
-            listAnimals(filter: $filter) {
-                items {
-                    id
-                    name
-                    species
-                    age
-                }
-            }
-        }
-    `;
-
-    const variables = {
-        filter: {
-            name: {
-                eq: name, // Exact match for the name
-            },
-        },
-    };
-
-    try {
-        const response = await API.graphql(graphqlOperation(query, variables));
-        console.log('Search Results:', response.data.listAnimals.items);
-        return response.data.listAnimals.items;
-    } catch (error) {
-        console.error('Error during search:', error);
-        throw error;
-    }
-  };
-
-
+  
   const handleAnimalPress = (animalData) => {
     setModalVisible(false);
     router.push({
@@ -179,7 +187,7 @@ return (
                           />
                           <View style={styles.textView}>
                             <Text style={styles.sectionTitle}>{item.name}</Text>
-                            <Text style={styles.sectionText}>
+                            <Text style={styles.sectionText} numberOfLines={5}>
                               {item.description}
                             </Text>
                           </View>
@@ -196,7 +204,7 @@ return (
                 {animalResults.length > 0 ? (
                   <FlatList
                     data={animalResults}
-                    keyExtractor={(item) => item.key}
+                    keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
                       <TouchableOpacity
                         style={styles.touchableItem}
@@ -204,13 +212,13 @@ return (
                       >
                         <View style={styles.imageView}>
                           <Image
-                            source={animalImages[item.image]}
+                            source={{ uri: item.image }}
                             style={styles.animalImage}
                           />
                           <View style={styles.textView}>
                             <Text style={styles.sectionTitle}>{item.name}</Text>
                             <Text numberOfLines={3} style={styles.sectionText}>
-                              {item.species}
+                              {item.scientificName}
                             </Text>
                           </View>
                         </View>
@@ -293,6 +301,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginRight: 5,
     marginLeft: 10,
+    alignItems: 'right',
   },
   sectionTitle: {
     fontSize: 17,
