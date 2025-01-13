@@ -4,10 +4,12 @@ import eventsDummy from '../data/events.js';
 import { animalData , animalImages} from '../data/animals';
 import { icons } from '../constants';
 import { useRouter } from 'expo-router';
+import { API, graphqlOperation } from 'aws-amplify';
+
 
 const SearchInput = forwardRef(({ title, value, placeholder, handleChangeText, otherStyles, ...props }, ref) => {
   const [showPassword, setShowPassword] = useState(false);
-  const [results, setResults] = useState([]);
+  const [results, setEventResults] = useState([]);
   const [animalResults, setAnimalResults] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [activeTab, setActiveTab] = useState('events'); // State to track the active tab
@@ -15,16 +17,83 @@ const SearchInput = forwardRef(({ title, value, placeholder, handleChangeText, o
 
   // Function to handle search submission
   const handleSearchSubmit = () => {
+
+    testQuery();
+
+    searchAnimalByName('Panda')
+    .then((results) => {
+        console.log('Found Animals:', results);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+    
+
+    
+
     const filteredEvents = eventsDummy.filter((item) =>
       item.name.toLowerCase().includes(value.toLowerCase())
     );
     const filteredAnimalResults = animalData.filter((item) =>
       item.name.toLowerCase().includes(value.toLowerCase())
     );
-    setResults(filteredEvents);
+    setEventResults(filteredEvents);
     setAnimalResults(filteredAnimalResults);
     setModalVisible(true);
   };
+
+  const testQuery = async () => {
+    const query = `
+        query ListAnimals {
+            listAnimals {
+                items {
+                    id
+                    name
+                }
+            }
+        }
+    `;
+
+    try {
+        const response = await API.graphql(graphqlOperation(query));
+        console.log('Test Query Result:', response.data);
+    } catch (error) {
+        console.error('Test Query Error:', error);
+    }
+  };
+
+  const searchAnimalByName = async (name) => {
+    const query = `
+        query SearchAnimals($filter: ModelAnimalFilterInput) {
+            listAnimals(filter: $filter) {
+                items {
+                    id
+                    name
+                    species
+                    age
+                }
+            }
+        }
+    `;
+
+    const variables = {
+        filter: {
+            name: {
+                eq: name, // Exact match for the name
+            },
+        },
+    };
+
+    try {
+        const response = await API.graphql(graphqlOperation(query, variables));
+        console.log('Search Results:', response.data.listAnimals.items);
+        return response.data.listAnimals.items;
+    } catch (error) {
+        console.error('Error during search:', error);
+        throw error;
+    }
+  };
+
 
   const handleAnimalPress = (animalData) => {
     setModalVisible(false);
