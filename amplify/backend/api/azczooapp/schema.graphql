@@ -69,11 +69,13 @@ type OccurrenceCounter @model {
 }
 
 type Mutation {
-  incrementOccurenceCounter(name: String!): OccurrenceCounter 
+  incrementOccurenceCounter(name: String!): OccurrenceCounter
     @function(name: "incrementOccurenceCounter")
-  
-  incrementOccurrenceCounterNew(name: String!, incrementBy: Int!): OccurrenceCounter
-    @function(name: "incrementOccurenceCounterNew-${env}")
+
+  incrementOccurrenceCounterNew(
+    name: String!
+    incrementBy: Int!
+  ): OccurrenceCounter @function(name: "incrementOccurenceCounterNew-${env}")
 }
 
 type OccurrenceCounterHistory @model {
