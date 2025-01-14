@@ -13,30 +13,31 @@ const client = generateClient();
 
 const SearchInput = forwardRef(({ title, value, placeholder, handleChangeText, otherStyles, ...props }, ref) => {
   const [showPassword, setShowPassword] = useState(false);
-  const [results, setEventResults] = useState([]);
+  const [eventResults, setEventResults] = useState([]);
   const [animalResults, setAnimalResults] = useState([]);
+  const [placeResults, setPlaceResults] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [activeTab, setActiveTab] = useState('events'); // State to track the active tab
   const router = useRouter();
 
   const searchAnimalsQuery = `
-  query SearchAnimalsByName($wildcard: String!) {
-    searchAnimals(filter: { name: { wildcard: $wildcard } }) {
-      items {
-        id
-        name
-        scientificName
-        habitat
-        diet
-        behaviour
-        weightMale
-        weightFemale
-        image
-        conservationStatus
-        funFacts
+    query SearchAnimalsByName($wildcard: String!) {
+      searchAnimals(filter: { name: { wildcard: $wildcard } }) {
+        items {
+          id
+          name
+          scientificName
+          habitat
+          diet
+          behaviour
+          weightMale
+          weightFemale
+          image
+          conservationStatus
+          funFacts
+        }
       }
     }
-  }
 `;
 
 const searchPlacesQuery = `
@@ -52,12 +53,26 @@ const searchPlacesQuery = `
   }
 `;
 
+const searchEventsQuery = `
+  query SearchEventsByName($wildcard: String!) {
+    searchEvents(filter: { name: { wildcard: $wildcard } }) {
+      items {
+        id
+        name
+        image
+        description
+      }
+    }
+  }
+`;
 
   // Function to handle search submission
   const handleSearchSubmit = async () => {
 
     try {
-      const wildcardValue = '*lio*'; // Dynamically set the wildcard value
+      // const wildcardValue = '*lio*';
+      const wildcardValue =  value.toLowerCase();
+     
       const variables = { wildcard: wildcardValue };
   
       const result = await client.graphql({
@@ -65,7 +80,7 @@ const searchPlacesQuery = `
           variables: variables,
       });
 
-      console.log('Search Results:', result.data.searchAnimals.items);
+      console.log('Animal search Results:', result.data.searchAnimals.items);
       setAnimalResults(result.data.searchAnimals.items)
     } catch (error) {
         console.error('Error during search:', error);
@@ -73,7 +88,25 @@ const searchPlacesQuery = `
     }
 
     try {
-      const wildcardValue = '*Lio*'; // Dynamically set the wildcard value
+      // const wildcardValue = '*Lio*'; // Dynamically set the wildcard value
+      const wildcardValue =  value.toLowerCase();
+      const variables = { wildcard: wildcardValue }; // Pass it as a variable
+  
+      const result = await client.graphql({
+          query: searchEventsQuery,
+          variables: variables, // Pass the variables object
+      });
+  
+      console.log('Event Search Results:', result.data.searchEvents.items);
+      setEventResults(result.data.searchEvents.items)
+    } catch (error) {
+        console.error('Error during search:', error);
+        Alert.alert('Error', 'An error occurred while searching for events.');
+    }
+
+    try {
+      // const wildcardValue = '*Lio*'; // Dynamically set the wildcard value
+      const wildcardValue =  value.toLowerCase();
       const variables = { wildcard: wildcardValue }; // Pass it as a variable
   
       const result = await client.graphql({
@@ -81,13 +114,12 @@ const searchPlacesQuery = `
           variables: variables, // Pass the variables object
       });
   
-      console.log('Search Results:', result.data.searchPlaces.items);
-      setEventResults(result.data.searchPlaces.items)
+      console.log('Place Search Results:', result.data.searchPlaces.items);
+      setPlaceResults(result.data.searchPlaces.items)
     } catch (error) {
         console.error('Error during search:', error);
         Alert.alert('Error', 'An error occurred while searching for places.');
     }
-
 
 
     // const filteredEvents = eventsDummy.filter((item) =>
@@ -101,8 +133,6 @@ const searchPlacesQuery = `
     setModalVisible(true);
   };
 
-
-  
   const handleAnimalPress = (animalData) => {
     setModalVisible(false);
     router.push({
@@ -119,7 +149,6 @@ const searchPlacesQuery = `
     });
   };
 
-  
 return (
   <View
     style={{
@@ -166,14 +195,20 @@ return (
             >
               <Text style={styles.tabButtonText}>Animals</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.tabButton, activeTab === 'places' && styles.activeTab]}
+              onPress={() => setActiveTab('places')} 
+            >
+              <Text style={styles.tabButtonText}>Places</Text>
+            </TouchableOpacity>
           </View>
 
           <View style={styles.container}>
-            {activeTab === 'events' ? (
+            {/* {activeTab === 'events' ? (
               <View style={styles.section}>
-                {results.length > 0 ? (
+                {eventResults.length > 0 ? (
                   <FlatList
-                    data={results}
+                    data={eventResults}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
                       <TouchableOpacity
@@ -229,7 +264,101 @@ return (
                   <Text>No results found</Text>
                 )}
               </View>
-            )}
+            )} */}
+
+{activeTab === 'events' ? (
+  <View style={styles.section}>
+    {eventResults.length > 0 ? (
+      <FlatList
+        data={eventResults}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={styles.touchableItem}
+            onPress={() => handleEventPress(item)}
+          >
+            <View style={styles.imageView}>
+              <Image
+                source={{ uri: item.image }}
+                style={styles.animalImage}
+              />
+              <View style={styles.textView}>
+                <Text style={styles.sectionTitle}>{item.name}</Text>
+                <Text style={styles.sectionText} numberOfLines={5}>
+                  {item.description}
+                </Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+        )}
+      />
+    ) : (
+      <Text>No results found</Text>
+    )}
+  </View>
+) : activeTab === 'animals' ? (
+  <View style={styles.section}>
+    {animalResults.length > 0 ? (
+      <FlatList
+        data={animalResults}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={styles.touchableItem}
+            onPress={() => handleAnimalPress(item)}
+          >
+            <View style={styles.imageView}>
+              <Image
+                source={{ uri: item.image }}
+                style={styles.animalImage}
+              />
+              <View style={styles.textView}>
+                <Text style={styles.sectionTitle}>{item.name}</Text>
+                <Text numberOfLines={3} style={styles.sectionText}>
+                  {item.scientificName}
+                </Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+        )}
+      />
+    ) : (
+      <Text>No results found</Text>
+    )}
+  </View>
+) : activeTab === 'places' ? (
+  <View style={styles.section}>
+    {placeResults.length > 0 ? (
+      <FlatList
+        data={placeResults}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={styles.touchableItem}
+            onPress={() => handlePlacePress(item)}
+          >
+            <View style={styles.imageView}>
+              <Image
+                source={{ uri: item.image }}
+                style={styles.animalImage}
+              />
+              <View style={styles.textView}>
+                <Text style={styles.sectionTitle}>{item.name}</Text>
+                <Text numberOfLines={4} style={styles.sectionText}>
+                  {item.address}
+                </Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+        )}
+      />
+    ) : (
+      <Text>No results found</Text>
+    )}
+  </View>
+) : (
+  <Text>Please select a tab</Text>
+)}
           </View>
           <TouchableOpacity
             onPress={() => setModalVisible(false)}
