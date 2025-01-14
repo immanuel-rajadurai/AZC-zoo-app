@@ -10,7 +10,6 @@ import { API, graphqlOperation } from 'aws-amplify';
 
 const client = generateClient();
 
-
 const SearchInput = forwardRef(({ title, value, placeholder, handleChangeText, otherStyles, ...props }, ref) => {
   const [showPassword, setShowPassword] = useState(false);
   const [eventResults, setEventResults] = useState([]);
