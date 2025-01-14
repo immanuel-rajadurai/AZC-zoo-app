@@ -723,7 +723,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     // backgroundColor: '#fff',
-    paddingBottom: 1,
+    paddingBottom: 20,
   },
   verticalLine: {
     width: 2,
@@ -733,7 +733,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingBottom: 19
+    paddingBottom: 50
   },
   titleContainer: {
     backgroundColor: '#d4edda', // Light green background
@@ -788,7 +788,7 @@ const styles = StyleSheet.create({
   },
   cameraBar: {
     // backgroundColor: '#e8f5e9',
-    padding: 30,
+    padding: 90,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
