@@ -49,5 +49,34 @@
         "EAS_NO_DEFAULT_NPM_INSTALL": "1"
       }
     }
+  },
+  "submit": {
+    "preview": {
+      "android": {},
+      "ios": {}
+    },
+    "gradle-release": {
+      "android": {},
+      "ios": {}
+    },
+    "development": {
+      "android": {},
+      "ios": {}
+    },
+    "internal": {
+      "android": {
+        "track": "internal"
+      },
+      "ios": {}
+    },
+    "production": {
+      "android": {
+        "track": "production"
+      },
+      "ios": {
+        "appleId": "immanuelraj154@gmail.com",
+        "ascAppId": "6739294395"
+      }
+    }
   }
 }
