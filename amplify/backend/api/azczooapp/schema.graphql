@@ -10,14 +10,14 @@ type User @model {
   optedIn: Boolean!
 }
 
-type Event @model {
+type Event @model @searchable {
   id: ID!
   name: String!
   description: String!
   image: String
 }
 
-type Place @model {
+type Place @model @searchable {
   id: ID!
   name: String!
   description: String!
@@ -25,7 +25,7 @@ type Place @model {
   image: String
 }
 
-type Animal @model {
+type Animal @model @searchable {
   id: ID!
   name: String!
   scientificName: String!
