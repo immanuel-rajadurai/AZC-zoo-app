@@ -25,7 +25,7 @@ export default function App() {
 
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(true);
-  const [hasSignedUp, setHasSignedUp] = useState(false);
+  // const [hasSignedUp, setHasSignedUp] = useState(false);
 
   useEffect(() => {
     // Print the current router stack
@@ -35,9 +35,13 @@ export default function App() {
   useEffect(() => {
     const checkSignUpStatus = async () => {
         try {
-            const value = await AsyncStorage.getItem('hasSignedUp');
-            if (value === 'true') {
-                setHasSignedUp(true);
+          await new Promise((resolve) => setTimeout(resolve, 2000)); // wait for 1 second
+
+            const hasSignedUp = await AsyncStorage.getItem('hasSignedUp');
+            if (hasSignedUp === 'true') {
+                router.replace('/home'); // Navigate to home if signed up
+            } else {
+                router.replace('/sign-up'); // Navigate to sign-up if not signed up
             }
         } catch (error) {
             console.error('Error checking sign-up status:', error);
@@ -47,19 +51,9 @@ export default function App() {
     };
 
     checkSignUpStatus();
-    }, []);
-
-    const handleContinue = () => {
-      if (hasSignedUp) {
-          router.push('/home'); // Redirect to home if already signed up
-      } else {
-          router.push('/sign-up'); // Redirect to sign-up if not signed up
-      }
-  };
+  }, [router]);
 
   if (isLoading) {
-      return null; // Optionally display a loading spinner here
-  }
 
     return (
           <SafeAreaView className="h-full" backgroundColor='#234e35'>
@@ -106,9 +100,9 @@ export default function App() {
                         style={styles.icon}
                         resizeMode="contain"
                       />
-                      <TouchableOpacity style={styles.closeButton} onPress={handleContinue}>
+                      {/* <TouchableOpacity style={styles.closeButton} onPress={handleContinue}>
                         <Text style={styles.closeButtonText}>Continue</Text>
-                      </TouchableOpacity>
+                      </TouchableOpacity> */}
                     </View>
                   </View>
 
@@ -121,6 +115,8 @@ export default function App() {
             <StatusBar backgroundColor='#161622' style='light'/>
           </SafeAreaView>
       )
+}
+return null;
 }
 
 
