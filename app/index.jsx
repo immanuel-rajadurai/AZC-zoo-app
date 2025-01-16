@@ -9,12 +9,14 @@ import { ModelProvider } from './modelContext';
 import CustomButtonBlack from '../components/CustomButtonBlack';
 import { NavigationContainer } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState  } from 'react';
 
 
 import { Amplify } from 'aws-amplify';
 import amplifyconfig from '../src/amplifyconfiguration.json';
 Amplify.configure(amplifyconfig);
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 //command to start up the app
 // npx expo start --tunnel
@@ -22,11 +24,42 @@ Amplify.configure(amplifyconfig);
 export default function App() {
 
   const navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasSignedUp, setHasSignedUp] = useState(false);
 
   useEffect(() => {
     // Print the current router stack
     console.log('Current Router Stack:', navigation.getState());
   }, [navigation]);
+
+  useEffect(() => {
+    const checkSignUpStatus = async () => {
+        try {
+            const value = await AsyncStorage.getItem('hasSignedUp');
+            if (value === 'true') {
+                setHasSignedUp(true);
+            }
+        } catch (error) {
+            console.error('Error checking sign-up status:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    checkSignUpStatus();
+    }, []);
+
+    const handleContinue = () => {
+      if (hasSignedUp) {
+          router.push('/home'); // Redirect to home if already signed up
+      } else {
+          router.push('/sign-up'); // Redirect to sign-up if not signed up
+      }
+  };
+
+  if (isLoading) {
+      return null; // Optionally display a loading spinner here
+  }
 
     return (
           <SafeAreaView className="h-full" backgroundColor='#234e35'>
@@ -73,7 +106,7 @@ export default function App() {
                         style={styles.icon}
                         resizeMode="contain"
                       />
-                      <TouchableOpacity style={styles.closeButton} onPress={() => router.push('/sign-up')}>
+                      <TouchableOpacity style={styles.closeButton} onPress={handleContinue}>
                         <Text style={styles.closeButtonText}>Continue</Text>
                       </TouchableOpacity>
                     </View>
