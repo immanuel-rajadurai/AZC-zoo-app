@@ -99,7 +99,7 @@ const SignUp = () => {
 
             console.log('User created:', usersResult.data.createUser);
             await AsyncStorage.setItem('hasSignedUp', 'true'); // flag for async
-            router.push('/home');
+            // router.push('/home');
         } catch (error) {
             if (error.errors && error.errors[0].errorType === 'DynamoDB:ConditionalCheckFailedException') {
                 Alert.alert('Error', 'This email is already in use.');

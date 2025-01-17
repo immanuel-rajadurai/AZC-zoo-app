@@ -35,23 +35,24 @@ export default function App() {
   useEffect(() => {
     const checkSignUpStatus = async () => {
         try {
-          await new Promise((resolve) => setTimeout(resolve, 1000)); // wait for 1 second
+            await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second
 
             const hasSignedUp = await AsyncStorage.getItem('hasSignedUp');
+
+           
             if (hasSignedUp === 'true') {
-                router.replace('/home'); // Navigate to home if signed up
+                router.push('/home'); // Navigate to home if signed up
             } else {
-                router.replace('/sign-up'); // Navigate to sign-up if not signed up
+                router.push('/sign-up'); // Navigate to sign-up if not signed up or key is missing
             }
         } catch (error) {
             console.error('Error checking sign-up status:', error);
-        } finally {
-            setIsLoading(false);
+            router.push('/sign-up'); 
         }
     };
 
     checkSignUpStatus();
-  }, [router]);
+}, [router]);
 
   if (isLoading) {
 
