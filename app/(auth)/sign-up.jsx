@@ -61,6 +61,9 @@ const SignUp = () => {
             } catch (error) {
                 console.log('error on fetching users', error);
             }
+
+            let hasSignedUp = await AsyncStorage.getItem('hasSignedUp');
+            console.log("In sign up page, Has signed up: ", hasSignedUp);
         };
 
         fetchUsers();
@@ -99,7 +102,7 @@ const SignUp = () => {
 
             console.log('User created:', usersResult.data.createUser);
             await AsyncStorage.setItem('hasSignedUp', 'true'); // flag for async
-            // router.push('/home');
+            router.push('/home');
         } catch (error) {
             if (error.errors && error.errors[0].errorType === 'DynamoDB:ConditionalCheckFailedException') {
                 Alert.alert('Error', 'This email is already in use.');

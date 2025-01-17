@@ -35,14 +35,19 @@ export default function App() {
   useEffect(() => {
     const checkSignUpStatus = async () => {
         try {
+            
             await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second
 
             const hasSignedUp = await AsyncStorage.getItem('hasSignedUp');
 
-           
+            console.log("In index page, Has signed up: ", hasSignedUp);
+
+            
             if (hasSignedUp === 'true') {
+                console.log("navigating to home");
                 router.push('/home'); // Navigate to home if signed up
             } else {
+                console.log("navigating to sign-up");
                 router.push('/sign-up'); // Navigate to sign-up if not signed up or key is missing
             }
         } catch (error) {
@@ -73,7 +78,7 @@ export default function App() {
                 <Text></Text>
                 <Text></Text> 
 
-                {/* <View style={styles.container}>
+                <View style={styles.container}>
                   <View style={styles.iconButtonContainer}>
                     <Image
                       source={icons.elephantlogo}
@@ -81,7 +86,7 @@ export default function App() {
                       resizeMode="contain"
                     />
 
-                    <TouchableOpacity style={styles.closeButton}>
+                    {/* <TouchableOpacity style={styles.closeButton}>
                       <Text style={styles.closeButtonText}>Close</Text>
                     </TouchableOpacity> */}
 
@@ -91,21 +96,36 @@ export default function App() {
                       handlePress={() => router.push('/home')}
                       containerStyles={styles.button}
                     /> */}
-                  {/* </View>
-                </View> */}
 
-                <View style={styles.container}>
+                    <CustomButtonBlack
+                        title="Continue"
+                        handlePress={async () => {
+                            const hasSignedUp = await AsyncStorage.getItem('hasSignedUp');
+                            if (hasSignedUp === 'true') {
+                              console.log("navigating to home");
+                              router.push('/home'); // Navigate to home if signed up
+                            } else {
+                                console.log("navigating to sign-up");
+                                router.push('/sign-up'); // Navigate to sign-up if not signed up or key is missing
+                            }
+                        }}
+                        containerStyles={styles.button}
+                    />
+                  </View>
+                </View>
+
+                {/* <View style={styles.container}>
                     <View style={styles.iconButtonContainer}>
                       <Image
                         source={icons.elephantlogo}
                         style={styles.icon}
                         resizeMode="contain"
-                      />
+                      /> */}
                       {/* <TouchableOpacity style={styles.closeButton} onPress={handleContinue}>
                         <Text style={styles.closeButtonText}>Continue</Text>
                       </TouchableOpacity> */}
-                    </View>
-                  </View>
+                    {/* </View>
+                  </View> */}
 
                 <Text></Text>
                 <Text></Text>
