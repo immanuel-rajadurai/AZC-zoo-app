@@ -35,7 +35,7 @@ export default function App() {
   useEffect(() => {
     const checkSignUpStatus = async () => {
         try {
-          await new Promise((resolve) => setTimeout(resolve, 2000)); // wait for 1 second
+          await new Promise((resolve) => setTimeout(resolve, 1000)); // wait for 1 second
 
             const hasSignedUp = await AsyncStorage.getItem('hasSignedUp');
             if (hasSignedUp === 'true') {
