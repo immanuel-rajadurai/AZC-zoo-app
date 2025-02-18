@@ -31,8 +31,8 @@ const Tickets = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const slideAnim = useRef(new Animated.Value(0)).current;
   const [selectorWidth, setSelectorWidth] = useState(0);
-const [isDateDropdownOpen, setIsDateDropdownOpen] = useState(false);
-const [isTimeDropdownOpen, setIsTimeDropdownOpen] = useState(false);
+  const [isDateDropdownOpen, setIsDateDropdownOpen] = useState(false);
+  const [isTimeDropdownOpen, setIsTimeDropdownOpen] = useState(false);
 
   const incrementTicket = (label) => {
     setTicketCounts((prev) => ({ ...prev, [label]: (prev[label] || 0) + 1 }));
@@ -108,8 +108,8 @@ const [isTimeDropdownOpen, setIsTimeDropdownOpen] = useState(false);
             <View style={[styles.calendarDropdown, , { width: selectorWidth }]}>
               <Calendar
                 onDayPress={(day) => {
-                  const formattedDate = formatDate(day.dateString); // Format the date
-                  setDate(formattedDate); // Set the formatted date
+                  const formattedDate = formatDate(day.dateString); 
+                  setDate(formattedDate); 
                   setCalendarVisible(false);
                 }}
                 markedDates={{
@@ -180,7 +180,7 @@ const [isTimeDropdownOpen, setIsTimeDropdownOpen] = useState(false);
                   style={styles.icon} 
                 />
                 <Text style={styles.ticketLabel}>
-                  {label} <Text style={styles.ticketSubLabel}>{subLabel}</Text>
+                  {label} {'\n'} <Text style={styles.ticketSubLabel}>{subLabel}</Text>
                 </Text>
               </View>
               <Text style={styles.ticketPrice}>{price}</Text>
@@ -268,8 +268,8 @@ const styles = StyleSheet.create({
   },  
   calendarDropdown: {
     position: 'absolute',
-    top: 90,
-    zIndex: 1,
+    top: '60%',
+    zIndex: 1000,
     backgroundColor: '#D9D9D9',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 10 },
@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
   },
   timeDropdown: {
     position: 'absolute',
-    top: 144,
+    top: '103%',
     zIndex: 1000,
     backgroundColor: '#D9D9D9',
     shadowColor: '#000',
@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   dropdownItem: {
-    padding: 12,
+    padding: '4%',
   },
   dropdownText: {
     fontSize: 16,
@@ -322,7 +322,7 @@ const styles = StyleSheet.create({
   labelContainer: {
     flexDirection: 'row', 
     alignItems: 'center', 
-    flex: 1.05, 
+    flex: 1.1, 
   },
   ticketLabel: {
     fontSize: 16,
@@ -371,7 +371,7 @@ const styles = StyleSheet.create({
   },
   popup: {
     position: 'absolute',
-    bottom: -4,
+    bottom: '-1%',
     left: 0,
     right: 0,
     backgroundColor: '#97C970',
