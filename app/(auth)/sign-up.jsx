@@ -142,7 +142,7 @@ const SignUp = () => {
                             <Text className="ml-2 text-white"> I agree with the{' '}
                                 <Text
                                     style={{ color: 'lightgray', textDecorationLine: 'underline' }}
-                                    onPress={() => Linking.openURL('https://google.com')}
+                                    onPress={() => Linking.openURL('https://www.aquazooconsulting.com/privacy-policy')}
                                 >
                                     Terms and Conditions
                                 </Text>
