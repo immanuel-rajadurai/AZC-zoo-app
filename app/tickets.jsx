@@ -5,17 +5,24 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import * as FileSystem from 'expo-file-system';
 import WebView from 'react-native-webview';
 
-const Tickets = () => {
+import ExpoStripeProvider from './ExpoStripeProvider'; // Import the Stripe provider
 
+const Tickets = () => {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-        <WebView 
-            source={{ uri: 'https://zsllondonzoo.seetickets.com/zsl/zsl-london-zoo?_gl=1*1ad2eww*_gcl_au*MTcxMjM1MjUyNC4xNzI5NTg4NDE2*_ga*MTM4MjAzNTM0Ny4xNzI5NTg4NDE2*_ga_MWZNHV9X89*MTcyOTU4ODQxNS4xLjAuMTcyOTU4ODQxNS42MC4wLjA.'}}
-            style={{ flex: 1 }} 
-        />
-    </SafeAreaView>
+    <View style={styles.container}>
+      <Text style={styles.title}>Buy Tickets</Text>
+      <Button title="Buy Ticket" onPress={() => console.log('Buying ticket...')} />
+    </View>
   );
 };
+
+export function TicketsScreen() {
+  return (
+    <ExpoStripeProvider>
+      <Tickets />
+    </ExpoStripeProvider>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -45,3 +52,11 @@ const styles = StyleSheet.create({
 });
 
 export default Tickets;
+
+
+ // <SafeAreaView style={{ flex: 1 }}>
+    //     {/* <WebView 
+    //         source={{ uri: 'https://zsllondonzoo.seetickets.com/zsl/zsl-london-zoo?_gl=1*1ad2eww*_gcl_au*MTcxMjM1MjUyNC4xNzI5NTg4NDE2*_ga*MTM4MjAzNTM0Ny4xNzI5NTg4NDE2*_ga_MWZNHV9X89*MTcyOTU4ODQxNS4xLjAuMTcyOTU4ODQxNS42MC4wLjA.'}}
+    //         style={{ flex: 1 }} 
+    //     /> */}
+    // </SafeAreaView>
