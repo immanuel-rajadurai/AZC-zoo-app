@@ -22,7 +22,7 @@ import challengegreen from "../assets/icons/challengegreen.png"
 import burgerMenu from "../assets/icons/burgerMenu.png";
 import elephantlogo from "../assets/icons/elephantlogo.png";
 import sidetabgreen from "../assets/icons/sidetabgreen.png";
-import londonzooheader from "../assets/icons/londonzooheader.png";
+import londonzooheader from "../assets/icons/zoo-du-bossaire-logo.png";
 import mapicon from "../assets/icons/mapicon.png";
 import cafe from "../assets/icons/cafe.png";
 import privacyicon from "../assets/icons/privacyicon.png";

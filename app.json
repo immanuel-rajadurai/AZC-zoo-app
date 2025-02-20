@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "app-v1",
-    "scheme": "appv1",
-    "slug": "app_v1",
+    "name": "Zoo Boissiere App",
+    "scheme": "zoo-boissiere-app",
+    "slug": "zoo-boissiere-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,7 +15,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "app.aquazoo.zooapp",
-      "buildNumber": "5",
+      "buildNumber": "1",
       "config": {
         "googleMapsApiKey": "AIzaSyBN2fxQjmuQ7fdTE4szAZVrRwUtTIQ_ME4"
       }

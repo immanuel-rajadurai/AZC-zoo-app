@@ -68,7 +68,7 @@ const CustomHeader = ({ route }) => {
 
             <Image
                 source={icons.londonzooheader}
-                style={{ width: 160, height: 50, tintColor: "#7BC144" }}
+                style={{ width: 160, height: 50}}
                 resizeMode="contain"
               />
           </>
