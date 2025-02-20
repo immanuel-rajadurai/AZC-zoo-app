@@ -53,7 +53,7 @@ const Wallet = () => {
         return updatedFiles;
       });
     } catch (error) {
-      console.error('Error picking or saving document:', error);
+      console.log('Error picking or saving document:', error);
     }
   };
 
