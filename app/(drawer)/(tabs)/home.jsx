@@ -176,7 +176,6 @@ const Home = () => {
   };
   
   const isOptionEnabled = (id) => options.find((option) => option.id === id)?.isEnabled;  
-  
 
   return (
     <View style={styles.container}>
@@ -217,7 +216,7 @@ const Home = () => {
           </Marker>
         ))} */}
 
-        {options.map((option) =>
+        {/* {options.map((option) =>
           option.isEnabled && option.id !== 2 ? (
             <Marker
               key={`marker-${option.id}`}
@@ -232,7 +231,7 @@ const Home = () => {
               />
             </Marker>
           ) : null
-        )}
+        )} */}
 
       </MapView>
 
@@ -278,16 +277,16 @@ const Home = () => {
         </View>
       </Modal>
 
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={styles.toggleButton}
         onPress={() => setAccessibilityVisible(!accessibilityVisible)}
       >
         <Image
           source={require('../../../assets/icons/accessibility-filter.png')} style={styles.toggleButton}
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
-      <Modal
+      {/* <Modal
         animationType="slide"
         transparent={true}
         visible={accessibilityVisible}
@@ -352,7 +351,7 @@ const Home = () => {
             </TouchableOpacity>
           </View>
         </View>
-      </Modal>
+      </Modal> */}
 
 
       <View style={styles.halfCircle} />

@@ -22,7 +22,7 @@ const Wallet = () => {
       console.log('DocumentPicker result:', result);
 
       if (result.type === 'cancel') {
-        return; // If user cancels, do nothing
+        return; 
       }
 
       const { uri, name, mimeType } = result.assets[0]; // Access first asset
