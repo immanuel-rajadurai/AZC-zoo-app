@@ -13,6 +13,7 @@ import { listUsers, CreateUser } from "../../src/graphql/queries";
 import { generateClient } from 'aws-amplify/api';
 import { API, graphqlOperation } from 'aws-amplify';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const client = generateClient();
 
@@ -60,6 +61,9 @@ const SignUp = () => {
             } catch (error) {
                 console.log('error on fetching users', error);
             }
+
+            let hasSignedUp = await AsyncStorage.getItem('hasSignedUp');
+            console.log("In sign up page, Has signed up: ", hasSignedUp);
         };
 
         fetchUsers();
@@ -97,6 +101,7 @@ const SignUp = () => {
             });
 
             console.log('User created:', usersResult.data.createUser);
+            await AsyncStorage.setItem('hasSignedUp', 'true'); // flag for async
             router.push('/home');
         } catch (error) {
             if (error.errors && error.errors[0].errorType === 'DynamoDB:ConditionalCheckFailedException') {
