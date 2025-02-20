@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "Zoo Boissiere App",
-    "scheme": "app_v1",
-    "slug": "app_v1",
+    "scheme": "app-v1",
+    "slug": "app-v1",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
