@@ -60,20 +60,9 @@ const Animals = () => {
         <View style={styles.column}>
             <View style={styles.imageContainer}>
               <Image source={{ uri: animal.image }} style={styles.animalImage} />
-              {scheduledAnimals.includes(animal.name) && <Icon name="heart" size={20} color="red" style={styles.icon} />}
-              {!scheduledAnimals.includes(animal.name) && <Icon name="heart" size={20} color="lightgrey" style={styles.icon} />}
             </View>
           {/* {!scheduledAnimals.includes(animal.name) && ( */}
-              <TouchableOpacity
-                style={styles.customButton}
-                onPress={() => addToSchedule(animal.name)}
-              >
-                <Text style={styles.customButtonText}>
-                  {scheduledAnimals.includes(animal.name) ? 'Added to Plan' : 'Add to Plan'}
-                </Text>
-                
-
-              </TouchableOpacity>
+              
           {/* )} */}
         </View>
         <View style={styles.column}>
@@ -88,6 +77,19 @@ const Animals = () => {
               <Text style={styles.cardSectionTitle}>Habitat: </Text>
               <Text style={styles.text}>{animal.habitat}</Text>
             </View>
+
+            <TouchableOpacity
+                style={styles.customButton}
+                onPress={() => addToSchedule(animal.name)}
+              >
+                <Text style={styles.customButtonText}>
+                  {scheduledAnimals.includes(animal.name) ? 'Added to Plan' : 'Add to Plan'}
+                 
+                </Text>
+                {scheduledAnimals.includes(animal.name) && <Icon name="heart" size={20} color="red" style={styles.icon} />}
+                {!scheduledAnimals.includes(animal.name) && <Icon name="heart" size={20} color="lightgrey" style={styles.icon} />}
+               
+              </TouchableOpacity>
           </View>
         </View>
       </TouchableOpacity>
@@ -188,27 +190,28 @@ const Animals = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Animals</Text>
 
-      <View style={styles.infoBox}>
-        <Text style={styles.infoText}>
-          Make a plan of animals that you want to visit throughout the zoo
-        </Text>
-
-        <Image
-          source={icons.listicon}
-          style={{ width: 60, height: 60, tintColor: "#7BC144" }}
-          resizeMode="contain"
-        />
-        <Image>
-
-        </Image>
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 20, marginBottom: 10, marginRight: 30 }}>
+        <View style={styles.infoBox}>
+          <Text style={styles.infoText}>
+            Make a plan of animals that you want to visit throughout the zoo
+          </Text>
+          
+          {/* <Image
+            source={icons.listicon}
+            style={{ width: 60, height: 60, tintColor: "#7BC144" }}
+            resizeMode="contain"
+          /> */}
+          <Image />
+        </View>
+        <TouchableOpacity style={styles.planButton} onPress={NavigateToSchedule}>
+          <Text style={styles.planButtonText}>My Plan</Text>
+        </TouchableOpacity>
       </View>
+
+    
+      
       <View style={styles.buttonContainer}>
-      <TouchableOpacity
-                style={styles.planButton}
-                onPress={NavigateToSchedule}
-                >
-                  <Text style={styles.customButtonText}>My Plan</Text>
-      </TouchableOpacity>
+      
         </View>
       <FlatList
         data={animals}
@@ -284,10 +287,10 @@ const styles = StyleSheet.create({
     borderColor: 'darkgreen',
     borderRadius: 10,
     padding: 15,
-    margin: 10,
     backgroundColor: '#f0fff0', // Optional light green background for contrast
     alignItems: 'center',
     flexDirection: 'row',
+    width: 290,
   },
   infoText: {
     fontSize: 14,
@@ -311,6 +314,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'left',
     margin: 1,
+    marginLeft: 15,
     justifyContent: 'space-between', // Ensure chevron stays within bounds
     flex: 1,
   },
@@ -336,7 +340,8 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: 'darkgreen',
-    marginBottom: 20,
+    marginBottom: 30,
+    marginTop: 45
   },
   text: {
     fontSize: 12,
@@ -357,25 +362,23 @@ const styles = StyleSheet.create({
     margin: 10, // Optional: Add margin to the component
   },
   animalImage: {
-    width: 100,
-    height: 100,
+    width: 145,
+    height: 145,
     marginRight: 1,
     borderRadius: 80
   },
   icon: {
-    position: 'absolute',
-    top: 5, // Adjust this value to position the icon vertically inside the image
-    left: 4, // Adjust this value to position the icon horizontally inside the image
+    marginLeft: 5, // Add some space between text and icon
   },
   imageContainer: {
-    position: 'relative', // Make the container relative for absolute positioning
+    position: 'relative', 
   },
   animalName: {
     fontSize: 20,
     fontWeight: 'bold',
     color: 'darkgreen',
     marginTop: 10,
-    marginBottom: 10,
+    marginBottom: 25,
     textAlign: 'left',
     paddingRight: 17,
   },
@@ -390,11 +393,19 @@ const styles = StyleSheet.create({
   },
   planButton: {
     backgroundColor: 'darkgreen',
-    borderRadius: 20,
+    borderRadius: 10,
     paddingVertical: 10, // Smaller vertical padding
     paddingHorizontal: 8, // Smaller horizontal padding
     alignItems: 'center',
-    width: 150, // Reduce minimum width
+    width: 70, // Reduce minimum width
+    height: 70,
+    marginLeft: 10,
+  },
+  planButtonText: {
+    color: 'white',
+    fontSize: 15, // Slightly smaller font size
+    fontWeight: 'bold',
+    marginTop: 8,
   },
   customButton: {
     backgroundColor: 'darkgreen',
@@ -402,13 +413,19 @@ const styles = StyleSheet.create({
     paddingVertical: 3, // Smaller vertical padding
     paddingHorizontal: 8, // Smaller horizontal padding
     alignItems: 'center',
-    width: 80,
-    marginTop:10
+    justifyContent: 'space-between', // Ensure text and icon are spaced correctly
+    flexDirection: 'row', // Arrange children in a row
+    width: 150,
+    height: 35,
+    marginTop: 10,
+    marginLeft: 5,
   },
   customButtonText: {
     color: 'white',
     fontSize: 12, // Slightly smaller font size
     fontWeight: 'bold',
+    flex: 1, // Ensure text takes up available space
+    textAlign: 'center', // Center the text
   },
   cardSectionTitle: {
     fontWeight: 'bold',

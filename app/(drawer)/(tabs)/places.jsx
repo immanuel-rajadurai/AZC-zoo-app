@@ -190,8 +190,8 @@ export default Places;
 
 const styles = StyleSheet.create({
   imageContainer: {
-    alignItems: 'center', // Center the image and status
-    marginRight: 10, // Add space between image/status and other content
+    // alignItems: 'center', // Center the image and status
+    // marginRight: 10, // Add space between image/status and other content
   },
   statusContainer: {
     justifyContent: 'center',
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
   },
   column: {
     flexDirection: 'column',
-    alignItems: 'center',
+    alignItems: 'left',
     margin: 10,
     justifyContent: 'space-between', // Ensure chevron stays within bounds
     flex: 1,
@@ -256,7 +256,9 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: 'darkgreen',
-    marginBottom: 20,
+    marginBottom: 30,
+    marginTop: 47,
+    textAlign: 'left', 
   },
   text: {
     fontSize: 12,
@@ -273,7 +275,7 @@ const styles = StyleSheet.create({
     // shadowRadius: 3.84, // Shadow radius
     // elevation: 5, // Elevation for Android shadow
     backgroundColor: '#fff', // Background color to make the shadow visible
-    padding: 10, // Optional: Add padding to the component
+    padding: 2, // Optional: Add padding to the component
     margin: 10, // Optional: Add margin to the component
   },
   placeImage: {
@@ -282,15 +284,11 @@ const styles = StyleSheet.create({
     marginRight: 10,
     borderRadius: 10
   },
-  image: {
-    width: '100%', 
-    height: 150,
-  },
   placeName: {
     fontSize: 20,
     fontWeight: 'bold',
     color: 'darkgreen',
-    marginTop: 2,
+    marginTop: -11,
     marginBottom: 2,
     textAlign: 'left',
     paddingRight: 2,

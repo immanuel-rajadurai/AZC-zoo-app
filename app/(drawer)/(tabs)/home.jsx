@@ -335,38 +335,36 @@ const styles = StyleSheet.create({
     fontSize: 16,
     margin: 10,
   },
-  halfCircle: {
-    position: 'absolute',
-    bottom: -40,  // Ensures it overlaps other components slightly
-    width: 200,  // Width of the half-circle
-    height: 80,  // Height of the half-circle
-    backgroundColor: '#162b4c',  // Dark green color
-    borderTopLeftRadius: 80,  // Creates a rounded top left corner
-    borderTopRightRadius: 80,  // Creates a rounded top right corner
-    zIndex: 2,  // Ensure it stays above other components
-  },
   bottombar: {
     position: 'absolute',
     bottom: 0,
     width: '100%',
     height: 10, // Adjust the thickness as needed
-    backgroundColor: 'grey',
+    backgroundColor: '#8BC33A',
   },
   eventButton: {
-    width: "60%",
-    padding: 5,
+    width: "67%",
+    padding: 2,
     position: "absolute",
     bottom: 0,
     zIndex: 1,
     alignItems: 'center', // Center horizontally
   },
-
-
+  halfCircle: {
+    position: 'absolute',
+    bottom: -40,  // Ensures it overlaps other components slightly
+    width: 190,  // Width of the half-circle
+    height: 80,  // Height of the half-circle
+    backgroundColor: '#234e35',  // Dark green color
+    borderTopLeftRadius: 80,  // Creates a rounded top left corner
+    borderTopRightRadius: 80,  // Creates a rounded top right corner
+    zIndex: 2,  // Ensure it stays above other components
+  },
   toggleButton: {
     position: "absolute",
     bottom: 8, 
     right: 8, 
-    backgroundColor: "grey",
+    backgroundColor: "#162b4c",
     paddingTop: 28,
     paddingBottom: 28,
     paddingLeft: 10,

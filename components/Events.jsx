@@ -109,7 +109,7 @@ Once the challenge is completed, make your way to the gift shop to collect your 
       >
         <Image source={hardcodedEvents[0].thumbnail} style={styles.image} />
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>Young Adventurer Challenge</Text>
+          <Text style={styles.leftTitle}>Young Adventurer Challenge</Text>
         </View>
       </TouchableOpacity>
 
@@ -119,7 +119,7 @@ Once the challenge is completed, make your way to the gift shop to collect your 
       >
         <Image source={hardcodedEvents[1].thumbnail} style={styles.image} />
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>Mystery Animal Challenge</Text>
+          <Text style={styles.rightTitle}>Mystery Animal Challenge</Text>
         </View>
       </TouchableOpacity>
     </View>
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     flex: 1,
-    width: '100%',
+    width: '97%',
     backgroundColor: '#fff',
   },
   image: {
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     // borderRadius: 20,
     // elevation: 1,
     width: 210,
-    // width: '100%',
+    width: '55%',
   },
   titleContainer: {
     position: 'absolute', // Place the title on top of the image
@@ -168,12 +168,23 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: '#fff',
   },
-  title: {
+  leftTitle: {
     color: '#000', 
     fontFamily: 'serif',
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
+    marginTop: 17,
+    marginLeft: 10,
+  },
+  rightTitle: {
+    color: '#000', 
+    fontFamily: 'serif',
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop: 17,
+    marginRight: 15,
   },
   animatedContainer: {
     // flex: 1,
@@ -182,7 +193,7 @@ const styles = StyleSheet.create({
     // top: 60,
     justifyContent: 'center',
     alignItems: 'center',
-    height: '85%',
+    height: '86%',
     width: '100%',
     // backgroundColor: '#fff',
   },
@@ -192,8 +203,8 @@ const styles = StyleSheet.create({
     borderRadius: 0,
     alignItems: 'center',
     marginBottom: 10,
-    width: '100%',
-    height: 500, // Larger height for the alternate header
+    width: '98%',
+    height: '290%', // Larger height for the alternate header
     position: 'absolute', // Position the header absolutely
     top: 0, // Position it at the top
     left: 10, // Align it to the left
@@ -226,7 +237,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     flex: 1,
     marginLeft:30,
-    marginTop:30
+    marginTop:30,
+    marginRight:30,
   },
   subHeaderText: {
     fontSize: 20,
@@ -251,6 +263,7 @@ const styles = StyleSheet.create({
     right: 10,
     top: '50%',
     transform: [{ translateY: -12 }],
+    marginRight: 0,
   },
   chevron: {
     width: 30,

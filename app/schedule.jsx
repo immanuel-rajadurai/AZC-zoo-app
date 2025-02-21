@@ -1,5 +1,5 @@
 import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity, Modal, SafeAreaView, ScrollView, Button } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { animalImages, animalData } from '../data/animals';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -7,6 +7,7 @@ import { generateClient } from 'aws-amplify/api';
 import { listAnimals } from '../src/graphql/queries'; 
 
 const client = generateClient(); 
+
 
 const Animals = () => {
 
@@ -113,7 +114,7 @@ const Animals = () => {
   
   //onPress={() => removeFromSchedule(animal.name)}
 
- 
+
   async function removeFromSchedule(animalName) {
 
     console.log("calling removeFromSchedule");

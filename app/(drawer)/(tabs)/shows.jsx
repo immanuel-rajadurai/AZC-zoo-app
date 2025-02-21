@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   },
   column: {
     flexDirection: 'column',
-    alignItems: 'center',
+    alignItems: 'left',
     margin: 10,
     justifyContent: 'space-between', // Ensure chevron stays within bounds
     flex: 1,
@@ -163,11 +163,14 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: 'darkgreen',
-    marginBottom: 20,
+    marginBottom: 2,
+    marginTop: 45,
+    textAlign: 'left', 
   },
   text: {
     fontSize: 12,
     flex: 1,
+    // marginLeft:15
   },
   animalList: {
     width: '100%',
@@ -180,7 +183,7 @@ const styles = StyleSheet.create({
     // shadowRadius: 3.84, // Shadow radius
     // elevation: 5, // Elevation for Android shadow
     backgroundColor: '#fff', // Background color to make the shadow visible
-    padding: 10, // Optional: Add padding to the component
+    padding: 2, // Optional: Add padding to the component
     margin: 10, // Optional: Add margin to the component
   },
   eventImage: {
@@ -193,7 +196,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: 'darkgreen',
-    marginTop: 2,
+    marginTop: -3,
     marginBottom: 2,
     textAlign: 'left',
     paddingRight: 2,

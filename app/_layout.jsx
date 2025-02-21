@@ -14,6 +14,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { useNavigation } from '@react-navigation/native';
 import { customGrad } from '@tensorflow/tfjs';
 import DrawerNavigator from './(drawer)/_layout';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
 
@@ -50,31 +51,32 @@ const CustomHeader = ({ route }) => {
     navigation.dispatch(DrawerActions.toggleDrawer());
   };
 
+  const insets = useSafeAreaInsets();
+
   return (
     <SafeAreaView style={{ backgroundColor: '#234e35' }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 1, paddingHorizontal: 15, position: 'relative'}}>
-        {!isSearchVisible ? (
-          <>
-            <TouchableOpacity
-              style={{ position: 'absolute', left: 10 }}
-              onPress={toggleDrawer}
-            >
-              <Image
-                source={icons.sidetabgreen}
-                style={{ width: 40, height: 35, tintColor: "#7BC144" }}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-
+    <View style={[styles.headerContainer]}>
+      {!isSearchVisible ? (
+        <>
+          <TouchableOpacity
+            style={styles.drawerToggle}
+            onPress={toggleDrawer}
+          >
             <Image
-                source={icons.londonzooheader}
-                style={{ width: 160, height: 50}}
-                resizeMode="contain"
-              />
-          </>
-        ) : (
+              source={icons.sidetabgreen}
+              style={styles.drawerIcon}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
 
-          <View style={styles.searchContainer}>
+          <Image
+            source={icons.londonzooheader}
+            style={styles.headerImage}
+            resizeMode="contain"
+          />
+        </>
+      ) : (
+        <View style={styles.searchContainer}>
           <SearchInput
             ref={searchInputRef}
             value={searchQuery}
@@ -84,30 +86,17 @@ const CustomHeader = ({ route }) => {
             <Image source={icons.deleteX} style={styles.closeIcon} />
           </TouchableOpacity>
         </View>
+      )}
 
-        )}
-
-        <TouchableOpacity style={{
-              position: 'absolute',
-              right: 10, 
-        
-            }} 
-            onPress={handleSearchToggle} 
-          >
-          <Image
-            source={isSearchVisible ? icons.close : icons.searchgreen} 
-            className="w-5 h-5"
-            style={{
-              width: 20,
-              height: 20,
-              tintColor: isSearchVisible ? 'black' : '#7BC144', 
-              left: 0
-            }}
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+      <TouchableOpacity style={styles.searchToggle} onPress={handleSearchToggle}>
+        <Image
+          source={isSearchVisible ? icons.close : icons.searchgreen}
+          style={styles.searchIcon}
+          resizeMode="contain"
+        />
+      </TouchableOpacity>
+    </View>
+  </SafeAreaView>
   );
 };
 
@@ -143,7 +132,6 @@ const RootLayout = () => {
           headerShown: false
         }} />
 
-        
         {/* <Stack.Screen name="easychallenge" options={{ title: 'Easy Challenge' }} /> */}
 
         <Stack.Screen
@@ -185,6 +173,7 @@ const RootLayout = () => {
               headerTitleStyle: {
                 fontWeight: 'bold', // Custom title style for this screen
               },
+              headerBackTitle: 'Back',
             }} 
         />
         
@@ -208,6 +197,15 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
   },
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 1,
+    paddingHorizontal: 15,
+    position: 'relative',
+    height: 30, // Control the overall height of the header
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -224,25 +222,31 @@ const styles = StyleSheet.create({
     width: 40,
     height: 35,
     tintColor: '#7BC144',
+    marginTop: 30,
+    marginLeft: 10,
   },
   headerImage: {
     width: 160,
-    height: 50,
-    tintColor: '#7BC144',
+    height: 75,
+    paddingTop:20,
+    paddingBottom:1
   },
   searchToggle: {
     position: 'absolute',
     right: 50,
   },
   searchIcon: {
-    width: 20,
-    height: 20,
+    width: 27,
+    height: 27,
     tintColor: '#7BC144',
+    marginRight: -30,
+    marginLeft: 100,
+    marginTop: 30,
   },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 10, // Adjust this value to control how low the input appears below the header
+    marginTop: 15, // Adjust this value to control how low the input appears below the header
     paddingHorizontal: 20, // Optional: Add horizontal padding
   },
   closeButton: {

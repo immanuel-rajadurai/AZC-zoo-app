@@ -19,7 +19,9 @@ const ToggleShowInformationButton = ({ title, handlePress, containerStyles, text
       <Text style={styles.text}>
         {title}
       </Text>
+      <Text style={styles.spacedText}></Text>
       <Text className={`text-primary font-pbold text-sm ${textStyles}`}>
+      
       </Text>
     </TouchableOpacity>
   )
@@ -50,6 +52,11 @@ const styles = StyleSheet.create({
   text: {
     color: 'black ',
     fontSize: 20,
+    fontWeight: 'bold',
+  },
+  spacedText: {
+    color: 'black ',
+    fontSize: 10,
     fontWeight: 'bold',
   },
 });

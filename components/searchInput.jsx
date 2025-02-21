@@ -11,6 +11,7 @@ import { API, graphqlOperation } from 'aws-amplify';
 const client = generateClient();
 
 const SearchInput = forwardRef(({ title, value, placeholder, handleChangeText, otherStyles, ...props }, ref) => {
+
   const [showPassword, setShowPassword] = useState(false);
   const [eventResults, setEventResults] = useState([]);
   const [animalResults, setAnimalResults] = useState([]);
@@ -370,14 +371,13 @@ return (
     </Modal>
   </View>
 );
-  
 })
 
 const styles = StyleSheet.create({
   searchBarContainer: {
     flex: 1,
     justifyContent: 'flex-end', // Align the container to the bottom
-    paddingTop: 10, // Adjust this value to control how low the input opens
+    paddingTop: 2, // Adjust this value to control how low the input opens
   },
   textInput: {
     fontSize: 16,

@@ -1,4 +1,4 @@
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import { Tabs, Redirect, Stack } from 'expo-router';
 import { icons, images } from '../../../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -6,7 +6,7 @@ import { CustomHeader } from '../_layout';
 
 //green CSS colour #187c3c
 
-const TabIcon = ({ icon, color, name, focused, style, textColor }) => {
+const TabIcon = ({ icon, color, name, focused, style, textColor, textMarginRight }) => {
   return (
     <View style={{ alignItems: 'center', justifyContent: 'center', gap: 2 }}>
       <Image
@@ -21,7 +21,8 @@ const TabIcon = ({ icon, color, name, focused, style, textColor }) => {
           fontSize: 12,
           textAlign: 'center',
           fontWeight: focused ? 'bold' : 'normal',
-           width: '100%'
+          width: '100%',
+          marginRight: textMarginRight,
         }}
       >
         {name}
@@ -29,6 +30,29 @@ const TabIcon = ({ icon, color, name, focused, style, textColor }) => {
     </View>
   );
 };
+
+// const TabIcon = ({ icon, textColor, name, focused, style, textStyle }) => {
+//   return (
+//     <View style={[styles.container, style]}>
+//       <Image source={icon} style={styles.icon} />
+//       <Text style={[styles.text, { color: textColor }, textStyle]}>{name}</Text>
+//     </View>
+//   );
+// };
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center', // Center horizontally
+    justifyContent: 'center', // Center vertically
+  },
+  icon: {
+    width: 32,
+    height: 32,
+  },
+  text: {
+    textAlign: 'center', // Center text
+  },
+});
 
 const TabsLayout = () => {
   return (
@@ -71,7 +95,7 @@ const TabsLayout = () => {
                 textColor="#619837"
                 name="Shows"
                 focused={focused}
-                style={{ width: 35, height: 35}}
+                style={{marginLeft: 0, width: 32, height: 32}}
               />
             )
           }}
@@ -89,7 +113,8 @@ const TabsLayout = () => {
                 textColor="#619837"
                 name="Food"
                 focused={focused}
-                style={{ width: 35, height: 35}}
+                style={{ marginBottom: 2, marginRight: 5, width: 30, height: 30}}
+                textMarginRight={5} 
               />
             )
           }}
@@ -107,7 +132,25 @@ const TabsLayout = () => {
                 textColor="#234e35"
                 name="Home"
                 focused={focused}
-                style={{ width: 85, height: 80, marginBottom: 30}}
+                style={{ width: 60, height: 60, marginBottom: 60}}
+              />
+            )
+          }}
+        />
+        <Tabs.Screen
+          name="animals"
+          options={{
+            title:'Animals',
+            headerShown: false,
+            tabBarIcon: ({ color, focused }) => (
+              <TabIcon
+                icon={icons.paw}
+                color={color}
+                textColor="#619837"
+                name="      Animals"
+                focused={focused}
+                className="w-52 h-72"
+                style={{marginLeft: 20, width: 32, height: 32, marginBottom: 1}}
               />
             )
           }}
@@ -124,31 +167,13 @@ const TabsLayout = () => {
                 color={color}
                 textColor="#619837"
                 name="Info"
-                style={{ width: 35, height: 35}}
+                style={{ marginBottom: 2,  width: 30, height: 30}}
                 focused={focused}
               />
             )
           }}
         />
-        <Tabs.Screen
-          name="animals"
-          options={{
-            title:'Animals',
-            headerShown: false,
-            //header: CustomHeader,
-            tabBarIcon: ({ color, focused }) => (
-              <TabIcon
-                icon={icons.paw}
-                color={color}
-                textColor="#619837"
-                name="Animals"
-                focused={focused}
-                className="w-52 h-72"
-                style={{ width: 45, height: 40}}
-              />
-            )
-          }}
-        />
+        
        
       </Tabs>
     </>
