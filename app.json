@@ -15,7 +15,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "app.aquazoo.zooapp",
-      "buildNumber": "10",
+      "buildNumber": "11",
       "config": {
         "googleMapsApiKey": "AIzaSyBN2fxQjmuQ7fdTE4szAZVrRwUtTIQ_ME4"
       },
