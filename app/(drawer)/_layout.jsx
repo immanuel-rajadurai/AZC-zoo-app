@@ -21,9 +21,6 @@ const CustomDrawerContent = (props) => {
             <Text style={styles.topicText}>Your Tickets</Text>
           </View>
 
-      
-  
-
         <DrawerItem
           label={() => (
             <Text style={styles.drawerLabel}>
