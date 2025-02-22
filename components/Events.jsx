@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     alignItems: 'center',
     marginBottom: 10,
-    width: '100%',
+    width: '106%',
     height:190,
     position: 'relative', // Position the header absolutely
     top: 0, // Position it at the top
@@ -238,11 +238,13 @@ const styles = StyleSheet.create({
     marginLeft:10,
   },
   descriptionText: {
-    fontSize: 16,
+    fontSize: 15,
     fontFamily: 'serif',
     color: '#555',
     textAlign: 'center',
     marginTop: 10,
+    marginLeft:15,
+    marginRight:12,
   },
   chevronContainer: {
     position: 'absolute',

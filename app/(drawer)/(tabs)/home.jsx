@@ -203,7 +203,7 @@ const Home = () => {
           opacity={0.8}
         />
 
-        {animals.map((animal, index) => (
+        {/* {animals.map((animal, index) => (
           <Marker
             key={index}
             coordinate={animal.coordinates}
@@ -215,7 +215,7 @@ const Home = () => {
               resizeMode="contain"
             />
           </Marker>
-        ))}
+        ))} */}
 
         {options.map((option) =>
           option.isEnabled && option.id !== 2 ? (
