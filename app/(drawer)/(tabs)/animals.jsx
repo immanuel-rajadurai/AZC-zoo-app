@@ -238,10 +238,10 @@ const Animals = () => {
                     <Text style={modalStyle.sectionTitle}>Diet: </Text>
                     <Text style={modalStyle.sectionText}>{selectedAnimal.diet}</Text>
                   </Text>
-                  <Text>
+                  {/* <Text>
                     <Text style={modalStyle.sectionTitle}>Height: </Text>
                     <Text style={modalStyle.sectionText}>{selectedAnimal.height}</Text>
-                  </Text>
+                  </Text> */}
                   <Text>
                     <Text style={modalStyle.sectionTitle}>Weight:{"\n"}</Text>
                     <Text style={modalStyle.sectionText}>
