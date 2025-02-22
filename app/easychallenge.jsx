@@ -752,7 +752,7 @@ const styles = StyleSheet.create({
     alignItems: 'center', // Center the text horizontally
     marginTop:70,
     alignSelf: 'center',
-    paddingHorizontal: 10
+    paddingHorizontal: 1
   },
   title: {
     fontSize: 24,
@@ -771,7 +771,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: 'center',
     paddingRight: 20,
-    paddingLeft: 23,
+    paddingLeft: 13,
     fontFamily: 'serif', // Suitable font
   },
   animalsLeft: {
