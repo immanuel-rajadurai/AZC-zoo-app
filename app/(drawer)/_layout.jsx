@@ -18,56 +18,11 @@ const CustomDrawerContent = (props) => {
 
           <View style={styles.header}>
             <Image source={icons.zoodrawericon} style={styles.icon} />
-            <Text style={styles.topicText}>Your Visit</Text>
+            <Text style={styles.topicText}>Your Tickets</Text>
           </View>
 
-        <DrawerItem
-          label={() => (
-            <Text style={styles.drawerLabel}>
-              Tickets
-            </Text>
-          )}
-          onPress={() => {
-              navigation.navigate('tickets');
-          }}
-          options={{ headerShown: false }}
-        />
-
-        <DrawerItem
-          label={() => (
-            <Text style={styles.drawerLabel}>
-              Membership
-            </Text>
-          )}
-          onPress={() => {
-              navigation.navigate('membership');
-          }}
-          options={{ headerShown: false }}
-        />
-
-        <DrawerItem
-          label={() => (
-            <Text style={styles.drawerLabel}>
-              Experiences
-            </Text>
-          )}
-          onPress={() => {
-              navigation.navigate('experiences');
-          }}
-          options={{ headerShown: false }}
-        />
-
-        <DrawerItem
-          label={() => (
-            <Text style={styles.drawerLabel}>
-              Venue hire
-            </Text>
-          )}
-          onPress={() => {
-              navigation.navigate('venuehire');
-          }}
-          options={{ headerShown: false }}
-        />
+      
+  
 
         <DrawerItem
           label={() => (
@@ -89,23 +44,11 @@ const CustomDrawerContent = (props) => {
         <DrawerItem
           label={() => (
             <Text style={styles.drawerLabel}>
-              FAQs
-            </Text>
-          )}
-          onPress={() => {
-              navigation.navigate('wallet');
-          }}
-          options={{ headerShown: false }}
-        />
-
-        <DrawerItem
-          label={() => (
-            <Text style={styles.drawerLabel}>
               Contact us
             </Text>
           )}
           onPress={() => {
-              navigation.navigate('wallet');
+              navigation.navigate('contactus');
           }}
           options={{ headerShown: false }}
         />
@@ -119,11 +62,11 @@ const CustomDrawerContent = (props) => {
         <DrawerItem
           label={() => (
             <Text style={styles.drawerLabel}>
-              Policies
+              Privacy Policy
             </Text>
           )}
           onPress={() => {
-              navigation.navigate('wallet');
+              navigation.navigate('privacypolicy');
           }}
           options={{ headerShown: false }}
         />

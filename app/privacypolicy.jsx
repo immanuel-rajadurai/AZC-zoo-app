@@ -5,12 +5,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import * as FileSystem from 'expo-file-system';
 import WebView from 'react-native-webview';
 
-const Membership = () => {
-
+const PrivacyPolicy = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
         <WebView 
-            source={{ uri: 'https://www.aquazooconsulting.com/about-3'}}
+            source={{ uri: 'https://www.aquazooconsulting.com/privacy-policy'}}
             style={{ flex: 1 }} 
         />
     </SafeAreaView>
@@ -44,4 +43,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Membership;
+export default PrivacyPolicy;
