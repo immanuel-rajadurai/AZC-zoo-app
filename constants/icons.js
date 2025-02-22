@@ -44,8 +44,6 @@ import twitterIcon from "../assets/icons/twitterlogo.png";
 import infoIcon from "../assets/icons/info_icon.png";
 
 
-
-
 export default {
   play,
   bookmark,
