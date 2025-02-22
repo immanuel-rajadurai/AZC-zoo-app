@@ -17,7 +17,7 @@ import tour3 from "../assets/placeholders/tour3.jpg"
 import zoo1 from "../assets/placeholders/zoo1.jpg"
 import zoo2 from "../assets/placeholders/zoo2.jpg"
 import tigerCover1 from "../assets/placeholders/tiger-cover-1.jpg"
-import londonZooIcon from "../assets/icons/zoo-du-bossaire-logo.png"
+import londonZooIcon from "../assets/icons/aquazoologo.png"
 import easyAnimalChallengeBackground from "../assets/images/easyanimalchallengebackground.png"
 import hardAnimalChallengeBackground from "../assets/images/hardchallengebackground.png"
 
