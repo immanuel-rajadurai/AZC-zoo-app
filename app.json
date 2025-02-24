@@ -15,13 +15,14 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "app.aquazoo.zooapp",
-      "buildNumber": "14",
+      "buildNumber": "15",
       "config": {
         "googleMapsApiKey": "AIzaSyBN2fxQjmuQ7fdTE4szAZVrRwUtTIQ_ME4"
       },
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
-        "NSLocationWhenInUseUsageDescription": "We use your live location to display nearby zoo areas on the map and enhance your way finding experience around the zoo."
+        "NSLocationWhenInUseUsageDescription": "We use your live location to display nearby zoo areas on the map and enhance your way finding experience around the zoo.",
+        "UISupportedDevices": ["iPhone"]
       }
     },
     "android": {
