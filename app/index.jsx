@@ -31,6 +31,22 @@ export default function App() {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
+    async function prepare() {
+      try {
+        // Simulate loading (e.g., fetching data)
+        await new Promise(resolve => setTimeout(resolve, 5000)); 
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        await SplashScreen.hideAsync(); // Hide splash screen when ready
+      }
+    }
+
+    prepare();
+  }, []);
+
+
+  useEffect(() => {
     if (Platform.OS === "ios") {
       if (Platform.isPad) {
         setShowModal(true);
