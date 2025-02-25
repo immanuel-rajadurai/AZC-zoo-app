@@ -21,7 +21,9 @@
       },
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
-        "NSLocationWhenInUseUsageDescription": "We use your live location to display nearby zoo areas on the map and enhance your way finding experience around the zoo.",
+        "NSCameraUsageDescription": "AquaZoo uses your camera to allow you to take photos for the interactive animal photo snap games.",
+        "NSLocationWhenInUseUsageDescription": "AquaZoo uses your live location to display nearby zoo areas on the map and enhance your way finding experience around the zoo.",
+        "NSPhotoLibraryUsageDescription": "AquaZoo needs access to your photo library so you can save and view the animal photos you capture in the app.",
         "UIRequiresFullScreen": true
       }
     },
