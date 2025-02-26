@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated, Easing,
 import React, { useState, useEffect, useRef } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Calendar } from 'react-native-calendars';
+import { router } from 'expo-router';
 
 const Tickets = () => {
 
@@ -209,9 +210,12 @@ const Tickets = () => {
       >
         <View style={styles.popupContent}>
           <Text style={styles.totalPriceText}>Total: ${totalPrice.toFixed(2)}</Text>
-          <TouchableOpacity style={styles.bookNowButton}>
-            <Text style={styles.bookNowText}>Book Now</Text>
-          </TouchableOpacity>
+          <TouchableOpacity
+          style={styles.bookNowButton}
+          onPress={() => router.push('/(auth)/sign-in')} 
+        >
+          <Text style={styles.bookNowText}>Book Now</Text>
+        </TouchableOpacity>
         </View>
       </Animated.View>
     </SafeAreaView>
