@@ -227,8 +227,8 @@ const styles = StyleSheet.create({
   },
   headerImage: {
     width: 160,
-    height: 75,
-    paddingTop:20,
+    height: 45, //original 50
+    paddingTop:20, 
     paddingBottom:1
   },
   searchToggle: {
