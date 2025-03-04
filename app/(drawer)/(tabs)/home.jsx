@@ -1,5 +1,6 @@
 import { View, Text, Image, StyleSheet, TouchableOpacity, Modal, ScrollView, Animated, Dimensions, Button } from 'react-native';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MapView, { Marker, Overlay } from 'react-native-maps';
 import * as Location from 'expo-location';
@@ -176,9 +177,12 @@ const Home = () => {
     );
   };
 
-  useEffect(() => {
-    setFeedbackModalVisible(true);
-  }, []);
+  // feedback modal
+  useFocusEffect(
+    useCallback(() => {
+      setFeedbackModalVisible(true);
+    }, [])
+);
   
   const isOptionEnabled = (id) => options.find((option) => option.id === id)?.isEnabled;  
   
