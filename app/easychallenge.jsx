@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { StyleSheet, Text, View, Button, Image, ActivityIndicator, TouchableOpacity, ScrollView, SafeAreaView, Modal, ImageBackground, Linking, Alert } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput, Image, ActivityIndicator, TouchableOpacity, ScrollView, SafeAreaView, Modal, ImageBackground, Linking, Alert } from 'react-native';
 import * as tf from '@tensorflow/tfjs';
 import * as jpeg from 'jpeg-js';
 import * as FileSystem from 'expo-file-system';
@@ -32,6 +32,8 @@ const Challenge = () => {
   const [predictedAnimal, setPredictedAnimal] = useState(null);
   const [classifyingModalVisible, setClassifyingModalVisible] = useState(false);
   const [incorrectAnimalModalVisible, setIncorrectAnimalModalVisible] = useState(false);
+  const [misClassifyModalVisible, setMisClassifyModalVisible] = useState(false);
+  const [typedAnimal, setTypedAnimal] = useState('');
 
   const animalInfo = {
     hippopotamus: {
@@ -448,7 +450,7 @@ const Challenge = () => {
 
       setImage(result.assets[0].uri);
 
-      let predictedAnimalResult = await classifyImage(result.assets[0].uri);
+      // let predictedAnimalResult = await classifyImage(result.assets[0].uri);
 
       setClassifyingModalVisible(false);
 
@@ -457,7 +459,9 @@ const Challenge = () => {
       // await asset.downloadAsync();
       // const imageUri = asset.localUri || asset.uri;
       // let predictedAnimalResult = await classifyImage(imageUri);
-      let predictedAnimal = predictedAnimalResult.toLowerCase()
+      // let predictedAnimal = predictedAnimalResult.toLowerCase()
+
+      let predictedAnimal = "peacock"
 
       //check whether the animal is correct or not
       if (Object.values(targetAnimals).includes(predictedAnimal)) {
@@ -554,6 +558,68 @@ const Challenge = () => {
     setIncorrectAnimalModalVisible(false);
   }
 
+  const handleMisClassify = () => {
+    setMisClassifyModalVisible(true);
+  }
+
+  const submitMisClassify = async () => {
+    console.log("typed animal: " + typedAnimal);
+
+    let predictedAnimal = typedAnimal.toLowerCase().replace(/\s+/g, '_');
+    
+    if (Object.values(targetAnimals).includes(predictedAnimal)) {
+
+      showModal({predictedAnimal:predictedAnimal}); 
+
+      try {
+
+        if (!scannedAnimals.includes(predictedAnimal)) {
+          scannedAnimals.push(predictedAnimal);
+
+          let updatedTargetAnimals = targetAnimals.filter(animal => animal !== predictedAnimal);
+          
+          setScannedAnimals(scannedAnimals);
+          setTargetAnimals(updatedTargetAnimals);
+
+          if (updatedTargetAnimals.length === 0) {
+            console.log("Challenge completed");
+            setChallengeCompleted(true);
+            setChallengeCompletedModalVisible(true);
+            AsyncStorage.setItem('challengeCompletedFlag', 'true');
+
+            console.log("populating scannedAnimals with: " + scannedAnimals);
+            await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
+          } else {
+            setChallengeCompleted(false);
+            setChallengeCompletedModalVisible(false);
+          }
+
+
+          await AsyncStorage.setItem('targetAnimals', JSON.stringify(updatedTargetAnimals));
+        } 
+        
+        console.log("populating scannedAnimals with: " + scannedAnimals);
+        await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
+
+      } catch (error) {
+        console.error('Failed to load scanned animals', error);
+      }
+
+    } else {
+        console.log("IN takePicture: " + predictedAnimal + " is not in targetAnimals: " + targetAnimals)
+        setIncorrectClassifiedObject(predictedAnimal)
+        setIncorrectAnimalModalVisible(true);
+    }
+
+    
+    setMisClassifyModalVisible(false);
+    setIncorrectAnimalModalVisible(false);
+  }
+
+  const closeMisClassifyModal = () => {
+    setMisClassifyModalVisible(false);
+  }
+
   return (
     
     <View style={styles.container}>
@@ -640,15 +706,56 @@ const Challenge = () => {
           <Text style={modalStyle.species}>Image detected: </Text>
           <Text style={modalStyle.species}>{incorrectClassifiedObject}</Text> 
           <Text></Text>
+          <TouchableOpacity onPress={handleMisClassify} style={modalStyle.misClassifyButton}>
+             <Text style={modalStyle.misClassifyButtonText}>Not your animal?</Text>
+          </TouchableOpacity>
+          <Text></Text>
           <Text></Text>
           <Text></Text>
           <Text></Text>
           <TouchableOpacity onPress={closeIncorrectAnimalModal} style={modalStyle.closeButton}>
             <Text style={modalStyle.closeButtonText}>Close</Text>
-            </TouchableOpacity>
+          </TouchableOpacity>
+
         </View>
       </SafeAreaView>
     </Modal>
+
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={misClassifyModalVisible}
+      onRequestClose={closeIncorrectAnimalModal}
+    >
+      <SafeAreaView style={modalStyle.modalContainer}>
+        <View style={modalStyle.modalContent}>
+          <Text style={styles.title}>Type in the animal you captured</Text>
+
+          <TextInput
+            style={modalStyle.textInput}
+            placeholder="Enter animal name"
+            value={typedAnimal}
+            onChangeText={setTypedAnimal}
+          />
+
+          <Text></Text>
+       
+          <TouchableOpacity onPress={submitMisClassify} style={modalStyle.misClassifyButton}>
+             <Text style={modalStyle.misClassifyButtonText}>Submit</Text>
+          </TouchableOpacity>
+          <Text></Text>
+          <Text></Text>
+          <Text></Text>
+          <Text></Text>
+          <TouchableOpacity onPress={closeMisClassifyModal} style={modalStyle.closeButton}>
+            <Text style={modalStyle.closeButtonText}>Close</Text>
+          </TouchableOpacity>
+
+        </View>
+      </SafeAreaView>
+    </Modal>
+
+
 
     <Modal
       animationType="slide"
@@ -896,6 +1003,22 @@ const modalStyle = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
   },
+  misClassifyButton: {
+    position: 'absolute',
+    bottom: 70,
+    alignSelf: 'center',
+    backgroundColor: 'grey', // Change background color to grey
+    padding: 5, // Reduce padding to make the button smaller
+    borderRadius: 5,
+    width: 150,
+  },
+  misClassifyButtonText: {
+    color: 'white',
+    fontSize: 14, // Smaller font size
+    fontStyle: 'italic', // Italic text
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
   closeButtonText: {
     color: 'white',
     fontWeight: 'bold',
@@ -965,5 +1088,14 @@ const modalStyle = StyleSheet.create({
   shareButtonText: {
     color: '#fff',
     fontSize: 16,
+  },
+  textInput: {
+    height: 40,
+    borderColor: 'white',
+    borderWidth: 1,
+    marginBottom: 20,
+    paddingHorizontal: 10,
+    color: 'white',
+    textAlign: 'center',
   },
 });
