@@ -408,6 +408,7 @@ const Challenge = () => {
   }
 
   const takePicture = async () => {
+    // Check if the user has granted permission to access the camera
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
     if (permissionResult.granted === false) {
       alert("You've refused to allow this app to access your camera!");
@@ -417,30 +418,31 @@ const Challenge = () => {
     console.log("image picker opened");
 
     // Launch the camera to take a picture
-    const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: false,
-      aspect: [4, 3],
-      quality: 1,
-    });
-    
-    //Launch the image library to picka photo
-    // const result = await ImagePicker.launchImageLibraryAsync({
+    // const result = await ImagePicker.launchCameraAsync({
     //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
     //   allowsEditing: false,
     //   aspect: [4, 3],
     //   quality: 1,
     // });
 
+    //Launch the image library to pick a photo
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: false,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log("result: ", result);
+    console.log("result image uri: ", result.assets[0].uri);
+    
     setClassifyingModalVisible(true);
 
     if (result.canceled) {
       console.log("image picker closed prematurely")
       setClassifyingModalVisible(false);
     } 
-    console.log("image picker closed")
-
-    
+    // console.log("image picker closed")
 
     await new Promise((resolve) => setTimeout(resolve, 100));
 
@@ -450,7 +452,7 @@ const Challenge = () => {
 
       setImage(result.assets[0].uri);
 
-      // let predictedAnimalResult = await classifyImage(result.assets[0].uri);
+      let predictedAnimalResult = await classifyImage(result.assets[0].uri);
 
       setClassifyingModalVisible(false);
 
@@ -459,9 +461,10 @@ const Challenge = () => {
       // await asset.downloadAsync();
       // const imageUri = asset.localUri || asset.uri;
       // let predictedAnimalResult = await classifyImage(imageUri);
-      // let predictedAnimal = predictedAnimalResult.toLowerCase()
+      let predictedAnimal = predictedAnimalResult.toLowerCase()
+      console.log("predicted animal: " + predictedAnimal);
 
-      let predictedAnimal = "peacock"
+      // let predictedAnimal = "peacock"
 
       //check whether the animal is correct or not
       if (Object.values(targetAnimals).includes(predictedAnimal)) {
@@ -473,7 +476,6 @@ const Challenge = () => {
           if (!scannedAnimals.includes(predictedAnimal)) {
             scannedAnimals.push(predictedAnimal);
             
-  
             let updatedTargetAnimals = targetAnimals.filter(animal => animal !== predictedAnimal);
             
             setScannedAnimals(scannedAnimals);
@@ -492,7 +494,6 @@ const Challenge = () => {
               setChallengeCompletedModalVisible(false);
             }
 
-
             await AsyncStorage.setItem('targetAnimals', JSON.stringify(updatedTargetAnimals));
           } 
           
@@ -510,6 +511,8 @@ const Challenge = () => {
       }
 
       // console.log("file location: ", result.assets[0].uri);
+    } else {
+      console.log("RESULT CANCELLED");
     }
 
     // classifyImageTest();
