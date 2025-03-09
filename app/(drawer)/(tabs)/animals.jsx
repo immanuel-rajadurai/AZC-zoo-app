@@ -13,6 +13,7 @@ import { listAnimals } from '../../../src/graphql/queries';
 const client = generateClient(); 
 
 const Animals = () => {
+
   const [modalVisible, setModalVisible] = useState(false);
   const [animals, setAnimals] = useState([]);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
@@ -22,17 +23,25 @@ const Animals = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
+
     const fetchAnimals = async () => { 
-      try {
-        const animalsResult = await client.graphql({ query: listAnimals });
-        setAnimals(animalsResult.data.listAnimals.items);
-        console.log("Animals:", animalsResult.data.listAnimals.items);
-      } catch (error) {
-        console.log('Error fetching animals:', error);
-      }
-    };
+        try {
+          const animalsResult = await client.graphql(
+            {query: listAnimals}
+          );
+
+          setAnimals(animalsResult.data.listAnimals.items)
+          
+          console.log("");
+          console.log("Animals");
+          console.log("animals: ", animals)
+        } catch (error) {
+          console.log('error on fetching animals', error)
+        }
+    }
     fetchAnimals();
   }, []);
+
 
   const closeModal = () => {
     setModalVisible(false);
@@ -44,30 +53,37 @@ const Animals = () => {
   };
 
   const AnimalItem = ({ animal, onPress }) => {
+
     return (
       <TouchableOpacity style={styles.animalItem} onPress={() => onPress(animal)}>
         <View style={styles.header}>
-          <View style={styles.column}>
+        <View style={styles.column}>
             <View style={styles.imageContainer}>
               <Image source={{ uri: animal.image }} style={styles.animalImage} />
               {scheduledAnimals.includes(animal.name) && <Icon name="heart" size={20} color="red" style={styles.icon} />}
               {!scheduledAnimals.includes(animal.name) && <Icon name="heart" size={20} color="lightgrey" style={styles.icon} />}
             </View>
-            <TouchableOpacity
-              style={styles.customButton}
-              onPress={() => addToSchedule(animal.name)}
-            >
-              <Text style={styles.customButtonText}>
-                {scheduledAnimals.includes(animal.name) ? 'Added to Plan' : 'Add to Plan'}
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.column}>
+          {/* {!scheduledAnimals.includes(animal.name) && ( */}
+              <TouchableOpacity
+                style={styles.customButton}
+                onPress={() => addToSchedule(animal.name)}
+              >
+                <Text style={styles.customButtonText}>
+                  {scheduledAnimals.includes(animal.name) ? 'Added to Plan' : 'Add to Plan'}
+                </Text>
+                
+
+              </TouchableOpacity>
+          {/* )} */}
+        </View>
+        <View style={styles.column}>
             <Text style={styles.animalName}>{animal.name}</Text>
+
             <View style={{ flexDirection: 'row' }}>
               <Text style={styles.cardSectionTitle}>Scientific Name: </Text>
               <Text style={styles.text}> {animal.scientificName}</Text>
             </View>
+            
             <View style={{ flexDirection: 'row' }}>
               <Text style={styles.cardSectionTitle}>Habitat: </Text>
               <Text style={styles.text}>{animal.habitat}</Text>
@@ -81,17 +97,49 @@ const Animals = () => {
   const loadScheduledAnimals = async () => {
     try {
       const scheduledAnimals = await AsyncStorage.getItem('scheduledAnimals');
+
+      console.log("scheduled animals in animals.jsx: " + scheduledAnimals);
+
       if (scheduledAnimals) {
         setScheduledAnimals(JSON.parse(scheduledAnimals));
       } else {
         const initialScheduledAnimals = [];
         setScheduledAnimals(initialScheduledAnimals);
+        setLoading(false);
         await AsyncStorage.setItem('scheduledAnimals', JSON.stringify(initialScheduledAnimals));
       }
+
     } catch (error) {
-      console.error('Failed to load scheduled animals:', error);
+      console.error('Failed to load zoo animals', error);
+      setLoading(false);
     }
+
   };
+
+  // useFocusEffect(() => {
+
+  //   const loadScheduledAnimals = async () => {
+  //     try {
+  //       const scheduledAnimals = await AsyncStorage.getItem('scheduledAnimals');
+
+  //       console.log("scheduled animals in animals.jsx: " + scheduledAnimals);
+
+  //       if (scheduledAnimals) {
+  //         setScheduledAnimals(JSON.parse(scheduledAnimals));
+  //       } else {
+  //         const initialScheduledAnimals = [];
+  //         setScheduledAnimals(initialScheduledAnimals);
+  //         await AsyncStorage.setItem('scheduledAnimals', JSON.stringify(initialScheduledAnimals));
+  //       }
+
+  //     } catch (error) {
+  //       console.error('Failed to load zoo animals', error);
+  //     }
+
+  //   };
+    
+  //   loadScheduledAnimals();
+  // }, []);  
 
   useFocusEffect(
     React.useCallback(() => {
@@ -104,7 +152,27 @@ const Animals = () => {
     setModalVisible(true);
   };
 
-  const addToSchedule = async (animalName) => {
+  // async function addToSchedule(animalName) {
+
+  //   try {
+
+  //     if (!scheduledAnimals.includes(animalName)) {
+
+  //       let currentScheduledAnimals = scheduledAnimals
+
+  //       currentScheduledAnimals.push(animalName)
+
+  //       setScheduledAnimals(currentScheduledAnimals)
+
+  //       await AsyncStorage.setItem('scheduledAnimals', JSON.stringify(currentScheduledAnimals));
+  //     }
+
+  //   } catch (error) {
+  //     console.error('Failed to modify scheduled animals', error);
+  //   }
+  // };
+
+  async function addToSchedule(animalName) {
     try {
       if (!scheduledAnimals.includes(animalName)) {
         const updatedAnimals = [...scheduledAnimals, animalName];
@@ -112,9 +180,9 @@ const Animals = () => {
         await AsyncStorage.setItem('scheduledAnimals', JSON.stringify(updatedAnimals));
       }
     } catch (error) {
-      console.error('Failed to modify scheduled animals:', error);
-    }
-  };
+      console.error('Failed to modify scheduled animals', error);
+    } 
+  }
 
   const getConservationColor = (status) => {
     switch (status.toLowerCase()) {
@@ -141,26 +209,30 @@ const Animals = () => {
         <Text style={styles.infoText}>
           Make a plan of animals that you want to visit throughout the zoo
         </Text>
+
         <Image
           source={icons.listicon}
           style={{ width: 60, height: 60, tintColor: "#7BC144" }}
           resizeMode="contain"
         />
-      </View>
+        <Image>
 
+        </Image>
+      </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.planButton} onPress={NavigateToSchedule}>
-          <Text style={styles.customButtonText}>My Plan</Text>
-        </TouchableOpacity>
-      </View>
-
+      <TouchableOpacity
+                style={styles.planButton}
+                onPress={NavigateToSchedule}
+                >
+                  <Text style={styles.customButtonText}>My Plan</Text>
+      </TouchableOpacity>
+        </View>
       <FlatList
         data={animals}
         renderItem={({ item }) => <AnimalItem animal={item} onPress={handlePress} />}
         keyExtractor={(item) => item.name}
         style={styles.animalList}
       />
-
       <Modal
         visible={modalVisible}
         transparent={true}
@@ -255,7 +327,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 15,
     margin: 10,
-    backgroundColor: '#f0fff0',
+    backgroundColor: '#f0fff0', // Optional light green background for contrast
     alignItems: 'center',
     flexDirection: 'row',
   },
@@ -274,26 +346,33 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     margin: 10,
-    justifyContent: 'space-between',
+    justifyContent: 'space-between', // Ensure chevron stays within bounds
     flex: 1,
   },
   column: {
     flexDirection: 'column',
     alignItems: 'left',
     margin: 1,
-    justifyContent: 'space-between',
+    justifyContent: 'space-between', // Ensure chevron stays within bounds
     flex: 1,
   },
   halfCircle: {
     position: 'absolute',
-    bottom: -40,
-    width: 200,
-    height: 80,
-    backgroundColor: '#234e35',
-    borderTopLeftRadius: 80,
-    borderTopRightRadius: 80,
-    zIndex: 2,
-    alignItems: 'center',
+    bottom: -40,  // Ensures it overlaps other components slightly
+    width: 200,  // Width of the half-circle
+    height: 80,  // Height of the half-circle
+    backgroundColor: '#234e35',  // Dark green color
+    borderTopLeftRadius: 80,  // Creates a rounded top left corner
+    borderTopRightRadius: 80,  // Creates a rounded top right corner
+    zIndex: 2,  // Ensure it stays above other components
+    alignItems: 'center'
+  },
+  bottombar: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    height: 10, // Adjust the thickness as needed
+    backgroundColor: '#8BC33A',
   },
   title: {
     fontSize: 24,
@@ -309,24 +388,29 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   animalItem: {
-    borderRadius: 10,
-    backgroundColor: '#fff',
-    padding: 2,
-    margin: 10,
+    borderRadius: 10, // Rounded corners
+    // shadowColor: '#000', // Shadow color
+    // shadowOffset: { width: 0, height: 2 }, // Shadow offset
+    // shadowOpacity: 0.25, // Shadow opacity
+    // shadowRadius: 3.84, // Shadow radius
+    // elevation: 5, // Elevation for Android shadow
+    backgroundColor: '#fff', // Background color to make the shadow visible
+    padding: 2, // Optional: Add padding to the component
+    margin: 10, // Optional: Add margin to the component
   },
   animalImage: {
     width: 100,
     height: 100,
     marginRight: 1,
-    borderRadius: 80,
+    borderRadius: 80
   },
   icon: {
     position: 'absolute',
-    top: 5,
-    left: 4,
+    top: 5, // Adjust this value to position the icon vertically inside the image
+    left: 4, // Adjust this value to position the icon horizontally inside the image
   },
   imageContainer: {
-    position: 'relative',
+    position: 'relative', // Make the container relative for absolute positioning
   },
   animalName: {
     fontSize: 20,
@@ -337,26 +421,35 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     paddingRight: 17,
   },
+  // buttonContainer: {
+  //   flexDirection: 'row', // Arrange children in a row
+  //   justifyContent: 'flex-end', // Move children to the far right
+  // },
+  checkboxText: {
+    marginLeft: 8,
+    fontSize: 12,
+    color: 'gray',
+  },
   planButton: {
     backgroundColor: 'darkgreen',
     borderRadius: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 8,
+    paddingVertical: 10, // Smaller vertical padding
+    paddingHorizontal: 8, // Smaller horizontal padding
     alignItems: 'center',
-    width: 150,
+    width: 150, // Reduce minimum width
   },
   customButton: {
     backgroundColor: 'darkgreen',
     borderRadius: 10,
-    paddingVertical: 3,
-    paddingHorizontal: 8,
+    paddingVertical: 3, // Smaller vertical padding
+    paddingHorizontal: 8, // Smaller horizontal padding
     alignItems: 'center',
     width: 80,
-    marginTop: 10,
+    marginTop:10
   },
   customButtonText: {
     color: 'white',
-    fontSize: 12,
+    fontSize: 12, // Slightly smaller font size
     fontWeight: 'bold',
   },
   cardSectionTitle: {
@@ -485,3 +578,4 @@ const modalStyle = StyleSheet.create({
     fontSize: 16,
   },
 });
+
