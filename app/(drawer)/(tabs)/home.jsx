@@ -30,6 +30,8 @@ const Home = () => {
   const [accessibilityVisible, setAccessibilityVisible] = useState(false); 
   const [mobilityImpairments, setMobilityImpairments] = useState(false);
   const [feedbackModalVisible, setFeedbackModalVisible] = useState(false);
+  const [buttonCount, setButtonCount] = useState(0)
+
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -47,6 +49,19 @@ const Home = () => {
   const [events, setEvents] = useState([]);
   
   const toggleEvents = () => {
+
+    if (!eventsVisible) {
+      setButtonCount(currentCount => {
+        const newCount = currentCount + 1;
+        
+        // Open modal when challenge button is pressed 20 times
+        if (newCount % 15 === 0) {
+          setFeedbackModalVisible(true);
+        }
+
+        return newCount;
+      });
+    }
     
     if (eventsVisible) {
       setShowEventsButtonVisible(true);
@@ -177,12 +192,6 @@ const Home = () => {
     );
   };
 
-  // feedback modal
-  useFocusEffect(
-    useCallback(() => {
-      setFeedbackModalVisible(true);
-    }, [])
-);
   
   const isOptionEnabled = (id) => options.find((option) => option.id === id)?.isEnabled;  
   
