@@ -3,14 +3,14 @@ import { StyleSheet, Text, View, Button, TextInput, Image, ActivityIndicator, To
 import * as tf from '@tensorflow/tfjs';
 import * as jpeg from 'jpeg-js';
 import * as FileSystem from 'expo-file-system';
-import labels from '../assets/labels.json'; 
+// import labels from '../assets/labels.json'; 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Asset } from 'expo-asset';
 import { fetch } from '@tensorflow/tfjs-react-native';
 import animalPhoto from '../assets/animalImages/tiger.jpg';
-import { bundleResourceIO } from '@tensorflow/tfjs-react-native';
+import { bundleResourceIO, decodeJpeg  } from '@tensorflow/tfjs-react-native';
 import { images, icons } from '../constants';
 
 
@@ -324,21 +324,25 @@ const Challenge = () => {
 
     async function loadModel() {
 
-        setModelLoaded(false);
+      setModelLoaded(false);
 
-        console.log("waiting for  resnet tf to be ready")
-        await tf.ready();
+      console.log("waiting for tf to be ready")
+      await tf.ready();
 
-        console.log("TF is successfully ready")
+      try {
 
-        const modelJson = require('../assets/mobilenet_model/model.json');
-        const shard1 = require('../assets/mobilenet_model/group1-shard1of3.bin');
-        const shard2 = require('../assets/mobilenet_model/group1-shard2of3.bin');
-        const shard3 = require('../assets/mobilenet_model/group1-shard3of3.bin');
+        console.log("TF is ready")
+
+        const modelJson = require('../assets/mobile_net_model_working/model.json');
+        const shard1 = require('../assets/mobile_net_model_working/group1-shard1of3.bin');
+        const shard2 = require('../assets/mobile_net_model_working/group1-shard2of3.bin');
+        const shard3 = require('../assets/mobile_net_model_working/group1-shard3of3.bin');
 
         const combinedWeights = [
           shard1, shard2, shard3
-        ];
+        ]; 
+
+        console.log("Weight files:", combinedWeights);
 
         console.log("Model files loaded. Creating model" )
 
@@ -347,6 +351,9 @@ const Challenge = () => {
         setModelLoaded(true);
         console.log("successfully created graph model");
         setModel(loadedModel);
+      } catch (error) {
+        console.error("❌ Error loading the model:", error);
+      }
     }
     loadModel();
   }, []);
@@ -370,17 +377,22 @@ const Challenge = () => {
 
         const imageTensor = tf.tidy(() => {
           const decodedImage = decodeImage(imageBuffer);
-          return decodedImage.resizeNearestNeighbor([224, 224]).toFloat().expandDims();
+          return decodedImage.resizeNearestNeighbor([180, 180]).toFloat().expandDims();
         });
         
         console.log("classifying image...")
+
+        const labels =  ["Falco_peregrinus_images", "Oryx_gazella_images", "Panthera_leo_images", "Rattus_rattus_images", "Zalophus_wollebaeki_images"];
 
         const prediction = await model.predict(imageTensor).data();
         const highestPredictionIndex = prediction.indexOf(Math.max(...prediction));
         const predictedClassEntry = labels[highestPredictionIndex];
         const predictedClass = predictedClassEntry ? predictedClassEntry[1] : 'Unknown'; // class name
 
-        console.log('Predicted Class:', predictedClass);
+        console.log('Predictions:', prediction);
+        console.log("prediction index: " + highestPredictionIndex);
+
+        console.log('Predicted Class:', predictedClassEntry);
         console.log("highest prediction " + Math.max(...prediction))
 
         console.log("type of predictions: " + typeof prediction)
@@ -391,9 +403,9 @@ const Challenge = () => {
         const secondHighestPrediction = sortedPredictions[1];
         const thirdHighestPrediction = sortedPredictions[2];
         
-        console.log("first highest prediction: " + firstHighestPrediction + " class: " + labels[prediction.indexOf(firstHighestPrediction)][1]);
-        console.log("second highest prediction: " + secondHighestPrediction + " class: " + labels[prediction.indexOf(secondHighestPrediction)][1]);
-        console.log("third highest prediction: " + thirdHighestPrediction + " class: " + labels[prediction.indexOf(thirdHighestPrediction)][1]);
+        console.log("first highest prediction: " + firstHighestPrediction + " class: " + labels[prediction.indexOf(firstHighestPrediction)]);
+        console.log("second highest prediction: " + secondHighestPrediction + " class: " + labels[prediction.indexOf(secondHighestPrediction)]);
+        console.log("third highest prediction: " + thirdHighestPrediction + " class: " + labels[prediction.indexOf(thirdHighestPrediction)]);
 
         setPredictions(predictedClass);
         setPredictedAnimal(predictedClass);
@@ -406,6 +418,93 @@ const Challenge = () => {
       }
     }
   }
+
+  async function classifyImage2(imageUri) {
+
+    console.log("Model Test:", model.predict(tf.ones([1, 180, 180, 3])).dataSync());
+
+    
+
+      if (!model) {
+          console.error("❌ Model is not loaded yet!");
+          return null;
+      }
+  
+      try {
+
+
+          console.log("📷 Reading image...");
+          const base64String = await FileSystem.readAsStringAsync(imageUri, {
+              encoding: FileSystem.EncodingType.Base64,
+          });
+  
+          // Convert base64 string to Uint8Array
+          const imageBuffer = tf.util.encodeString(base64String, 'base64').buffer;
+          const imageUint8 = new Uint8Array(imageBuffer);
+  
+          console.log("🖼️ Decoding image...");
+          let imageTensor = decodeJpeg(imageUint8);  // Equivalent to image.load_img()
+          console.log("🖼️ Raw image tensor shape:", imageTensor.shape);
+  
+          // Resize to match model input (180x180)
+          imageTensor = tf.image.resizeBilinear(imageTensor, [180, 180]);
+  
+          // Convert image to array (Equivalent to img_to_array)
+          imageTensor = imageTensor.toFloat();
+  
+          // Normalize (Equivalent to /= 255.0 in Python)
+          imageTensor = imageTensor.div(tf.scalar(255.0));
+  
+          // Expand dimensions to match model input (Equivalent to [np.newaxis, ...])
+          imageTensor = imageTensor.expandDims(0);
+
+          // const class_names = ["Falco_peregrinus_images", "Oryx_gazella_images", "Panthera_leo_images", "Rattus_rattus_images", "Zalophus_wollebaeki_images"];
+          const class_names = labels;
+  
+          console.log("✅ Image preprocessing complete");
+          console.log("🔍 Model input tensor shape:", imageTensor.shape);
+  
+          console.log("🔍 Running classification...");
+          const logits = model.predict(imageTensor); // Raw model outputs
+          const probabilitiesTensor = tf.softmax(logits); // Apply softmax
+          const probabilities = await probabilitiesTensor.data(); // Convert to array
+  
+          console.log("🔢 Raw logits:", await logits.data());
+          console.log("🔢 Softmax probabilities:", probabilities);
+  
+          // Find the highest probability class
+          const predictedClassIndex = probabilities.indexOf(Math.max(...probabilities));
+          const predictedClass = class_names[predictedClassIndex];
+  
+          console.log(`✅ Predicted Animal: ${predictedClass}`);
+  
+          // Print top predictions
+          console.log("\nTop predictions:");
+          probabilities.forEach((prob, idx) => {
+              console.log(`${class_names[idx]}: ${(prob * 100).toFixed(2)}%`);
+          });
+  
+          // Store result in state
+          setPredictions(predictedClass);
+          setPredictedAnimal(predictedClass);
+  
+          // Dispose tensors to free memory
+          tf.dispose([imageTensor, logits, probabilitiesTensor]);
+  
+          return predictedClass;
+  
+      } catch (error) {
+          console.error("❌ Error classifying image:", error);
+          return null;
+      }
+  }
+  
+
+
+
+
+
+  
 
   const takePicture = async () => {
     // Check if the user has granted permission to access the camera
