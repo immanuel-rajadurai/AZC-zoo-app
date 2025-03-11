@@ -3,7 +3,7 @@
     "name": "Aquazoo",
     "scheme": "appv1",
     "slug": "app_v1",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icons/appicon.png",
     "userInterfaceStyle": "light",
@@ -15,7 +15,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "app.aquazoo.zooapp",
-      "buildNumber": "30",
+      "buildNumber": "31",
       "config": {
         "googleMapsApiKey": "AIzaSyBN2fxQjmuQ7fdTE4szAZVrRwUtTIQ_ME4"
       },
