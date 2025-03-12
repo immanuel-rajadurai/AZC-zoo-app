@@ -1,5 +1,6 @@
 import { View, Text, Image, StyleSheet, TouchableOpacity, Modal, ScrollView, Animated, Dimensions, Button } from 'react-native';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MapView, { Marker, Overlay } from 'react-native-maps';
 import * as Location from 'expo-location';
@@ -28,6 +29,9 @@ const Home = () => {
   const [isShowEventsButtonVisible, setShowEventsButtonVisible] = useState(true);
   const [accessibilityVisible, setAccessibilityVisible] = useState(false); 
   const [mobilityImpairments, setMobilityImpairments] = useState(false);
+  const [feedbackModalVisible, setFeedbackModalVisible] = useState(false);
+  const [buttonCount, setButtonCount] = useState(0)
+
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -45,6 +49,19 @@ const Home = () => {
   const [events, setEvents] = useState([]);
   
   const toggleEvents = () => {
+
+    if (!eventsVisible) {
+      setButtonCount(currentCount => {
+        const newCount = currentCount + 1;
+        
+        // Open modal when challenge button is pressed 20 times
+        if (newCount % 20 === 0) {
+          setFeedbackModalVisible(true);
+        }
+
+        return newCount;
+      });
+    }
     
     if (eventsVisible) {
       setShowEventsButtonVisible(true);
@@ -174,6 +191,7 @@ const Home = () => {
       })
     );
   };
+
   
   const isOptionEnabled = (id) => options.find((option) => option.id === id)?.isEnabled;  
   
@@ -386,7 +404,50 @@ const Home = () => {
         </Animated.View>
 
       )}
-
+      <Modal
+        visible={feedbackModalVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setFeedbackModalVisible(false)}
+            >
+              <SafeAreaView style={modalStyle.modalContainer}>
+                <View style={modalStyle.modalContent}>
+                  <ScrollView style={modalStyle.scrollContainer}>
+                  <Text style={modalStyle.modalTitle}>How did we zoo?</Text>
+                  <Text style={modalStyle.textStyle}>Share your thoughts with others! {"\n"} Leave a review </Text>
+                  <View style={modalStyle.reviewRow}>
+                    <TouchableOpacity>
+                      <Image source={require('../../../assets/icons/tripadvisor.png')} style={modalStyle.reviewIcon} />
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                      <Image source={require('../../../assets/icons/review-logo.png')} style={modalStyle.reviewIcon} />
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                      <Image source={require('../../../assets/icons/trustpilot-logo.png')} style={modalStyle.reviewIcon} />
+                    </TouchableOpacity>                    
+                  </View>
+                  <Text style={modalStyle.textStyle}>You can also share your experience with your close friends!</Text>
+                  <View style={modalStyle.socialIconsContainer}>
+                    <TouchableOpacity>
+                      <Image source={require('../../../assets/icons/instagramlogo.png')} style={modalStyle.socialIcon} />
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                      <Image source={require('../../../assets/icons/facebook_icon.png')} style={modalStyle.socialIcon} />
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                      <Image source={require('../../../assets/icons/twitterlogo.png')} style={modalStyle.socialIcon} />
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                      <Image source={require('../../../assets/icons/tiktok_logo.png')} style={modalStyle.socialIcon} />
+                    </TouchableOpacity>
+                  </View>
+                  </ScrollView>
+                  <TouchableOpacity onPress={() => setFeedbackModalVisible(false)} style={modalStyle.closeButton}>
+                    <Text style={modalStyle.closeButtonText}>Close</Text>
+                  </TouchableOpacity>
+                </View>
+              </SafeAreaView>
+            </Modal>
     </View>
   );
 }
@@ -486,6 +547,7 @@ const modalStyles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
+    
   },
   topicText: {
     fontSize: 24,
@@ -613,6 +675,116 @@ const modalStyles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   }
+});
+
+const modalStyle = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  scrollContainer: {
+    paddingBottom: 70,
+  },
+
+  modalContent: {
+    width: '90%',
+    backgroundColor: '#5a8c66',
+    borderRadius: 30,
+    padding: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    borderColor: 'green', 
+  },
+  closeButton: {
+    position: 'relative',
+    bottom: 10,
+    alignSelf: 'center',
+    backgroundColor: 'black',
+    padding: 10,
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontFamily: 'serif',
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
+    color: 'white',
+  },
+  image: {
+    width: '100%', 
+    height: 150,
+  },
+  
+  sectionTitle: {
+    fontWeight: 'bold',
+    marginBottom: 22,
+    fontFamily: 'serif',
+    color: 'white',
+  },
+  
+  // sectionText: {
+  //   fontSize: 16,
+  //   marginBottom: 20,
+  //   fontFamily: 'serif',
+  //   color: 'white',
+  // },
+  textStyle: {
+    color: "white",
+    // fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 18,
+    fontFamily: 'serif',  
+    fontStyle: 'italic',
+  },
+  topicText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
+    fontFamily: 'serif',
+    color: 'white',
+  },
+  subTopicText: {
+    ontSize: 18,
+    fontStyle: 'italic',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 10,
+    fontFamily: 'serif',
+    color: 'white',
+    marginLeft: 10,
+  },
+  reviewRow: {
+    flexDirection: "row",
+    marginTop: 25,
+    marginBottom: 50,
+    justifyContent: "center",
+  },
+  reviewIcon: {
+    width: 60,
+    height: 60,
+    marginHorizontal: 20,
+    alignItems: "center",
+  },
+  socialIcon: {
+    width: 50,
+    height: 50,
+    marginHorizontal: 15,
+  },
+  socialIconsContainer: {
+    flexDirection: "row",
+    marginTop: 25,
+    // alignItems: "center",
+    justifyContent: "center",
+  },
 });
 
 export default Home;
