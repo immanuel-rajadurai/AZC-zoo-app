@@ -55,7 +55,7 @@ const Home = () => {
         const newCount = currentCount + 1;
         
         // Open modal when challenge button is pressed 20 times
-        if (newCount % 15 === 0) {
+        if (newCount % 20 === 0) {
           setFeedbackModalVisible(true);
         }
 
