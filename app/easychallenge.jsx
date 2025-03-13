@@ -409,7 +409,13 @@ const Challenge = () => {
         console.log("normalised predictions");
         console.log(normalizedPredictions);
 
-        return [labels[prediction.indexOf(firstHighestPrediction)], labels[prediction.indexOf(secondHighestPrediction)], labels[prediction.indexOf(thirdHighestPrediction)], labels[prediction.indexOf(fourthHighestPrediction)], normalizedPredictions];
+        const predictionsDict = labels.reduce((acc, label, index) => {
+          acc[label] = normalizedPredictions[index];
+          return acc;
+        }, {});
+
+
+        return [labels[prediction.indexOf(firstHighestPrediction)], labels[prediction.indexOf(secondHighestPrediction)], labels[prediction.indexOf(thirdHighestPrediction)], labels[prediction.indexOf(fourthHighestPrediction)], predictionsDict];
 
       } catch (error) {
         console.error('Error classifying image:', error);
@@ -472,7 +478,7 @@ const Challenge = () => {
       // await asset.downloadAsync();
       // const imageUri = asset.localUri || asset.uri;
       // let predictedAnimalResult = await classifyImage(imageUri);
-      let predictedAnimal = predictedAnimalResult.toLowerCase()
+      let predictedAnimal = predictedAnimalResult
       console.log("predicted animal: " + predictedAnimal);
 
       // let predictedAnimal = "peacock"
@@ -706,34 +712,49 @@ const Challenge = () => {
     </Modal>
 
     <Modal
-      animationType="slide"
-      transparent={true}
-      visible={incorrectAnimalModalVisible}
-      onRequestClose={closeIncorrectAnimalModal}
-    >
-      <SafeAreaView style={modalStyle.modalContainer}>
-        <View style={modalStyle.modalContent}>
-          <Text style={styles.title}>Animal not classified</Text>
-          <Text style={modalStyle.species}>You have either not photographed an animal on the list or your picture isn't clear enough</Text>
-          <Text></Text>
-          <Text></Text>
-          <Text style={modalStyle.species}>Image detected: </Text>
-          <Text style={modalStyle.species}>{incorrectClassifiedObject}</Text> 
-          <Text></Text>
-          <TouchableOpacity onPress={handleMisClassify} style={modalStyle.misClassifyButton}>
-             <Text style={modalStyle.misClassifyButtonText}>Not your animal?</Text>
-          </TouchableOpacity>
-          <Text></Text>
-          <Text></Text>
-          <Text></Text>
-          <Text></Text>
-          <TouchableOpacity onPress={closeIncorrectAnimalModal} style={modalStyle.closeButton}>
-            <Text style={modalStyle.closeButtonText}>Close</Text>
-          </TouchableOpacity>
+  animationType="slide"
+  transparent={true}
+  visible={incorrectAnimalModalVisible}
+  onRequestClose={closeIncorrectAnimalModal}
+>
+  <SafeAreaView style={modalStyle.modalContainer}>
+    <View style={modalStyle.modalContent}>
+      <Text style={styles.title}>Animal not classified</Text>
+      <Text style={modalStyle.species}>
+        You have either not photographed an animal on the list or your picture isn't clear enough
+      </Text>
+      <Text></Text>
+      <Text></Text>
+      <Text style={modalStyle.species}>Image detected: </Text>
 
-        </View>
-      </SafeAreaView>
-    </Modal>
+      {/* Ensure incorrectClassifiedObject exists before accessing it */}
+      {incorrectClassifiedObject && incorrectClassifiedObject.length > 0 ? (
+        <>
+          <Text style={modalStyle.species}>{incorrectClassifiedObject[0]}</Text>
+          <ScrollView horizontal={true} persistentScrollbar={true}>
+          <Text style={modalStyle.sectionText}>
+            {Object.entries(incorrectClassifiedObject[4]).map(([label, prediction]) => `${label}: ${prediction}`).join('\n')}
+          </Text>
+          </ScrollView>
+        </>
+      ) : (
+        <Text style={modalStyle.species}>No classification available</Text>
+      )}
+
+      <Text></Text>
+      <TouchableOpacity onPress={handleMisClassify} style={modalStyle.misClassifyButton}>
+        <Text style={modalStyle.misClassifyButtonText}>Not your animal?</Text>
+      </TouchableOpacity>
+      <Text></Text>
+      <Text></Text>
+      <Text></Text>
+      <Text></Text>
+      <TouchableOpacity onPress={closeIncorrectAnimalModal} style={modalStyle.closeButton}>
+        <Text style={modalStyle.closeButtonText}>Close</Text>
+      </TouchableOpacity>
+    </View>
+  </SafeAreaView>
+</Modal>
 
     <Modal
       animationType="slide"
