@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Button, Image, ActivityIndicator, TouchableOpac
 import * as tf from '@tensorflow/tfjs';
 import * as jpeg from 'jpeg-js';
 import * as FileSystem from 'expo-file-system';
-import labels from '../assets/labels.json'; 
+// import labels from '../assets/labels.json'; 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -326,10 +326,10 @@ const Challenge = () => {
 
         console.log("TF is successfully ready")
 
-        const modelJson = require('../assets/mobilenet_model/model.json');
-        const shard1 = require('../assets/mobilenet_model/group1-shard1of3.bin');
-        const shard2 = require('../assets/mobilenet_model/group1-shard2of3.bin');
-        const shard3 = require('../assets/mobilenet_model/group1-shard3of3.bin');
+        const modelJson = require('../assets/mobile_net_model_working/model.json');
+        const shard1 = require('../assets/mobile_net_model_working/group1-shard1of3.bin');
+        const shard2 = require('../assets/mobile_net_model_working/group1-shard2of3.bin');
+        const shard3 = require('../assets/mobile_net_model_working/group1-shard3of3.bin');
 
         const combinedWeights = [
           shard1, shard2, shard3
@@ -365,10 +365,12 @@ const Challenge = () => {
 
         const imageTensor = tf.tidy(() => {
           const decodedImage = decodeImage(imageBuffer);
-          return decodedImage.resizeNearestNeighbor([224, 224]).toFloat().expandDims();
+          return decodedImage.resizeNearestNeighbor([180, 180]).toFloat().expandDims();
         });
         
         console.log("classifying image...")
+        const labels =  ["Falco_peregrinus_images", "Oryx_gazella_images", "Panthera_leo_images", "Rattus_rattus_images", "Zalophus_wollebaeki_images"];
+
 
         const prediction = await model.predict(imageTensor).data();
         const highestPredictionIndex = prediction.indexOf(Math.max(...prediction));
@@ -393,7 +395,7 @@ const Challenge = () => {
         setPredictions(predictedClass);
         setPredictedAnimal(predictedClass);
 
-        return predictedClass;
+        return labels[prediction.indexOf(firstHighestPrediction)];
 
       } catch (error) {
         console.error('Error classifying image:', error);
@@ -412,30 +414,31 @@ const Challenge = () => {
     console.log("image picker opened");
 
     // Launch the camera to take a picture
-    const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: false,
-      aspect: [4, 3],
-      quality: 1,
-    });
-    
-    //Launch the image library to picka photo
-    // const result = await ImagePicker.launchImageLibraryAsync({
+    // const result = await ImagePicker.launchCameraAsync({
     //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
     //   allowsEditing: false,
     //   aspect: [4, 3],
     //   quality: 1,
     // });
+    
+  
+
+    //Launch the image library to picka photo
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: false,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    // if (result.canceled) {
+    //   console.log("image picker closed prematurely")
+    //   setClassifyingModalVisible(false);
+    // } 
+    // console.log("image picker closed")
 
     setClassifyingModalVisible(true);
 
-    if (result.canceled) {
-      console.log("image picker closed prematurely")
-      setClassifyingModalVisible(false);
-    } 
-    console.log("image picker closed")
-
-    
     await new Promise((resolve) => setTimeout(resolve, 100));
 
     if (!result.canceled) {
