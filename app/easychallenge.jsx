@@ -1,15 +1,16 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { StyleSheet, Text, View, Button, TextInput, Image, ActivityIndicator, TouchableOpacity, ScrollView, SafeAreaView, Modal, ImageBackground, Linking, Alert } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, ActivityIndicator, TouchableOpacity, ScrollView, SafeAreaView, Modal, ImageBackground, Linking } from 'react-native';
 import * as tf from '@tensorflow/tfjs';
 import * as jpeg from 'jpeg-js';
 import * as FileSystem from 'expo-file-system';
-import labels from '../assets/labels.json'; 
+// import labels from '../assets/labels.json'; 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import questionmark from '../assets/icons/questionmark.png';
 import { Asset } from 'expo-asset';
 import { fetch } from '@tensorflow/tfjs-react-native';
-import animalPhoto from '../assets/animalImages/tiger.jpg';
+import animalPhoto from '../assets/animalImages/ostrich.jpg';
 import { bundleResourceIO } from '@tensorflow/tfjs-react-native';
 import { images, icons } from '../constants';
 
@@ -18,22 +19,20 @@ const Challenge = () => {
 
   const [model, setModel] = useState(null);
   const [modelLoaded, setModelLoaded] = useState(true);
-  const [challengeCompleted, setChallengeCompleted] = useState(false);
-  const [challengeCompletedModalVisible, setChallengeCompletedModalVisible] = useState(false);
+  const [hardChallengeCompleted, setHardChallengeCompleted] = useState(false);
+  const [hardChallengeCompletedModalVisible, setHardChallengeCompletedModalVisible] = useState(false);
   const [predictions, setPredictions] = useState(null);
   const [hasPermission, setHasPermission] = useState(null);
   const [image, setImage] = useState(null);
-  const [targetAnimals, setTargetAnimals] = useState([]);
-  const [scannedAnimals, setScannedAnimals] = useState([]);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [hardTargetAnimals, setHardTargetAnimals] = useState([]);
+  const [hardScannedAnimals, setHardScannedAnimals] = useState([]);
+  const [hardModalVisible, setHardModalVisible] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(null);
   const [incorrectClassifiedObject, setIncorrectClassifiedObject] = useState(null);
   const [isInfoModal, setIsInfoModal] = useState(null);
   const [predictedAnimal, setPredictedAnimal] = useState(null);
   const [classifyingModalVisible, setClassifyingModalVisible] = useState(false);
   const [incorrectAnimalModalVisible, setIncorrectAnimalModalVisible] = useState(false);
-  const [misClassifyModalVisible, setMisClassifyModalVisible] = useState(false);
-  const [typedAnimal, setTypedAnimal] = useState('');
 
   const animalInfo = {
     hippopotamus: {
@@ -144,7 +143,6 @@ const Challenge = () => {
     );
   };
   
-  
   const ScannedAnimalsList = ({ targetAnimals, scannedAnimals }) => {
 
     return (
@@ -152,51 +150,50 @@ const Challenge = () => {
         <View style={styles.contentContainer}>
           <View>
             <View style={styles.subTitleContainer}>
-              <Text style={styles.subtitle}>Animals to snap</Text>
+            <Text style={styles.subtitle}>Animals to snap</Text>
             </View>
-
+        
             <ScrollView style={styles.scrollView} persistentScrollbar={true}>  
               {targetAnimals.map((animal, index) => {
                 const info = animalInfo[animal.toLowerCase()];
                 return (
-                  <TouchableOpacity key={index} onPress={() => showModal({ predictedAnimal: animal, info: true })}>
-                    <View style={styles.animalCard}>
+                    <View key={index} style={styles.mysteryAnimalCard}>
                       <View style={styles.imageContainer}>
-                        <Image source={{ uri: info.image }} style={styles.animalImage} />
+                      <Image source={questionmark} style={styles.animalImage} />
                       </View>
-                      <Text style={styles.animalName}>{info.name}</Text>
+                      <Text style={styles.animalName}>Mystery Animal</Text>
                     </View>
-                  </TouchableOpacity>
                 );
               })}
             </ScrollView>
-          </View>
-          <View style={styles.verticalLine} />
-          <View>
-          <View style={styles.subTitleContainer}>
-          <Text style={styles.subtitle}>Snapped Animals</Text>
-          </View>
-          <ScrollView style={styles.scrollView} persistentScrollbar={true}>
-              {scannedAnimals.map((animal, index) => {
-                const info = animalInfo[animal.toLowerCase()];
-                return (
-                  <TouchableOpacity key={index} onPress={() => showModal({predictedAnimal:animal, info:true})}>
-                    <View style={styles.animalCard}>
-                      <View style={styles.imageContainer}>
-                        <Image source={{ uri: info.image }} style={styles.animalImage} />
-                        <Icon name="check-circle" size={30} color="green" style={styles.tickIcon} />
-                      </View>
-                      <Text style={styles.animalName}>{info.name}</Text>
+        </View>
+        <View style={styles.verticalLine}/>
+        <View>
+        <View style={styles.subTitleContainer}>
+        <Text style={styles.subtitle}>Snapped Animals</Text>
+        </View>
+        <ScrollView style={styles.scrollView} persistentScrollbar={true}>
+            {scannedAnimals.map((animal, index) => {
+              const info = animalInfo[animal.toLowerCase()];
+              return (
+                <TouchableOpacity key={index} onPress={() => showModal({predictedAnimal:animal, info:true})}>
+                  <View style={styles.animalCard}>
+                    <View style={styles.imageContainer}>
+                      <Image source={{ uri: info.image }} style={styles.animalImage} />
+                      <Icon name="check-circle" size={30} color="green" style={styles.tickIcon} />
                     </View>
-                  </TouchableOpacity>
-                );
-              })}
-            </ScrollView>
+                    <Text style={styles.animalName}>{info.name}</Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
           </View>
         </View>
       </View>
     );
   };
+
 
   useEffect(() => {
 
@@ -204,7 +201,7 @@ const Challenge = () => {
 
       try {
 
-        const challengeCompletedFlag = await AsyncStorage.getItem('challengeCompletedFlag')
+        const challengeCompletedFlag = await AsyncStorage.getItem('hardChallengeCompletedFlag')
 
         console.log("Challenge completed flag: ", challengeCompletedFlag);
 
@@ -213,14 +210,14 @@ const Challenge = () => {
 
           if (challengeCompletedFlag == "true") {
             console.log("Challenge completed from initial useEffect");
-            console.log("The target animals at this stage are: ", targetAnimals);
-            console.log("The scanned animals at this stage are: ", scannedAnimals);
+            console.log("The target animals at this stage are: ", hardTargetAnimals);
+            console.log("The scanned animals at this stage are: ", hardScannedAnimals);
 
-            let storedScannedAnimals2 = await AsyncStorage.getItem('scannedAnimals');
+            let storedScannedAnimals2 = await AsyncStorage.getItem('hardScannedAnimals');
 
             console.log("The stored scanned animals at this stage are: ", storedScannedAnimals2);
             // setChallengeCompleted(true);
-            setChallengeCompletedModalVisible(true);
+            setHardChallengeCompletedModalVisible(true);
           }
 
         } else {
@@ -228,20 +225,20 @@ const Challenge = () => {
           //challenge is still in progress
           console.log("Challenge in progress")
 
-          AsyncStorage.setItem('challengeCompletedFlag', 'false');
+          AsyncStorage.setItem('hardChallengeCompletedFlag', 'false');
 
           const initialTargetAnimals = ['lion', 'african_elephant', 'hippopotamus', 'ostrich', 'tiger'];
 
           try {
-            const storedTargetAnimals = await AsyncStorage.getItem('targetAnimals');
+            const storedTargetAnimals = await AsyncStorage.getItem('hardTargetAnimals');
             console.log("stored target animals: " + storedTargetAnimals);
 
             if (storedTargetAnimals) {
               console.log("setting target animals to initial configuration");
-              setTargetAnimals(JSON.parse(storedTargetAnimals));
+              setHardTargetAnimals(JSON.parse(storedTargetAnimals));
             } else {
-              setTargetAnimals(initialTargetAnimals);
-              await AsyncStorage.setItem('targetAnimals', JSON.stringify(initialTargetAnimals));
+              setHardTargetAnimals(initialTargetAnimals);
+              await AsyncStorage.setItem('hardTargetAnimals', JSON.stringify(initialTargetAnimals));
             }
           } catch (error) {
             console.log("Error occured during targetAnimal retrieval", error);
@@ -254,15 +251,15 @@ const Challenge = () => {
       } finally {
 
         try {
-          let storedScannedAnimals = await AsyncStorage.getItem('scannedAnimals');
+          let storedScannedAnimals = await AsyncStorage.getItem('hardScannedAnimals');
           
           if (storedScannedAnimals) {
-            setScannedAnimals(JSON.parse(storedScannedAnimals));
+            setHardScannedAnimals(JSON.parse(storedScannedAnimals));
           } else {
             console.log("Found no storedScannedAnimals therefore initialising new empty storedScannedAnimals");
             let emptyScannedAnimals = [];
-            setScannedAnimals(emptyScannedAnimals);
-            await AsyncStorage.setItem('scannedAnimals', JSON.stringify(emptyScannedAnimals));
+            setHardScannedAnimals(emptyScannedAnimals);
+            await AsyncStorage.setItem('hardScannedAnimals', JSON.stringify(emptyScannedAnimals));
           }
           
         } catch (error) {
@@ -271,15 +268,15 @@ const Challenge = () => {
 
 
         try {
-          let storedScannedAnimals = await AsyncStorage.getItem('scannedAnimals');
+          let storedScannedAnimals = await AsyncStorage.getItem('hardScannedAnimals');
           
           if (storedScannedAnimals) {
-            setScannedAnimals(JSON.parse(storedScannedAnimals));
+            setHardScannedAnimals(JSON.parse(storedScannedAnimals));
           } else {
             console.log("Found no storedScannedAnimals therefore initialising new empty storedScannedAnimals");
             let emptyScannedAnimals = [];
-            setScannedAnimals(emptyScannedAnimals);
-            await AsyncStorage.setItem('scannedAnimals', JSON.stringify(emptyScannedAnimals));
+            setHardScannedAnimals(emptyScannedAnimals);
+            await AsyncStorage.setItem('hardScannedAnimals', JSON.stringify(emptyScannedAnimals));
           }
           
         } catch (error) {
@@ -287,22 +284,22 @@ const Challenge = () => {
         }
 
 
-        // await AsyncStorage.setItem('targetAnimals', JSON.stringify(['tiger']));
-        // setTargetAnimals(['tiger']) 
+        // await AsyncStorage.setItem('hardTargetAnimals', JSON.stringify(['tiger']));
+        // setHardTargetAnimals(['tiger']) 
 
         // // let scannedAnimals = ['lion', 'african_elephant', 'leopard', 'ostrich'];
         // let scannedAnimals = [];
-        // setScannedAnimals(scannedAnimals);
-        // await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
+        // setHardScannedAnimals(scannedAnimals);
+        // await AsyncStorage.setItem('hardScannedAnimals', JSON.stringify(scannedAnimals));
 
-        // await AsyncStorage.setItem('challengeCompletedFlag', 'false');
-        // setChallengeCompleted(false);
-        // setChallengeCompletedModalVisible(false); 
+        // await AsyncStorage.setItem('hardChallengeCompletedFlag', 'false');
+        // setHardChallengeCompleted(false);
+        // setHardChallengeCompletedModalVisible(false); 
 
-        // await AsyncStorage.removeItem('targetAnimals') 
-        // await AsyncStorage.removeItem('scannedAnimals') 
-        // setScannedAnimals([])
-        // setTargetAnimals([])
+        // await AsyncStorage.removeItem('hardTargetAnimals') 
+        // await AsyncStorage.removeItem('hardScannedAnimals') 
+        // setHardScannedAnimals([])
+        // setHardTargetAnimals([])
       }
 
     };
@@ -310,15 +307,13 @@ const Challenge = () => {
     initialiseChallenge();
   }, []);  
 
+  useEffect(() => {
+    console.log("Target animals: ", hardTargetAnimals);
+  }, [hardTargetAnimals]);
 
   useEffect(() => {
-    console.log("Target animals: ", targetAnimals);
-  }, [targetAnimals]);
-
-  useEffect(() => {
-    console.log("Scanned animals: ", scannedAnimals);
-  }, [scannedAnimals]);
-
+    console.log("Scanned animals: ", hardScannedAnimals);
+  }, [hardScannedAnimals]);
 
   useEffect(() => {
 
@@ -331,10 +326,10 @@ const Challenge = () => {
 
         console.log("TF is successfully ready")
 
-        const modelJson = require('../assets/mobile_net_model_working/model.json');
-        const shard1 = require('../assets/mobile_net_model_working/group1-shard1of3.bin');
-        const shard2 = require('../assets/mobile_net_model_working/group1-shard2of3.bin');
-        const shard3 = require('../assets/mobile_net_model_working/group1-shard3of3.bin');
+        const modelJson = require('../assets/ldn_zoo_mobile_net_model/model.json');
+        const shard1 = require('../assets/ldn_zoo_mobile_net_model/group1-shard1of3.bin');
+        const shard2 = require('../assets/ldn_zoo_mobile_net_model/group1-shard2of3.bin');
+        const shard3 = require('../assets/ldn_zoo_mobile_net_model/group1-shard3of3.bin');
 
         const combinedWeights = [
           shard1, shard2, shard3
@@ -374,18 +369,15 @@ const Challenge = () => {
         });
         
         console.log("classifying image...")
-
-        const labels =  ["Falco_peregrinus_images", "Oryx_gazella_images", "Panthera_leo_images", "Rattus_rattus_images", "Zalophus_wollebaeki_images"];
+        const labels =  ['Choloepus_Hoffmanni_images', 'Equus_Quagga_images', 'Giraffa_Camelopardalis_images', 'Panthera_leo_images', 'Phoenicopterus_Roseus_images'];
+        
 
         const prediction = await model.predict(imageTensor).data();
         const highestPredictionIndex = prediction.indexOf(Math.max(...prediction));
         const predictedClassEntry = labels[highestPredictionIndex];
         const predictedClass = predictedClassEntry ? predictedClassEntry[1] : 'Unknown'; // class name
 
-        console.log('Predictions:', prediction);
-        console.log("prediction index: " + highestPredictionIndex);
-
-        console.log('Predicted Class:', predictedClassEntry);
+        console.log('Predicted Class:', predictedClass);
         console.log("highest prediction " + Math.max(...prediction))
 
         console.log("type of predictions: " + typeof prediction)
@@ -395,7 +387,7 @@ const Challenge = () => {
         const firstHighestPrediction = sortedPredictions[0];
         const secondHighestPrediction = sortedPredictions[1];
         const thirdHighestPrediction = sortedPredictions[2];
-        const fourthHighestPrediction = sortedPredictions[3];
+         const fourthHighestPrediction = sortedPredictions[3];
 
         const normalizedPredictions = tf.softmax(tf.tensor(prediction)).arraySync();
 
@@ -417,6 +409,7 @@ const Challenge = () => {
 
         return [labels[prediction.indexOf(firstHighestPrediction)], labels[prediction.indexOf(secondHighestPrediction)], labels[prediction.indexOf(thirdHighestPrediction)], labels[prediction.indexOf(fourthHighestPrediction)], predictionsDict];
 
+
       } catch (error) {
         console.error('Error classifying image:', error);
         return null;
@@ -425,7 +418,6 @@ const Challenge = () => {
   }
 
   const takePicture = async () => {
-    // Check if the user has granted permission to access the camera
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
     if (permissionResult.granted === false) {
       alert("You've refused to allow this app to access your camera!");
@@ -441,8 +433,10 @@ const Challenge = () => {
     //   aspect: [4, 3],
     //   quality: 1,
     // });
+    
+  
 
-    //Launch the image library to pick a photo
+    //Launch the image library to picka photo
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: false,
@@ -450,16 +444,13 @@ const Challenge = () => {
       quality: 1,
     });
 
-    console.log("result: ", result);
-    console.log("result image uri: ", result.assets[0].uri);
-    
-    setClassifyingModalVisible(true);
-
-    if (result.canceled) {
-      console.log("image picker closed prematurely")
-      setClassifyingModalVisible(false);
-    } 
+    // if (result.canceled) {
+    //   console.log("image picker closed prematurely")
+    //   setClassifyingModalVisible(false);
+    // } 
     // console.log("image picker closed")
+
+    setClassifyingModalVisible(true);
 
     await new Promise((resolve) => setTimeout(resolve, 100));
 
@@ -478,58 +469,57 @@ const Challenge = () => {
       // await asset.downloadAsync();
       // const imageUri = asset.localUri || asset.uri;
       // let predictedAnimalResult = await classifyImage(imageUri);
+      // let predictedAnimal = predictedAnimalResult.toLowerCase()
       let predictedAnimal = predictedAnimalResult
       console.log("predicted animal: " + predictedAnimal);
 
-      // let predictedAnimal = "peacock"
-
       //check whether the animal is correct or not
-      if (Object.values(targetAnimals).includes(predictedAnimal)) {
+      if (Object.values(hardTargetAnimals).includes(predictedAnimal)) {
 
         showModal({predictedAnimal:predictedAnimal}); 
   
         try {
   
-          if (!scannedAnimals.includes(predictedAnimal)) {
-            scannedAnimals.push(predictedAnimal);
+          if (!hardScannedAnimals.includes(predictedAnimal)) {
+            hardScannedAnimals.push(predictedAnimal);
             
-            let updatedTargetAnimals = targetAnimals.filter(animal => animal !== predictedAnimal);
+  
+            let updatedTargetAnimals = hardTargetAnimals.filter(animal => animal !== predictedAnimal);
             
-            setScannedAnimals(scannedAnimals);
-            setTargetAnimals(updatedTargetAnimals);
+            setHardScannedAnimals(hardScannedAnimals);
+            setHardTargetAnimals(updatedTargetAnimals);
 
             if (updatedTargetAnimals.length === 0) {
               console.log("Challenge completed");
-              setChallengeCompleted(true);
-              setChallengeCompletedModalVisible(true);
-              AsyncStorage.setItem('challengeCompletedFlag', 'true');
+              setHardChallengeCompleted(true);
+              setHardChallengeCompletedModalVisible(true);
+              AsyncStorage.setItem('hardChallengeCompletedFlag', 'true');
 
-              console.log("populating scannedAnimals with: " + scannedAnimals);
-              await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
+              console.log("populating scannedAnimals with: " + hardScannedAnimals);
+              await AsyncStorage.setItem('hardScannedAnimals', JSON.stringify(hardScannedAnimals));
             } else {
-              setChallengeCompleted(false);
-              setChallengeCompletedModalVisible(false);
+              setHardChallengeCompleted(false);
+              setHardChallengeCompletedModalVisible(false);
             }
 
-            await AsyncStorage.setItem('targetAnimals', JSON.stringify(updatedTargetAnimals));
+
+            await AsyncStorage.setItem('hardTargetAnimals', JSON.stringify(updatedTargetAnimals));
           } 
           
-          console.log("populating scannedAnimals with: " + scannedAnimals);
-          await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
+          console.log("populating scannedAnimals with: " + hardScannedAnimals);
+          await AsyncStorage.setItem('hardScannedAnimals', JSON.stringify(hardScannedAnimals));
   
         } catch (error) {
           console.error('Failed to load scanned animals', error);
         }
   
       } else {
-          console.log("IN takePicture: " + predictedAnimal + " is not in targetAnimals: " + targetAnimals)
+          console.log("IN takePicture: " + predictedAnimal + " is not in targetAnimals: " + hardTargetAnimals)
           setIncorrectClassifiedObject(predictedAnimal)
           setIncorrectAnimalModalVisible(true);
       }
 
       // console.log("file location: ", result.assets[0].uri);
-    } else {
-      console.log("RESULT CANCELLED");
     }
 
     // classifyImageTest();
@@ -551,11 +541,11 @@ const Challenge = () => {
       image: animalInfo[predictedAnimal].image
     });
     setIsInfoModal(info);
-    setModalVisible(true);
+    setHardModalVisible(true);
   };
 
   const closeModal = () => {
-    setModalVisible(false);
+    setHardModalVisible(false);
   };
 
   const showClassifyingModal = () => {
@@ -567,7 +557,7 @@ const Challenge = () => {
   };
 
   const closeChallengeCompletedModal = () => {
-    setChallengeCompletedModalVisible(false);
+    setHardChallengeCompletedModalVisible(false);
   }
 
   const showIncorrectAnimalModal = () => {
@@ -582,69 +572,11 @@ const Challenge = () => {
     setMisClassifyModalVisible(true);
   }
 
-  const submitMisClassify = async () => {
-    console.log("typed animal: " + typedAnimal);
-
-    let predictedAnimal = typedAnimal.toLowerCase().replace(/\s+/g, '_');
-    
-    if (Object.values(targetAnimals).includes(predictedAnimal)) {
-
-      showModal({predictedAnimal:predictedAnimal}); 
-
-      try {
-
-        if (!scannedAnimals.includes(predictedAnimal)) {
-          scannedAnimals.push(predictedAnimal);
-
-          let updatedTargetAnimals = targetAnimals.filter(animal => animal !== predictedAnimal);
-          
-          setScannedAnimals(scannedAnimals);
-          setTargetAnimals(updatedTargetAnimals);
-
-          if (updatedTargetAnimals.length === 0) {
-            console.log("Challenge completed");
-            setChallengeCompleted(true);
-            setChallengeCompletedModalVisible(true);
-            AsyncStorage.setItem('challengeCompletedFlag', 'true');
-
-            console.log("populating scannedAnimals with: " + scannedAnimals);
-            await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
-          } else {
-            setChallengeCompleted(false);
-            setChallengeCompletedModalVisible(false);
-          }
-
-
-          await AsyncStorage.setItem('targetAnimals', JSON.stringify(updatedTargetAnimals));
-        } 
-        
-        console.log("populating scannedAnimals with: " + scannedAnimals);
-        await AsyncStorage.setItem('scannedAnimals', JSON.stringify(scannedAnimals));
-
-      } catch (error) {
-        console.error('Failed to load scanned animals', error);
-      }
-
-    } else {
-        console.log("IN takePicture: " + predictedAnimal + " is not in targetAnimals: " + targetAnimals)
-        setIncorrectClassifiedObject(predictedAnimal)
-        setIncorrectAnimalModalVisible(true);
-    }
-
-    
-    setMisClassifyModalVisible(false);
-    setIncorrectAnimalModalVisible(false);
-  }
-
-  const closeMisClassifyModal = () => {
-    setMisClassifyModalVisible(false);
-  }
-
   return (
-    
+
     <View style={styles.container}>
-    <ImageBackground source={images.easyAnimalChallengeBackground} style={styles.backgroundImage}>
-    <ScannedAnimalsList targetAnimals={targetAnimals} scannedAnimals={scannedAnimals} />
+    <ImageBackground source={images.hardAnimalChallengeBackground} style={styles.backgroundImage}>
+    <ScannedAnimalsList targetAnimals={hardTargetAnimals} scannedAnimals={hardScannedAnimals} />
 
     <View style={styles.cameraBar}>
     {modelLoaded ? (
@@ -677,15 +609,15 @@ const Challenge = () => {
     <Modal
       animationType="slide"
       transparent={true}
-      visible={challengeCompletedModalVisible}
+      visible={hardChallengeCompletedModalVisible}
       onRequestClose={closeChallengeCompletedModal}
     >
       <SafeAreaView style={modalStyle.modalContainer}>
       <View style={modalStyle.modalContent}>
-      <Text style={styles.title}>Challenge Completed!</Text>
+      <Text style={styles.title}>Mystert Challenge Completed!</Text>
         <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
           <Text></Text>
-          <Text style={modalStyle.rewardText}>Congratulations! You have completed the challenge</Text>
+          <Text style={modalStyle.rewardText}>Congratulations! You have completed the mystery challenge!</Text>
           <Text></Text>
           <Text style={modalStyle.rewardText}>Come collect your prize at the kiosk inside the gift shop</Text>
           <Text></Text>
@@ -755,47 +687,11 @@ const Challenge = () => {
     </View>
   </SafeAreaView>
 </Modal>
-
+    
     <Modal
       animationType="slide"
       transparent={true}
-      visible={misClassifyModalVisible}
-      onRequestClose={closeIncorrectAnimalModal}
-    >
-      <SafeAreaView style={modalStyle.modalContainer}>
-        <View style={modalStyle.modalContent}>
-          <Text style={styles.title}>Type in the animal you captured</Text>
-
-          <TextInput
-            style={modalStyle.textInput}
-            placeholder="Enter animal name"
-            value={typedAnimal}
-            onChangeText={setTypedAnimal}
-          />
-
-          <Text></Text>
-       
-          <TouchableOpacity onPress={submitMisClassify} style={modalStyle.misClassifyButton}>
-             <Text style={modalStyle.misClassifyButtonText}>Submit</Text>
-          </TouchableOpacity>
-          <Text></Text>
-          <Text></Text>
-          <Text></Text>
-          <Text></Text>
-          <TouchableOpacity onPress={closeMisClassifyModal} style={modalStyle.closeButton}>
-            <Text style={modalStyle.closeButtonText}>Close</Text>
-          </TouchableOpacity>
-
-        </View>
-      </SafeAreaView>
-    </Modal>
-
-
-
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={modalVisible}
+      visible={hardModalVisible}
       onRequestClose={closeModal}
     >
     <SafeAreaView style={modalStyle.modalContainer}>
@@ -803,12 +699,11 @@ const Challenge = () => {
         <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
           {selectedAnimal && (
             <>
-              
+              <Text style={styles.title}>
+                {isInfoModal ? 'Animal' : 'Well Done! Animal Unlocked'}
+              </Text>
               <Image source={{ uri: selectedAnimal.image }} style={modalStyle.image} />
               <Text style={modalStyle.species}>({selectedAnimal.species})</Text> 
-              <Text style={styles.title}>
-                {isInfoModal ? '' : 'Well Done! Animal Unlocked'}
-              </Text>
               <Text>
                 <Text style={modalStyle.sectionTitle}>Diet: </Text>
                 <Text style={modalStyle.sectionText}>{selectedAnimal.diet}</Text>
@@ -852,20 +747,20 @@ const Challenge = () => {
       </View>
     </SafeAreaView>
   </Modal>
+
   </ImageBackground>
   </View>
   )
 }
 
 export default Challenge
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     // backgroundColor: '#fff',
-    paddingBottom: 20,
+    paddingBottom: 1,
   },
   verticalLine: {
     width: 2,
@@ -875,7 +770,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingBottom: 50
+    paddingBottom: 19
   },
   titleContainer: {
     backgroundColor: '#d4edda', // Light green background
@@ -894,7 +789,7 @@ const styles = StyleSheet.create({
     alignItems: 'center', // Center the text horizontally
     marginTop:70,
     alignSelf: 'center',
-    paddingHorizontal: 1
+    paddingHorizontal: 10
   },
   title: {
     fontSize: 24,
@@ -913,7 +808,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: 'center',
     paddingRight: 20,
-    paddingLeft: 13,
+    paddingLeft: 23,
     fontFamily: 'serif', // Suitable font
   },
   animalsLeft: {
@@ -930,7 +825,7 @@ const styles = StyleSheet.create({
   },
   cameraBar: {
     // backgroundColor: '#e8f5e9',
-    padding: 90,
+    padding: 30,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
@@ -977,9 +872,10 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   mysteryAnimalCard: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 15,
+    backgroundColor: '#5a8c66',
+    borderTopLeftRadius: 120,
+    borderTopRightRadius: 120,
+    padding: 0,
     marginVertical: 10,
     alignItems: 'center',
     shadowColor: '#000',
@@ -987,7 +883,7 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.8,
     shadowRadius: 4,
     elevation: 5,
   },
@@ -1024,7 +920,7 @@ const modalStyle = StyleSheet.create({
   modalContent: {
     width: '90%',
     backgroundColor: '#5a8c66',
-    // borderRadius: 30,
+    borderRadius: 30,
     padding: 0,
     // alignItems: 'center',
     position: 'relative',
@@ -1037,22 +933,6 @@ const modalStyle = StyleSheet.create({
     backgroundColor: 'black',
     padding: 10,
     borderRadius: 5,
-  },
-  misClassifyButton: {
-    position: 'absolute',
-    bottom: 70,
-    alignSelf: 'center',
-    backgroundColor: 'grey', // Change background color to grey
-    padding: 5, // Reduce padding to make the button smaller
-    borderRadius: 5,
-    width: 150,
-  },
-  misClassifyButtonText: {
-    color: 'white',
-    fontSize: 14, // Smaller font size
-    fontStyle: 'italic', // Italic text
-    fontWeight: 'bold',
-    textAlign: 'center',
   },
   closeButtonText: {
     color: 'white',
@@ -1123,14 +1003,5 @@ const modalStyle = StyleSheet.create({
   shareButtonText: {
     color: '#fff',
     fontSize: 16,
-  },
-  textInput: {
-    height: 40,
-    borderColor: 'white',
-    borderWidth: 1,
-    marginBottom: 20,
-    paddingHorizontal: 10,
-    color: 'white',
-    textAlign: 'center',
   },
 });

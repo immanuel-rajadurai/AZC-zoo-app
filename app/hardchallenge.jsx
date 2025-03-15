@@ -326,10 +326,10 @@ const Challenge = () => {
 
         console.log("TF is successfully ready")
 
-        const modelJson = require('../assets/mobile_net_model_working/model.json');
-        const shard1 = require('../assets/mobile_net_model_working/group1-shard1of3.bin');
-        const shard2 = require('../assets/mobile_net_model_working/group1-shard2of3.bin');
-        const shard3 = require('../assets/mobile_net_model_working/group1-shard3of3.bin');
+        const modelJson = require('../assets/ldn_zoo_mobile_net_model/model.json');
+        const shard1 = require('../assets/ldn_zoo_mobile_net_model/group1-shard1of3.bin');
+        const shard2 = require('../assets/ldn_zoo_mobile_net_model/group1-shard2of3.bin');
+        const shard3 = require('../assets/ldn_zoo_mobile_net_model/group1-shard3of3.bin');
 
         const combinedWeights = [
           shard1, shard2, shard3
@@ -369,8 +369,8 @@ const Challenge = () => {
         });
         
         console.log("classifying image...")
-        const labels =  ["Falco_peregrinus_images", "Oryx_gazella_images", "Panthera_leo_images", "Rattus_rattus_images", "Zalophus_wollebaeki_images"];
-
+        const labels =  ['Choloepus_Hoffmanni_images', 'Equus_Quagga_images', 'Giraffa_Camelopardalis_images', 'Panthera_leo_images', 'Phoenicopterus_Roseus_images'];
+        
 
         const prediction = await model.predict(imageTensor).data();
         const highestPredictionIndex = prediction.indexOf(Math.max(...prediction));
