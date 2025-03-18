@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity, Modal, ScrollView, Animated, Dimensions, Button } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Modal, ScrollView, Animated, Dimensions, Button, Linking } from 'react-native';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -85,6 +85,31 @@ const Home = () => {
       setShowEventsButtonVisible(false);
     }
   };
+
+  const openInstagram = () => {
+    const instagramUrl = 'instagram://library?AssetPath=your_image_path'; // Replace with your Instagram URL
+    Linking.openURL(instagramUrl).catch((err) =>
+      console.error('Error opening Instagram link:', err)
+    );
+  };
+  const shareToFacebook = () => {
+      const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+        'https://www.londonzoo.org/'
+      )}`;
+      Linking.openURL(facebookShareUrl).catch((err) =>
+        console.error('Error opening URL:', err)
+      );
+    };
+  
+  const shareToTwitter = () => {
+      const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+        'I just completed an Animal challenge at London Zoo! Check out my acheivement!'
+      )}&url=${encodeURIComponent('https://www.londonzoo.org/')}`;
+      
+      Linking.openURL(twitterShareUrl).catch((err) =>
+        console.error('Error opening URL:', err)
+      );
+    };
 
   const zooRegion = {
     latitude: 51.535121,
@@ -428,13 +453,13 @@ const Home = () => {
                   </View>
                   <Text style={modalStyle.textStyle}>You can also share your experience with your close friends!</Text>
                   <View style={modalStyle.socialIconsContainer}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={openInstagram}>
                       <Image source={require('../../../assets/icons/instagramlogo.png')} style={modalStyle.socialIcon} />
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={shareToFacebook}>
                       <Image source={require('../../../assets/icons/facebook_icon.png')} style={modalStyle.socialIcon} />
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={shareToTwitter}>
                       <Image source={require('../../../assets/icons/twitterlogo.png')} style={modalStyle.socialIcon} />
                     </TouchableOpacity>
                     <TouchableOpacity>
