@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import * as FileSystem from 'expo-file-system';
 import WebView from 'react-native-webview';
 
-import ExpoStripeProvider from './ExpoStripeProvider'; // Import the Stripe provider
+import StripeProvider from '../components/StripeProvider'; 
 
 const Tickets = () => {
   return (
@@ -18,9 +18,9 @@ const Tickets = () => {
 
 export function TicketsScreen() {
   return (
-    <ExpoStripeProvider>
+    <StripeProvider>
       <Tickets />
-    </ExpoStripeProvider>
+    </StripeProvider>
   );
 }
 

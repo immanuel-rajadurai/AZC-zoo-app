@@ -1,8 +1,6 @@
-require("dotenv").config();
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-import { CURRENCY } from "./config";
+import { stripe } from "../stripe-server";
 
-async function handlePaymentRequest(req, res) {
+export async function handlePaymentRequest(req, res) {
     try {
         const customer = await stripe.customers.create();
         const ephemeralKey = await stripe.ephemeralKeys.create({
@@ -10,7 +8,7 @@ async function handlePaymentRequest(req, res) {
         });
         const paymentIntent = await stripe.paymentIntents.create({
             amount: 1256,
-            currency: CURRENCY,
+            currency: "usd",
             customer: customer.id,
             automatic_payment_methods: {
                 enabled: true,
@@ -28,5 +26,3 @@ async function handlePaymentRequest(req, res) {
         res.status(500).json({ error: error.message });
     }
 }
-
-export default { handlePaymentRequest };

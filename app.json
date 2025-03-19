@@ -37,7 +37,15 @@
     },
     "plugins": [
       "expo-router",
-      "expo-document-picker"
+      "expo-document-picker",
+      "expo-asset",
+      [
+        "@stripe/stripe-react-native",
+        {
+          "enableGooglePay": true
+
+        }
+      ]
     ],
     "extra": {
       "router": {
