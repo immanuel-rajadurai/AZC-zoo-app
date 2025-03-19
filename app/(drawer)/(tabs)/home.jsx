@@ -111,6 +111,21 @@ const Home = () => {
       );
     };
 
+  const openTripadvisorReview = () => {
+    const tripAdvisorUrl = 'https://www.tripadvisor.co.uk/UserReviewEdit-g186338-d187553-London_Zoo-London_England.html';
+    Linking.openURL(tripAdvisorUrl).catch((err) =>
+      console.error('Error opening Tripadvisor:', err)
+    );
+  };
+
+  const openGoogleReview = () => {
+    const googleReviewUrl = 'https://www.google.com/search?sca_esv=1c8765e962fa8ef3&rlz=1C1CHBF_en-GBGB920GB920&sxsrf=AHTn8zrwlnHV4qLszcfV6JMX4V0oKVeDBg:1742396068329&si=APYL9bu7VukcKqdQJcpqJ814fIvBo9o8YpjD-LmyKwznrVfwMevHUR7TfezoKIJvP9_BbQKRUJAFT0pKNYtiUWE7S0pTbThMpdsEg_t9_MGl7zklxd8cwPDwTRSkoKBT2GuTZQpBnGvP&q=London+Zoo+Reviews&sa=X&ved=2ahUKEwijyNeVs5aMAxVcT0EAHfvrJQoQ0bkNegQIOhAE&biw=1536&bih=695&dpr=1.25';
+    Linking.openURL(googleReviewUrl).catch((err) =>
+      console.error('Error opening Google review link:', err)
+    );
+  };
+    
+
   const zooRegion = {
     latitude: 51.535121,
     longitude: -0.154131,
@@ -441,11 +456,11 @@ const Home = () => {
                   <Text style={modalStyle.modalTitle}>How did we zoo?</Text>
                   <Text style={modalStyle.textStyle}>Share your thoughts with others! {"\n"} Leave a review </Text>
                   <View style={modalStyle.reviewRow}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={openTripadvisorReview}>
                       <Image source={require('../../../assets/icons/tripadvisor.png')} style={modalStyle.reviewIcon} />
                     </TouchableOpacity>
-                    <TouchableOpacity>
-                      <Image source={require('../../../assets/icons/review-logo.png')} style={modalStyle.reviewIcon} />
+                    <TouchableOpacity onPress={openGoogleReview}>
+                      <Image source={require('../../../assets/icons/Google-Review-logo.png')} style={modalStyle.reviewIcon} />
                     </TouchableOpacity>
                     <TouchableOpacity>
                       <Image source={require('../../../assets/icons/trustpilot-logo.png')} style={modalStyle.reviewIcon} />
