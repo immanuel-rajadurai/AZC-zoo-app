@@ -462,9 +462,7 @@ const Home = () => {
                     <TouchableOpacity onPress={openGoogleReview}>
                       <Image source={require('../../../assets/icons/Google-Review-logo.png')} style={modalStyle.reviewIcon} />
                     </TouchableOpacity>
-                    <TouchableOpacity>
-                      <Image source={require('../../../assets/icons/trustpilot-logo.png')} style={modalStyle.reviewIcon} />
-                    </TouchableOpacity>                    
+                    
                   </View>
                   <Text style={modalStyle.textStyle}>You can also share your experience with your close friends!</Text>
                   <View style={modalStyle.socialIconsContainer}>
@@ -477,9 +475,7 @@ const Home = () => {
                     <TouchableOpacity onPress={shareToTwitter}>
                       <Image source={require('../../../assets/icons/twitterlogo.png')} style={modalStyle.socialIcon} />
                     </TouchableOpacity>
-                    <TouchableOpacity>
-                      <Image source={require('../../../assets/icons/tiktok_logo.png')} style={modalStyle.socialIcon} />
-                    </TouchableOpacity>
+                    
                   </View>
                   </ScrollView>
                   <TouchableOpacity onPress={() => setFeedbackModalVisible(false)} style={modalStyle.closeButton}>
