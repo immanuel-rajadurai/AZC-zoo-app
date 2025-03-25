@@ -238,6 +238,13 @@ const Home = () => {
 
   return (
     <View style={styles.container}>
+    <View style={styles.closingTimeContainer}>
+      <Image 
+        source={require('../../../assets/icons/clock-icon.png')} // Replace with your clock icon
+        style={styles.timeIcon}
+      />
+      <Text style={styles.closingTimeText}>Closing: 5:00 PM</Text>
+    </View>
       <MapView
         style={styles.map}
         ref={mapRef}
@@ -489,14 +496,19 @@ const Home = () => {
 }
 
 const styles = StyleSheet.create({
+  //#234e35
   container: {
     ...StyleSheet.absoluteFillObject,
     flex: 1, 
-    justifyContent: "flex-end",
+    justifyContent: "flex-start",
     alignItems: "center",
+    paddingTop: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
   },
   map: {
-    ...StyleSheet.absoluteFillObject,
+    // ...StyleSheet.absoluteFillObject,
+    width: '100%',
+    height: '100%',
   },
   overlay: {
     transform: [{ rotate: '90deg' }],
@@ -547,6 +559,30 @@ const styles = StyleSheet.create({
     alignItems: "center", 
     zIndex: 2,
     marginTop:20
+  },
+  closingTimeContainer: {
+    //rgba(255, 255, 255, 0.8)
+    backgroundColor: 'rgba(255, 255, 255, 0.8)', // Background for better visibility
+    borderRadius: 10,
+    padding: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: 20,  // Add left and right padding/margin
+    // marginTop: 10, // Adjust this value based on your header height, e.g., 80 or 100px
+    zIndex: 10, // Ensure it's on top of the map
+  },
+  
+  timeIcon: {
+    width: 24,
+    height: 24,
+    marginRight: 8,
+    // backgroundColor: 'rgba(255, 255, 255, 0.8)'
+  },
+  
+  closingTimeText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#333',
   },
 });
 
@@ -821,6 +857,7 @@ const modalStyle = StyleSheet.create({
     // alignItems: "center",
     justifyContent: "center",
   },
+  
 });
 
 export default Home;
