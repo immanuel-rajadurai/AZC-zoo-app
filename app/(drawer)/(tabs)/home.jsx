@@ -498,7 +498,7 @@ const Home = () => {
 const styles = StyleSheet.create({
   //#234e35
   container: {
-    ...StyleSheet.absoluteFillObject,
+    // ...StyleSheet.absoluteFillObject,
     flex: 1, 
     justifyContent: "flex-start",
     alignItems: "center",
@@ -507,6 +507,7 @@ const styles = StyleSheet.create({
   },
   map: {
     // ...StyleSheet.absoluteFillObject,
+    position: 'absolute',
     width: '100%',
     height: '100%',
   },
@@ -561,28 +562,30 @@ const styles = StyleSheet.create({
     marginTop:20
   },
   closingTimeContainer: {
-    //rgba(255, 255, 255, 0.8)
-    backgroundColor: 'rgba(255, 255, 255, 0.8)', // Background for better visibility
+    backgroundColor: 'rgba(255, 255, 255, 0.8)', 
     borderRadius: 10,
     padding: 8,
     flexDirection: 'row',
     alignItems: 'center',
-    marginHorizontal: 20,  // Add left and right padding/margin
-    // marginTop: 10, // Adjust this value based on your header height, e.g., 80 or 100px
-    zIndex: 10, // Ensure it's on top of the map
+    marginHorizontal: 20,  
+    zIndex: 10, 
+    width: '100%',
+     
   },
   
   timeIcon: {
     width: 24,
     height: 24,
     marginRight: 8,
-    // backgroundColor: 'rgba(255, 255, 255, 0.8)'
+    left: '30%',
+    
   },
   
   closingTimeText: {
     fontSize: 14,
     fontWeight: 'bold',
     color: '#333',
+    left: '30%',
   },
 });
 
