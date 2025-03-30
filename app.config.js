@@ -1,4 +1,3 @@
-// app.config.js
 export default {
     expo: {
       name: "AquaZoo",
@@ -7,6 +6,7 @@ export default {
       orientation: "portrait",
       userInterfaceStyle: "light",
       splash: {
+        image: "./assets/splash.png",
         resizeMode: "contain",
         backgroundColor: "#ffffff"
       },
@@ -32,7 +32,12 @@ export default {
             }
           }
         ]
-      ]
+      ],
+      extra: {
+        eas: {
+          projectId: "e4ea456c-d2e8-4801-9572-910143dac4f0"
+        }
+      }
     }
-  };
+  }
   
