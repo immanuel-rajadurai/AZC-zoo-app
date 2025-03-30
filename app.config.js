@@ -6,7 +6,6 @@ export default {
       orientation: "portrait",
       userInterfaceStyle: "light",
       splash: {
-        image: "./assets/splash.png",
         resizeMode: "contain",
         backgroundColor: "#ffffff"
       },
@@ -18,7 +17,7 @@ export default {
         supportsTablet: true
       },
       android: {
-        package: "com.immraj.app_v1", 
+        package: "com.immraj.app_v1",
         adaptiveIcon: {
           foregroundImage: "./assets/adaptive-icon.png",
           backgroundColor: "#FFFFFF"
@@ -29,7 +28,9 @@ export default {
           "expo-build-properties",
           {
             android: {
-              kotlinVersion: "1.9.25"
+              kotlinVersion: "1.9.25",    
+              compileSdkVersion: 34,
+              targetSdkVersion: 34,
             }
           }
         ]
@@ -38,7 +39,10 @@ export default {
         eas: {
           projectId: "e4ea456c-d2e8-4801-9572-910143dac4f0"
         }
+      },
+      cli: {
+        appVersionSource: "version"
       }
     }
-  }
+  };
   
