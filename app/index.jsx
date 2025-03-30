@@ -1,3 +1,4 @@
+import 'react-native-reanimated';
 import { StatusBar } from 'expo-status-bar';
 import { Text, View, Image, ScrollView, StyleSheet, TouchableOpacity, Modal, Platform, Dimensions } from 'react-native';
 import { router } from 'expo-router';
@@ -8,6 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { Amplify } from 'aws-amplify';
 import amplifyconfig from '../src/amplifyconfiguration.json';
+
 
 Amplify.configure(amplifyconfig);
 
