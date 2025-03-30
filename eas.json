@@ -12,7 +12,7 @@
         "EAS_NO_DEFAULT_NPM_INSTALL": "1"
       }
     },
-    "gradle-release": {
+   "gradle-release": {
       "android": {
         "gradleCommand": ":app:assembleRelease"
       },
