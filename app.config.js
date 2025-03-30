@@ -18,6 +18,7 @@ export default {
         supportsTablet: true
       },
       android: {
+        package: "com.immraj.app_v1", 
         adaptiveIcon: {
           foregroundImage: "./assets/adaptive-icon.png",
           backgroundColor: "#FFFFFF"
