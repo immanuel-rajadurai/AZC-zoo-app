@@ -162,19 +162,66 @@ const Places = () => {
       >
         <SafeAreaView style={modalStyle.modalContainer}>
           <View style={modalStyle.modalContent}>
-            <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
+            <View contentContainerStyle={{ paddingBottom: 100 }}>
               {selectedPlace && (
                 <>
-                
-                  <Text style={modalStyle.placeName}>{selectedPlace.name}</Text>
-                  <Image source={{ uri: selectedPlace.image }} style={modalStyle.image} />
-                  <Text></Text>
-                  <Text>
-                    <Text style={modalStyle.sectionText}>{selectedPlace.description}</Text> 
-                  </Text>
+                  {/* Image + Name */}
+                  <View style={modalStyle.imageContainer}>
+                    <Image 
+                      source={{ uri: selectedPlace.image }}  
+                      style={modalStyle.image} 
+                    />
+                    <View style={modalStyle.textOverlay}>
+                      <Text style={modalStyle.placeName}>
+                        {selectedPlace.name}  
+                      </Text>
+                    </View>
+                  </View>
+
+                  {/* Info Sections */}
+                  <View style={modalStyle.infoContainer}>
+                    <View style={modalStyle.infoColumn}>
+                      <Image 
+                        source={require('../../../assets/icons/Location.png')} 
+                        style={modalStyle.icon}
+                      />
+                      <Text style={modalStyle.sectionTitle}>Location</Text>
+                      <Text style={modalStyle.sectionText}>Near the main exhibits</Text>
+                    </View>
+                    <View style={modalStyle.infoColumn}>
+                      <Image 
+                        source={require('../../../assets/icons/Clock.png')} 
+                        style={modalStyle.icon}
+                      />
+                      <Text style={modalStyle.sectionTitle}>Opening Times</Text>
+                      <Text style={modalStyle.sectionText}>
+                        Mon-Fri: 10:00-23:00{'\n'}
+                        Sat-Sun: 13:00-18:00
+                      </Text>
+                    </View>
+                    <View style={modalStyle.infoColumn}>
+                      <Image 
+                        source={require('../../../assets/icons/Food.png')} 
+                        style={modalStyle.icon}
+                      />
+                      <Text style={modalStyle.sectionTitle}>Food Type</Text>  
+                      <Text style={modalStyle.sectionText}>Snacks & meals</Text>
+                    </View>
+                  </View>
+
+                  {/* Facilities Section */}
+                  <View style={modalStyle.facilitiesContainer}>
+                    <Text style={modalStyle.facilitiesTitle}>Facilities:</Text>
+                    <Text style={modalStyle.facilitiesText}>
+                      • Shaded seating{'\n'}
+                      • Fun, educational activities{'\n'}
+                      • Restrooms & baby care{'\n'}
+                      • Serene fountains
+                    </Text>
+                  </View>
                 </>
               )}
-            </ScrollView>
+            </View>
             <TouchableOpacity onPress={closeModal} style={modalStyle.closeButton}>
               <Text style={modalStyle.closeButtonText}>Close</Text>
             </TouchableOpacity>
@@ -390,63 +437,93 @@ const modalStyle = StyleSheet.create({
   },
   modalContent: {
     width: '90%',
-    backgroundColor: '#5a8c66',
-    // borderRadius: 30,
+    backgroundColor: '#5C8B67',
+    borderRadius: 30,
     padding: 0,
-    // alignItems: 'center',
     position: 'relative',
-    borderColor: 'green', 
+    overflow: 'hidden',
+  },
+  imageContainer: {
+    position: 'relative',
+    width: '100%',
+    height: 180,
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+  },
+  textOverlay: {
+    position: 'absolute',
+    bottom: 10,
+    left: 16,
+  },
+  placeName: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'white',
+    fontFamily: 'serif',
+  },
+  infoContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#F1F1F1',
+    padding: 16,
+    marginBottom: 12,
+  },
+  infoColumn: {
+    flex: 1,
+    alignItems: 'center',
+    marginHorizontal: 4,
+  },
+  icon:{
+    width: 28,
+    height: 28,
+    marginBottom: 4,
+  },
+  sectionTitle: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    fontFamily: 'serif',
+    color: 'black',
+    marginBottom: 5,
+    textAlign: 'center',
+  },
+  sectionText: {
+    fontSize: 14,
+    fontFamily: 'serif',
+    color: 'black',
+    textAlign: 'center',
+  },
+  facilitiesContainer: {
+    paddingTop: 0,
+    padding: 16,
+  },
+  facilitiesTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    fontFamily: 'serif',
+    color: 'white',
+  },
+  facilitiesText: {
+    fontSize: 16,
+    fontFamily: 'serif',
+    color: 'white',
   },
   closeButton: {
-    position: 'absolute',
-    bottom: 20,
+    marginBottom: 10,
+    width: '90%',
     alignSelf: 'center',
     backgroundColor: 'black',
-    padding: 10,
-    borderRadius: 5,
+    padding: 16,
+    borderRadius: 10,
+    alignItems: 'center',
   },
   closeButtonText: {
     color: 'white',
     fontWeight: 'bold',
     fontFamily: 'serif',
-  },
-  modalTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  image: {
-    width: '100%', 
-    height: 150,
-  },
-  placeName: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    fontFamily: 'serif',
-    color: 'white',
-  },
-  description: {
-    fontSize: 18,
-    fontStyle: 'italic',
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 10,
-    fontFamily: 'serif',
-    color: 'white',
-    marginLeft: 10,
-  },
-  sectionTitle: {
-    fontWeight: 'bold',
-    marginBottom: 20,
-    fontFamily: 'serif',
-    color: 'white',
-  },
-  sectionText: {
     fontSize: 16,
-    marginBottom: 20,
-    fontFamily: 'serif',
-    color: 'white',
   },
 });

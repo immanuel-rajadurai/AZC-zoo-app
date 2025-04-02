@@ -514,8 +514,8 @@ const modalStyle = StyleSheet.create({
     marginHorizontal: 4,
   },
   icon:{
-    width: 24,
-    height: 24,
+    width: 28,
+    height: 28,
     marginBottom: 8,
   },
   sectionTitle: {
