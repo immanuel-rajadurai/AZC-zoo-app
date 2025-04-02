@@ -184,6 +184,23 @@ const Animals = () => {
     } 
   }
 
+  const getConservationColor = (status) => {
+    switch (status.toLowerCase()) {
+      case 'vulnerable':
+        return '#FFA500'; // Orange
+      case 'endangered':
+        return '#FF0000'; // Red
+      case 'critically endangered':
+        return '#8B0000'; // Dark Red
+      case 'near threatened':
+        return '#FFFF00'; // Yellow
+      case 'least concern':
+        return '#00FF00'; // Green
+      default:
+        return '#FFF'; // Default 
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Animals</Text>
@@ -216,7 +233,6 @@ const Animals = () => {
         keyExtractor={(item) => item.name}
         style={styles.animalList}
       />
-
       <Modal
         visible={modalVisible}
         transparent={true}
@@ -225,46 +241,72 @@ const Animals = () => {
       >
         <SafeAreaView style={modalStyle.modalContainer}>
           <View style={modalStyle.modalContent}>
-            <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
+            <View contentContainerStyle={{ paddingBottom: 100 }}>
               {selectedAnimal && (
                 <>
-                  <Image source={{ uri: selectedAnimal.image }} style={modalStyle.image} />
-                  <Text style={modalStyle.animalName}>{selectedAnimal.name}</Text>
-                  <Text style={modalStyle.species}>{selectedAnimal.scientificName}</Text>
-                  <Text>
-                    <Text style={modalStyle.sectionTitle}>Diet: </Text>
-                    <Text style={modalStyle.sectionText}>{selectedAnimal.diet}</Text>
-                  </Text>
-                  <Text>
-                    <Text style={modalStyle.sectionTitle}>Height: </Text>
-                    <Text style={modalStyle.sectionText}>{selectedAnimal.height}</Text>
-                  </Text>
-                  <Text>
-                    <Text style={modalStyle.sectionTitle}>Weight:{"\n"}</Text>
-                    <Text style={modalStyle.sectionText}>
-                      {"\u2022"} Male: {selectedAnimal.weightMale}
-                    </Text>
-                    {"\n"}
-                    <Text style={modalStyle.sectionText}>
-                      {"\u2022"} Female: {selectedAnimal.weightFemale}
-                    </Text>
-                  </Text>
-                  <Text>
-                    <Text style={modalStyle.sectionTitle}>Habitat: </Text>
-                    <Text style={modalStyle.sectionText}>{selectedAnimal.habitat}</Text>
-                  </Text>
-                  <Text>
-                    <Text style={modalStyle.sectionTitle}>Conservation Status: </Text>
-                    <Text style={modalStyle.sectionText}>{selectedAnimal.conservationStatus}</Text>
-                  </Text>
+                  {/* Image with Text Overlay */}
+                  <View style={modalStyle.imageContainer}>
+                    <Image source={{ uri: selectedAnimal.image }} style={modalStyle.image} />
+                    <View style={modalStyle.textOverlay}>
+                      <Text style={modalStyle.animalName}>{selectedAnimal.name}</Text>
+                      <Text style={modalStyle.species}>{selectedAnimal.scientificName}</Text>
+                    </View>
+                  </View>
 
-                  <Text>
-                    <Text style={modalStyle.sectionTitle}>Fun Facts:{"\n"}</Text>
-                  <Text style={modalStyle.sectionText}>{selectedAnimal.funFacts}</Text>
-                  </Text>
+                  {/* Diet, Weight, Habitat Section */}
+                  <View style={modalStyle.infoContainer}>
+                    <View style={modalStyle.infoColumn}>
+                      <Image source={require('../../../assets/icons/diet.png')} style={modalStyle.icon}/>
+                      <Text style={modalStyle.sectionTitle}>Diet</Text>
+                      <Text style={modalStyle.sectionText}>{selectedAnimal.diet}</Text>
+                    </View>
+                    <View style={modalStyle.infoColumn}>
+                      <Image source={require('../../../assets/icons/weight.png')} style={modalStyle.icon}/>
+                      <Text style={modalStyle.sectionTitle}>Weight</Text>
+                      <Text style={modalStyle.sectionText}>
+                        Male: {selectedAnimal.weightMale}
+                      </Text>
+                      <Text style={modalStyle.sectionText}>
+                        Female: {selectedAnimal.weightFemale}
+                      </Text>
+                    </View>
+                    <View style={modalStyle.infoColumn}>
+                      <Image source={require('../../../assets/icons/habitat.png')} style={modalStyle.icon}/>
+                      <Text style={modalStyle.sectionTitle}>Habitat</Text>
+                      <Text style={modalStyle.sectionText}>{selectedAnimal.habitat}</Text>
+                    </View>
+                  </View>
+
+                  {/* Conservation Status */}
+                  <View
+                    style={[
+                      modalStyle.conservationContainer,
+                      {
+                        borderColor: getConservationColor(selectedAnimal.conservationStatus),
+                      },
+                    ]}
+                  >
+                    <Text style={modalStyle.ConservationTitle}>Conservation Status: </Text>
+                    <Text
+                      style={[
+                        modalStyle.conservationText,
+                        {
+                          color: getConservationColor(selectedAnimal.conservationStatus),
+                        },
+                      ]}
+                    >
+                      {selectedAnimal.conservationStatus}
+                    </Text>
+                  </View>
+
+                  {/* Fun Facts */}
+                  <View style={modalStyle.additionalInfoContainer}>
+                    <Text style={modalStyle.additionalInfoTitle}>Fun Facts:</Text>
+                    <Text style={modalStyle.additionalInfoText}>{selectedAnimal.funFacts}</Text>
+                  </View>
                 </>
               )}
-            </ScrollView>
+            </View>
             <TouchableOpacity onPress={closeModal} style={modalStyle.closeButton}>
               <Text style={modalStyle.closeButtonText}>Close</Text>
             </TouchableOpacity>
@@ -426,65 +468,114 @@ const modalStyle = StyleSheet.create({
   },
   modalContent: {
     width: '90%',
-    backgroundColor: '#5a8c66',
+    backgroundColor: '#5C8B67',
     borderRadius: 30,
     padding: 0,
-    // alignItems: 'center',
     position: 'relative',
-    borderColor: 'green', 
+    overflow: 'hidden',
+  },
+  imageContainer: {
+    position: 'relative',
+    width: '100%',
+    height: 180,
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+  },
+  textOverlay: {
+    position: 'absolute',
+    bottom: 10,
+    left: 16,
+  },
+  animalName: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'white',
+    fontFamily: 'serif',
+  },
+  species: {
+    fontSize: 18,
+    color: 'white',
+    fontFamily: 'serif',
+  },
+  infoContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#F1F1F1',
+    padding: 16,
+    margin: 0,
+  },
+  infoColumn: {
+    flex: 1,
+    alignItems: 'center',
+    marginHorizontal: 4,
+  },
+  icon:{
+    width: 28,
+    height: 28,
+    marginBottom: 8,
+  },
+  sectionTitle: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    fontFamily: 'serif',
+    color: 'black',
+    marginBottom: 5,
+  },
+  sectionText: {
+    fontSize: 14,
+    fontFamily: 'serif',
+    color: 'black',
+    textAlign: 'center',
+  },
+  conservationContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    margin: 16,
+    padding: 10,
+    borderWidth: 1.2,
+  },
+  ConservationTitle: {
+    color: 'white',
+    fontSize: 16,
+  },
+  conservationText: {
+    fontSize: 16,
+    fontFamily: 'serif',
+    fontWeight: 'bold',
+  },
+  additionalInfoContainer: {
+    paddingTop: 0,
+    padding: 16,
+  },
+  additionalInfoTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    fontFamily: 'serif',
+    color: 'white',
+  },
+  additionalInfoText: {
+    fontSize: 16,
+    fontFamily: 'serif',
+    color: 'white',
   },
   closeButton: {
-    position: 'absolute',
-    bottom: 20,
+    marginBottom: 10,
+    width: '90%',
     alignSelf: 'center',
     backgroundColor: 'black',
-    padding: 10,
-    borderRadius: 5,
+    padding: 16,
+    borderRadius: 10,
+    alignItems: 'center',
   },
   closeButtonText: {
     color: 'white',
     fontWeight: 'bold',
     fontFamily: 'serif',
-  },
-  modalTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  image: {
-    width: '100%', 
-    height: 150,
-  },
-  animalName: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    fontFamily: 'serif',
-    color: 'white',
-  },
-  species: {
-    fontSize: 18,
-    fontStyle: 'italic',
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 10,
-    fontFamily: 'serif',
-    color: 'white',
-    marginLeft: 10,
-  },
-  sectionTitle: {
-    fontWeight: 'bold',
-    marginBottom: 20,
-    fontFamily: 'serif',
-    color: 'white',
-  },
-  
-  sectionText: {
     fontSize: 16,
-    marginBottom: 20,
-    fontFamily: 'serif',
-    color: 'white',
   },
 });
 
