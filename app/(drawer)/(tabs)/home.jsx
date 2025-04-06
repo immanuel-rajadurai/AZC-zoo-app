@@ -39,7 +39,7 @@ const Home = () => {
   }
  
   const [region, setRegion] = useState({
-    latitude: 51.535121,
+    latitude: 51.535120,
     longitude: -0.154131,
     latitudeDelta: 0.003,
     longitudeDelta: 0.003,
@@ -154,10 +154,27 @@ const Home = () => {
       });
   };
 
+ 
+
+  const centerLat = 51.53465;  // midpoint of your lat bounds
+  const centerLng = -0.1550;   // midpoint of your lng bounds
+  
+  // const imageBounds = [
+  //   [centerLat - 0.00257, centerLng - 0.0070], // SW
+  //   [centerLat + 0.0055, centerLng + 0.0070], // NE
+  // ];
+
+
+  const newLatSouth = 0.0027 * 0.65; // ≈ 0.001799
+  const newLatNorth = 0.0068 * 0.65;  // ≈ 0.00385
+  const newLngHalf  = 0.0110* 0.65;  // ≈ 0.0049
+
   const imageBounds = [
-    [51.532581594564654, -0.15931530103070354], //southwest
-    [51.536631441307364, -0.15031572508956532], //northeast
+    [centerLat - newLatSouth, centerLng - newLngHalf],
+    [centerLat + newLatNorth, centerLng + newLngHalf],
   ];
+
+
 
   const [options, setOptions] = useState([
     { id: 1, name: 'Mobility Impairments', isEnabled: false },
@@ -212,17 +229,17 @@ const Home = () => {
         // followsUserLocation={true}
         customMapStyle={mapstyle1}
         // onRegionChangeComplete={(region) => setRegion(region)}
-        onRegionChangeComplete={(newRegion) => {
-          // Set the region back to the specified bounds if the user tries to pan outside
-          if (
-            newRegion.latitude < 51.534 || // Lat min bound
-            newRegion.latitude > 51.536 || // Lat max bound
-            newRegion.longitude < -0.156 || // Lon min bound
-            newRegion.longitude > -0.152 // Lon max bound
-          ) {
-            mapRef.current.animateToRegion(region, 200); // Reset to original region
-          }
-        }}
+        // onRegionChangeComplete={(newRegion) => {
+        //   // Set the region back to the specified bounds if the user tries to pan outside
+        //   if (
+        //     newRegion.latitude < 51.534 || // Lat min bound
+        //     newRegion.latitude > 51.536 || // Lat max bound
+        //     newRegion.longitude < -0.156 || // Lon min bound
+        //     newRegion.longitude > -0.152 // Lon max bound
+        //   ) {
+        //     mapRef.current.animateToRegion(region, 200); // Reset to original region
+        //   }
+        // }}
         provider={MapView.PROVIDER_GOOGLE}
       >
     
@@ -230,7 +247,7 @@ const Home = () => {
           image={
             isOptionEnabled(2) 
             ? require("../../../assets/mapoverlays/zoomap4.png")// Visual impairment map
-            : require("../../../assets/mapoverlays/zoomap3.png")// Standard map
+            : require("../../../assets/mapoverlays/ldnzootestoverlay4.png")// Standard map
           }
           bounds={imageBounds}
           bearing={0}
@@ -443,7 +460,7 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
   overlay: {
-    transform: [{ rotate: '90deg' }],
+    transform: [{ rotate: '-90deg' }],
   },
   eventsContainer: {
     position: 'relative',

@@ -427,22 +427,22 @@ const Challenge = () => {
     console.log("image picker opened");
 
     // Launch the camera to take a picture
-    // const result = await ImagePicker.launchCameraAsync({
-    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    //   allowsEditing: false,
-    //   aspect: [4, 3],
-    //   quality: 1,
-    // });
-    
-  
-
-    //Launch the image library to picka photo
-    const result = await ImagePicker.launchImageLibraryAsync({
+    const result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: false,
       aspect: [4, 3],
       quality: 1,
     });
+    
+  
+
+    //Launch the image library to picka photo
+    // const result = await ImagePicker.launchImageLibraryAsync({
+    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    //   allowsEditing: false,
+    //   aspect: [4, 3],
+    //   quality: 1,
+    // });
 
     // if (result.canceled) {
     //   console.log("image picker closed prematurely")
