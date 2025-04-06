@@ -35,9 +35,9 @@ const Places = () => {
   
           setPlaces(placesResult.data.listPlaces.items)
           
-          // console.log("");
-          // console.log("Places");
-          // console.log(places[0])
+          console.log("");
+          console.log("Places");
+          console.log(places[0])
         } catch (error) {
           console.log('error on fetching places', error)
         }
