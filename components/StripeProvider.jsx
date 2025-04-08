@@ -9,14 +9,13 @@ const merchantId = Constants.expoConfig?.plugins?.find(
 if (!merchantId) {
   throw new Error('Missing Expo config for "@stripe/stripe-react-native"');
 }
+const stripeKey = Constants.expoConfig.extra.STRIPE_PUBLIC_KEY;
 
-export default function ExpoStripeProvider({
-  children, // Pass children so you can wrap any component inside
-}) {
+export default function ExpoStripeProvider({children}) {
   return (
     <StripeProvider
-      publishableKey={process.env.STRIPE_PUBLIC_KEY}
-      merchantIdentifier={merchantId}
+      publishableKey={stripeKey ?? ""}
+      //merchantIdentifier={merchantId}
       urlScheme={Linking.createURL("/").split(":")[0]}
     >
       {children}
