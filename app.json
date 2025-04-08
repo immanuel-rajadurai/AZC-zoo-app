@@ -42,12 +42,15 @@
       [
         "@stripe/stripe-react-native",
         {
-          "enableGooglePay": true
+          "enableGooglePay": true,
+          "merchantIdentifier": "merchant.com.placeholder",
+          "publishableKey": "pk_test_51Qrlx6FPsyJ1cfQvXzlc6tS8nPU4sdKaZ4MKkBysONy791guHKRSMnFwbIRtKFI4sCUN4fkSY5Mkzs5TYClmIYN600pGFDJJFR"
 
         }
       ]
     ],
     "extra": {
+      "STRIPE_PUBLISHABLE_KEY": "pk_test_51Qrlx6FPsyJ1cfQvXzlc6tS8nPU4sdKaZ4MKkBysONy791guHKRSMnFwbIRtKFI4sCUN4fkSY5Mkzs5TYClmIYN600pGFDJJFR",
       "router": {
         "origin": false
       },
