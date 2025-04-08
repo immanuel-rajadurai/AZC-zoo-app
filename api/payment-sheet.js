@@ -2,12 +2,13 @@ import { stripe } from "../stripe-server";
 
 export async function handlePaymentRequest(req, res) {
     try {
+        const { amount } = await req.body;
         const customer = await stripe.customers.create();
         const ephemeralKey = await stripe.ephemeralKeys.create({
             customer: customer.id,
         });
         const paymentIntent = await stripe.paymentIntents.create({
-            amount: 1256,
+            amount,
             currency: "usd",
             customer: customer.id,
             automatic_payment_methods: {
