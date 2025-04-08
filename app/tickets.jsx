@@ -1,26 +1,26 @@
-import { View, Text, StyleSheet, Button } from 'react-native';
-import React from 'react';
-import * as DocumentPicker from 'expo-document-picker';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import * as FileSystem from 'expo-file-system';
-import WebView from 'react-native-webview';
-import CheckoutForm from './Checkout-form';
+import { View, Text, StyleSheet, TextInput, Button } from 'react-native';
+import React, { useState } from 'react';
+import CheckoutForm from '../components/Checkout-form';
+import StripeProvider from '../components/StripeProvider';
 
-import StripeProvider from '../components/StripeProvider'; 
+export default function TicketsScreen() {
+  const [amount, setAmount] = useState('');
 
-const Tickets = () => {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Buy Tickets</Text>
-      <CheckoutForm amount={1256} /> 
-    </View>
-  );
-};
-
-export function TicketsScreen() {
   return (
     <StripeProvider>
-      <Tickets />
+      <View>
+        <Text style={styles.title}>Enter Ticket Amount</Text>
+
+        <TextInput
+          style={styles.input}
+          placeholder="Enter amount"
+          keyboardType="numeric"
+          value={amount}
+          onChangeText={setAmount}
+        />
+
+        <CheckoutForm amount={parseFloat(amount) > 0 ? parseFloat(amount) : 0} />
+      </View>
     </StripeProvider>
   );
 }
@@ -31,28 +31,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
-    backgroundColor: '#f5f5f5', 
+    backgroundColor: '#f5f5f5',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#333', 
+    color: '#333',
   },
-  button: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    backgroundColor: '#007bff', 
+  input: {
+    width: '80%',
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
     borderRadius: 5,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
+    paddingHorizontal: 10,
+    marginBottom: 20,
   },
 });
 
-export default Tickets;
 
 
  // <SafeAreaView style={{ flex: 1 }}>
