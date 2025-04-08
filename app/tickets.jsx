@@ -4,6 +4,7 @@ import * as DocumentPicker from 'expo-document-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as FileSystem from 'expo-file-system';
 import WebView from 'react-native-webview';
+import CheckoutForm from './Checkout-form';
 
 import StripeProvider from '../components/StripeProvider'; 
 
@@ -11,7 +12,7 @@ const Tickets = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Buy Tickets</Text>
-      <Button title="Buy Ticket" onPress={() => console.log('Buying ticket...')} />
+      <CheckoutForm amount={1256} /> 
     </View>
   );
 };
