@@ -17,6 +17,7 @@
     "@react-native-community/netinfo": "~11.4.1",
     "@react-navigation/drawer": "^7.0.0",
     "@react-navigation/native": "^7.0.0",
+    "@stripe/stripe-react-native": "0.38.6",
     "@tensorflow/tfjs": "^4.21.0",
     "@tensorflow/tfjs-react-native": "^1.0.0",
     "aws-amplify": "^6.6.7",
@@ -62,8 +63,8 @@
     "react-native-webview": "13.12.5",
     "rimraf": "^6.0.1",
     "rn-sliding-up-panel": "^2.4.6",
-    "uuid": "^10.0.0",
-    "@stripe/stripe-react-native": "0.38.6"
+    "stripe": "^18.0.0",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
