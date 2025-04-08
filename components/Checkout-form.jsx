@@ -1,64 +1,107 @@
 import { useStripe } from '@stripe/stripe-react-native';
-import React from 'react';
-import { Button } from 'react-native';
+import { useState, useEffect } from 'react';
+import { Alert, Button } from 'react-native';
 import * as Linking from 'expo-linking';
 
-async function fetchPaymentSheetParams() {
-    const response = await fetch('api/payment-sheet', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
+async function fetchPaymentSheetParams(amount) {
+  try {
+    const response = await fetch('/api/payment-sheet', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ amount }),
     });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch payment params from backend');
+    }
+
     return await response.json();
+  } catch (error) {
+    console.error('Error fetching payment sheet params:', error);
+    return null;
+  }
 }
 
 export default function CheckoutForm({ amount }) {
-    const { initPaymentSheet, presentPaymentSheet } = useStripe();
-    const [loading, setLoading] = React.useState(false);
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
+  const [loading, setLoading] = useState(false);
+  const [ready, setReady] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
-    const initializePaymentSheet = async () => {
-        const { paymentIntent, ephemeralKey, customer, publishableKey } = await fetchPaymentSheetParams();
-        const { error } = await initPaymentSheet({
-            merchantDisplayName: 'Your app name',
-            customerId: customer,
-            customerEphemeralKeySecret: ephemeralKey,
-            paymentIntentClientSecret: paymentIntent,
-            allowsDelayedPaymentMethods: true,
-            defaultBillingDetails: {
-                name: 'Jane Doe',
-                email: 'jane.doe@example.com',
-                phone: '1-800-555-1234',
-            },
-            returnURL: Linking.createURL("stripe-redirect"),
-        });
-        
-        if (!error) {
-            setLoading(true);
-        }
-    };
+  const initializePaymentSheet = async () => {
+    console.log('[Stripe] Initializing payment sheet for amount:', amount);
 
-    const openPaymentSheet = async () => {
-        const { error } = await presentPaymentSheet();
-        
-        if (error) {
-            console.log(`Error: ${error.code}`, error.message);
-        } else {
-            console.log('Success', 'Payment complete');
-        }
-        
-        setLoading(false);
-    };
-    
-    React.useEffect(() => {
-        initializePaymentSheet();
-    }, []);
+    const params = await fetchPaymentSheetParams(amount);
+    if (!params) {
+      setErrorMessage('Failed to fetch payment details');
+      return;
+    }
 
-    return (
-        <Button
-            title="Buy Ticket"
-            disabled={!loading}
-            onPress={openPaymentSheet}
-        />
-    );
+    const { paymentIntent, ephemeralKey, customer } = params;
+
+    if (!initPaymentSheet) {
+      console.warn('[Stripe] initPaymentSheet is undefined (likely Expo Go)');
+      setReady(true);
+      return;
+    }
+
+    const { error } = await initPaymentSheet({
+      merchantDisplayName: 'Your app name',
+      customerId: customer,
+      customerEphemeralKeySecret: ephemeralKey,
+      paymentIntentClientSecret: paymentIntent,
+      allowsDelayedPaymentMethods: true,
+      returnURL: Linking.createURL('stripe-redirect'),
+    });
+
+    if (error) {
+      console.error('[Stripe] Error initializing payment sheet:', error);
+      setErrorMessage(error.message);
+    } else {
+      console.log('[Stripe] Payment sheet initialized successfully.');
+      setReady(true);
+    }
+  };
+
+  const openPaymentSheet = async () => {
+    console.log('[Stripe] Attempting to present payment sheet...');
+
+    if (!presentPaymentSheet) {
+      Alert.alert(
+        'Test Mode (Expo Go)',
+        'Stripe payment sheet would appear here if using a custom dev client.'
+      );
+      return;
+    }
+
+    const { error } = await presentPaymentSheet();
+
+    if (error) {
+      console.error('[Stripe] Payment failed:', error);
+      Alert.alert('Payment Error', error.message);
+    } else {
+      Alert.alert('Success', 'Your payment was successful!');
+    }
+
+    setReady(false); // Reset after attempt
+  };
+
+  useEffect(() => {
+    if (amount > 0) {
+      initializePaymentSheet();
+    }
+  }, [amount]);
+
+  return (
+    <>
+      {errorMessage !== '' && Alert.alert('Error', errorMessage)}
+      <Button
+        title={presentPaymentSheet ? 'Buy Ticket' : 'Simulate Buy (Expo Go)'}
+        disabled={!ready}
+        onPress={openPaymentSheet}
+      />
+    </>
+  );
 }
