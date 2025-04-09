@@ -144,56 +144,66 @@ const Challenge = () => {
   };
   
   const ScannedAnimalsList = ({ targetAnimals, scannedAnimals }) => {
-
     return (
       <View style={styles.container}>
         <View style={styles.contentContainer}>
           <View>
             <View style={styles.subTitleContainer}>
-            <Text style={styles.subtitle}>Animals to snap</Text>
+              <Text style={styles.subtitle}>Animals to snap</Text>
             </View>
-        
+          
             <ScrollView style={styles.scrollView} persistentScrollbar={true}>  
               {targetAnimals.map((animal, index) => {
                 const info = animalInfo[animal.toLowerCase()];
                 return (
-                    <View key={index} style={styles.mysteryAnimalCard}>
-                      <View style={styles.imageContainer}>
+                  <View key={index} style={styles.mysteryAnimalCard}>
+                    <View style={styles.imageContainer}>
                       <Image source={questionmark} style={styles.animalImage} />
-                      </View>
-                      <Text style={styles.animalName}>Mystery Animal</Text>
+                      {/* Custom Camera Icon (Same as Before) */}
+                      <TouchableOpacity 
+                        onPress={takePicture} 
+                        style={styles.cameraIconContainer}
+                      >
+                        <Image 
+                          source={icons.camera} 
+                          style={styles.cameraIcon} 
+                        />
+                      </TouchableOpacity>
                     </View>
+                    <Text style={styles.animalName}>Mystery Animal</Text>
+                  </View>
                 );
               })}
             </ScrollView>
-        </View>
-        <View style={styles.verticalLine}/>
-        <View>
-        <View style={styles.subTitleContainer}>
-        <Text style={styles.subtitle}>Snapped Animals</Text>
-        </View>
-        <ScrollView style={styles.scrollView} persistentScrollbar={true}>
-            {scannedAnimals.map((animal, index) => {
-              const info = animalInfo[animal.toLowerCase()];
-              return (
-                <TouchableOpacity key={index} onPress={() => showModal({predictedAnimal:animal, info:true})}>
-                  <View style={styles.animalCard}>
-                    <View style={styles.imageContainer}>
-                      <Image source={{ uri: info.image }} style={styles.animalImage} />
-                      <Icon name="check-circle" size={30} color="green" style={styles.tickIcon} />
+          </View>
+          
+          <View style={styles.verticalLine}/>
+          
+          <View>
+            <View style={styles.subTitleContainer}>
+              <Text style={styles.subtitle}>Snapped Animals</Text>
+            </View>
+            <ScrollView style={styles.scrollView} persistentScrollbar={true}>
+              {scannedAnimals.map((animal, index) => {
+                const info = animalInfo[animal.toLowerCase()];
+                return (
+                  <TouchableOpacity key={index} onPress={() => showModal({predictedAnimal:animal, info:true})}>
+                    <View style={styles.animalCard}>
+                      <View style={styles.imageContainer}>
+                        <Image source={{ uri: info.image }} style={styles.animalImage} />
+                        <Icon name="check-circle" size={30} color="green" style={styles.tickIcon} />
+                      </View>
+                      <Text style={styles.animalName}>{info.name}</Text>
                     </View>
-                    <Text style={styles.animalName}>{info.name}</Text>
-                  </View>
-                </TouchableOpacity>
-              );
-            })}
-          </ScrollView>
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
           </View>
         </View>
       </View>
     );
   };
-
 
   useEffect(() => {
 
@@ -556,22 +566,7 @@ const Challenge = () => {
     <View style={styles.container}>
     <ImageBackground source={images.hardAnimalChallengeBackground} style={styles.backgroundImage}>
     <ScannedAnimalsList targetAnimals={hardTargetAnimals} scannedAnimals={hardScannedAnimals} />
-
-    <View style={styles.cameraBar}>
-    {modelLoaded ? (
-      // <>
-
-          <TouchableOpacity style={styles.cameraButton} onPress={takePicture}>
-            <Image source={icons.camera} style={{ width: 60, height: 60 }}/>
-          </TouchableOpacity>
-          
-      // </>
-    ) : (
-      <Text>Loading AI</Text>,
-      <ActivityIndicator size="large" color="green" />
-    )}
-    </View>
-
+    
     <Modal
       animationType="slide"
       transparent={true}
@@ -838,13 +833,20 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 4,
     elevation: 5,
+    position: 'relative', 
+  },
+  cameraIconContainer: {
+    position: 'absolute',
+    top: 0,  
+    right: -20,   
+  },
+  cameraIcon: {
+    width: 50,   
+    height: 50,  
   },
   imageContainer: {
     position: 'relative',
