@@ -82,3 +82,12 @@ type OccurrenceCounterHistory @model {
   name: String! @primaryKey
   history: [Int!]!
 }
+
+type UpTime @model @searchable { 
+  id: ID!
+  zooName: String!
+  isClosed: Boolean!
+  openTime: String!
+  closeTime: String!
+}
+
