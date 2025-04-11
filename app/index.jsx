@@ -9,12 +9,14 @@ import { ModelProvider } from './modelContext';
 import CustomButtonBlack from '../components/CustomButtonBlack';
 import { NavigationContainer } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState  } from 'react';
 
 
 import { Amplify } from 'aws-amplify';
 import amplifyconfig from '../src/amplifyconfiguration.json';
 Amplify.configure(amplifyconfig);
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 //command to start up the app
 // npx expo start --tunnel
@@ -22,11 +24,42 @@ Amplify.configure(amplifyconfig);
 export default function App() {
 
   const navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState(true);
+  // const [hasSignedUp, setHasSignedUp] = useState(false);
 
   useEffect(() => {
     // Print the current router stack
     console.log('Current Router Stack:', navigation.getState());
   }, [navigation]);
+
+  useEffect(() => {
+    const checkSignUpStatus = async () => {
+        try {
+            
+            await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second
+
+            const hasSignedUp = await AsyncStorage.getItem('hasSignedUp');
+
+            console.log("In index page, Has signed up: ", hasSignedUp);
+
+            
+            if (hasSignedUp === 'true') {
+                console.log("navigating to home");
+                router.push('/home'); // Navigate to home if signed up
+            } else {
+                console.log("navigating to sign-up");
+                router.push('/sign-up'); // Navigate to sign-up if not signed up or key is missing
+            }
+        } catch (error) {
+            console.error('Error checking sign-up status:', error);
+            router.push('/sign-up'); 
+        }
+    };
+
+    checkSignUpStatus();
+}, [router]);
+
+  if (isLoading) {
 
     return (
           <SafeAreaView className="h-full" backgroundColor='#234e35'>
@@ -45,7 +78,7 @@ export default function App() {
                 <Text></Text>
                 <Text></Text> 
 
-                {/* <View style={styles.container}>
+                <View style={styles.container}>
                   <View style={styles.iconButtonContainer}>
                     <Image
                       source={icons.elephantlogo}
@@ -53,7 +86,7 @@ export default function App() {
                       resizeMode="contain"
                     />
 
-                    <TouchableOpacity style={styles.closeButton}>
+                    {/* <TouchableOpacity style={styles.closeButton}>
                       <Text style={styles.closeButtonText}>Close</Text>
                     </TouchableOpacity> */}
 
@@ -63,21 +96,36 @@ export default function App() {
                       handlePress={() => router.push('/home')}
                       containerStyles={styles.button}
                     /> */}
-                  {/* </View>
-                </View> */}
 
-                <View style={styles.container}>
+                    <CustomButtonBlack
+                        title="Continue"
+                        handlePress={async () => {
+                            const hasSignedUp = await AsyncStorage.getItem('hasSignedUp');
+                            if (hasSignedUp === 'true') {
+                              console.log("navigating to home");
+                              router.push('/home'); // Navigate to home if signed up
+                            } else {
+                                console.log("navigating to sign-up");
+                                router.push('/sign-up'); // Navigate to sign-up if not signed up or key is missing
+                            }
+                        }}
+                        containerStyles={styles.button}
+                    />
+                  </View>
+                </View>
+
+                {/* <View style={styles.container}>
                     <View style={styles.iconButtonContainer}>
                       <Image
                         source={icons.elephantlogo}
                         style={styles.icon}
                         resizeMode="contain"
-                      />
-                      <TouchableOpacity style={styles.closeButton} onPress={() => router.push('/sign-up')}>
+                      /> */}
+                      {/* <TouchableOpacity style={styles.closeButton} onPress={handleContinue}>
                         <Text style={styles.closeButtonText}>Continue</Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
+                      </TouchableOpacity> */}
+                    {/* </View>
+                  </View> */}
 
                 <Text></Text>
                 <Text></Text>
@@ -88,6 +136,8 @@ export default function App() {
             <StatusBar backgroundColor='#161622' style='light'/>
           </SafeAreaView>
       )
+}
+return null;
 }
 
 
